@@ -111,6 +111,24 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.blue[500],
             size: 50,
           ),
+          Expanded(
+              child: Slider(
+            value: double.parse(currentpos.toString()),
+            min: 0,
+            max: double.parse(maxduration.toString()),
+            divisions: maxduration,
+            label: currentpostlabel,
+            onChanged: (double value) async {
+              int seekval = value.round();
+              int result = await player.seek(Duration(milliseconds: seekval));
+              if (result == 1) {
+                //seek successful
+                currentpos = seekval;
+              } else {
+                print("Seek unsuccessful.");
+              }
+            },
+          )),
         ],
       ),
     );
@@ -118,6 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    void _yourFunction(String searchqueries) {}
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -128,7 +147,102 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView(
         children: [
           getTitleSection(),
-          Image.asset('images/eng_bg.png', fit: BoxFit.cover),
+          Stack(alignment: Alignment.topCenter, children: [
+            Image.asset('assets/images/eng_bg.png', fit: BoxFit.cover),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 - 140,
+              top: MediaQuery.of(context).size.height / 4 * 0.6,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: AssetImage("assets/images/bluebutton.png"),
+                      fit: BoxFit.cover,
+                      width: 280,
+                      height: 70,
+                      child: InkWell(onTap: () {}),
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("EFT INTRO",
+                            style:
+                                TextStyle(fontSize: 40, color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 - 140,
+              top: MediaQuery.of(context).size.height / 4,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: AssetImage("assets/images/bluebutton.png"),
+                      fit: BoxFit.cover,
+                      width: 280,
+                      height: 70,
+                      child: InkWell(onTap: () {}),
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("YOUR EFT",
+                            style:
+                                TextStyle(fontSize: 40, color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 - 140,
+              top: MediaQuery.of(context).size.height / 4 * 1.4,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: AssetImage("assets/images/bluebutton.png"),
+                      fit: BoxFit.cover,
+                      width: 280,
+                      height: 70,
+                      child: InkWell(onTap: () {}),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("CONTACT ME",
+                            style: const TextStyle(
+                                fontSize: 40, color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ])
         ],
       ),
     );

@@ -62,6 +62,7 @@ flutter:
   assets:
     - assets/images/eng_bg.png
     - assets/images/333.jpg
+    - assets/images/bluebutton.png
     - assets/audio/
   #   - images/a_dot_ham.jpeg
 
