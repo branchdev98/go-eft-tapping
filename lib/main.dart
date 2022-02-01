@@ -5,7 +5,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,6 +21,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      localizationsDelegates: [
+        AppLocalizations.delegate, // Add this line
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''), // English, no country code
+        Locale('sv', ''), // Spanish, no country code
+      ],
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -57,14 +69,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentpos = 0;
   String currentpostlabel = "00:00";
-  int maxduration = 100;
+  String maxpostlabel = "00:00";
+  int maxduration = 40;
 
-  String audioasset = "assets/audio/red-indian-music.mp3";
+  String audioasset = "assets/audio/audiob.mp3";
   bool isplaying = false;
   bool audioplayed = false;
   late Uint8List audiobytes;
 
   AudioPlayer player = AudioPlayer();
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    //return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
 
   @override
   void initState() {
@@ -78,6 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
       player.onDurationChanged.listen((Duration d) {
         //get the duration of audio
         maxduration = d.inMilliseconds;
+        int sseconds = Duration(milliseconds: maxduration).inSeconds;
+
+        final total = Duration(seconds: sseconds);
+
+        maxpostlabel = "${_printDuration(total)}";
+        print("${_printDuration(total)}");
         setState(() {});
       });
 
@@ -94,7 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
         int rminutes = sminutes - (shours * 60);
         int rseconds = sseconds - (sminutes * 60 + shours * 60 * 60);
 
-        currentpostlabel = "$rhours:$rminutes:$rseconds";
+        final now = Duration(seconds: sseconds);
+
+        currentpostlabel = "${_printDuration(now)}";
 
         setState(() {
           //refresh the UI
@@ -119,34 +147,99 @@ class _MyHomePageState extends State<MyHomePage> {
                 fit: StackFit.passthrough,
                 children: [
                   Ink.image(
-                    image: AssetImage("assets/images/infobutton.png"),
+                    image: isplaying
+                        ? AssetImage("assets/images/pausebutton.png")
+                        : AssetImage("assets/images/infobutton.png"),
                     fit: BoxFit.cover,
                     width: 40,
                     height: 40,
-                    child: InkWell(onTap: () {}),
+                    child: InkWell(
+                      onTap: () async {
+                        if (!isplaying && !audioplayed) {
+                          int result = await player.playBytes(audiobytes);
+                          if (result == 1) {
+                            //play success
+                            setState(() {
+                              isplaying = true;
+                              audioplayed = true;
+                            });
+                          } else {
+                            print("Error while playing audio.");
+                          }
+                        } else if (audioplayed && !isplaying) {
+                          int result = await player.resume();
+                          if (result == 1) {
+                            //resume success
+                            setState(() {
+                              isplaying = true;
+                              audioplayed = true;
+                            });
+                          } else {
+                            print("Error on resume audio.");
+                          }
+                        } else {
+                          int result = await player.pause();
+                          if (result == 1) {
+                            //pause success
+                            setState(() {
+                              isplaying = false;
+                            });
+                          } else {
+                            print("Error on pause audio.");
+                          }
+                        }
+                      },
+                    ),
                   ),
                 ]),
           ),
           Expanded(
-              child: Slider(
-            value: double.parse(currentpos.toString()),
-            activeColor: Colors.blue[200],
-            inactiveColor: Colors.white,
-            min: 0,
-            max: double.parse(maxduration.toString()),
-            divisions: maxduration,
-            label: currentpostlabel,
-            onChanged: (double value) async {
-              int seekval = value.round();
-              int result = await player.seek(Duration(milliseconds: seekval));
-              if (result == 1) {
-                //seek successful
-                currentpos = seekval;
-              } else {
-                print("Seek unsuccessful.");
-              }
-            },
-          )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  child: Slider(
+                    value: double.parse(currentpos.toString()),
+                    activeColor: Colors.blue[200],
+                    inactiveColor: Colors.white,
+                    min: 0,
+                    max: double.parse(maxduration.toString()),
+                    divisions: maxduration,
+                    label: currentpostlabel,
+                    onChanged: (double value) async {
+                      int seekval = value.round();
+                      int result =
+                          await player.seek(Duration(milliseconds: seekval));
+                      if (result == 1) {
+                        //seek successful
+                        currentpos = seekval;
+                      } else {
+                        print("Seek unsuccessful.");
+                      }
+                    },
+                  ),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(currentpostlabel,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        )),
+                    SizedBox(width: 10), // use Spacer
+                    Text(maxpostlabel,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        )),
+                    SizedBox(width: 20),
+                  ],
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -161,6 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
       body: ListView(
         children: [
@@ -168,11 +262,69 @@ class _MyHomePageState extends State<MyHomePage> {
           Stack(alignment: Alignment.bottomCenter, children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 70,
+              height: MediaQuery.of(context).size.height - 85,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: new AssetImage("assets/images/eng_bg.png"),
+                  image: new AssetImage("assets/images/background.png"),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 85,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: new AssetImage("assets/images/bottombg.png"),
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 10,
+              top: 10,
+              child: Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(AppLocalizations.of(context)!.goefttapping,
+                      style: const TextStyle(
+                        fontSize: 36,
+                        color: Colors.black,
+                      )),
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 8 * 7.2,
+              top: 5,
+              child: Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(AppLocalizations.of(context)!.copyright,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        color: Colors.black,
+                      )),
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 8,
+              top: 55,
+              child: Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(AppLocalizations.of(context)!.thesound,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.black,
+                      )),
                 ),
               ),
             ),
@@ -195,11 +347,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 50,
                       child: InkWell(onTap: () {}),
                     ),
-                    const Align(
+                    Align(
                       alignment: Alignment.center,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text("EFT INTRO",
+                        child: Text(AppLocalizations.of(context)!.eftintro,
                             style:
                                 TextStyle(fontSize: 30, color: Colors.white)),
                       ),
@@ -227,11 +379,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 50,
                       child: InkWell(onTap: () {}),
                     ),
-                    const Align(
+                    Align(
                       alignment: Alignment.center,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text("YOUR EFT",
+                        child: Text(AppLocalizations.of(context)!.youreft,
                             style:
                                 TextStyle(fontSize: 30, color: Colors.white)),
                       ),
@@ -264,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       alignment: Alignment.center,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("CONTACT ME",
+                        child: Text(AppLocalizations.of(context)!.contactme,
                             style: const TextStyle(
                                 fontSize: 30, color: Colors.white)),
                       ),
@@ -308,7 +460,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Positioned(
               left: MediaQuery.of(context).size.width / 2 -
                   MediaQuery.of(context).size.width / 4 * 3 / 2 +
-                  MediaQuery.of(context).size.width / 4 * 0.975,
+                  MediaQuery.of(context).size.width / 4 * 0.98,
               top: MediaQuery.of(context).size.height / 4 * 2.2,
               child: Material(
                 elevation: 4.0,
@@ -329,7 +481,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       alignment: Alignment.center,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text("SWEDISH",
+                        child: Text("Swedish\nSVENSKA",
                             style:
                                 TextStyle(fontSize: 15, color: Colors.white)),
                       ),
@@ -363,7 +515,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       alignment: Alignment.center,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text("ARABIC",
+                        child: Text("Arabic\n",
                             style:
                                 TextStyle(fontSize: 15, color: Colors.white)),
                       ),
@@ -374,7 +526,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Positioned(
               left: 10,
-              top: MediaQuery.of(context).size.height / 3 * 2.3,
+              top: MediaQuery.of(context).size.height - 130,
               child: Material(
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
@@ -393,7 +545,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Positioned(
               left: 50,
-              top: MediaQuery.of(context).size.height / 3 * 2.3,
+              top: MediaQuery.of(context).size.height - 130,
               child: Material(
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
@@ -407,6 +559,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 30,
                     child: InkWell(onTap: () {}),
                   ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 100,
+              top: MediaQuery.of(context).size.height - 120,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(AppLocalizations.of(context)!.sharingiscaring,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      )),
                 ),
               ),
             ),

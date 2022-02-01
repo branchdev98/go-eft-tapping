@@ -1,0 +1,31 @@
+{
+    "helloWorld": "Hello World!",
+
+    "@helloWorld": {
+      "description": "The conventional newborn programmer greeting"
+    },
+    "goefttapping": "GO EFT Tapping",
+    "thesound": "The sound can be interrupted by pressing any button.",
+    "copyright": "©",
+    "eftintro": "EFT INTRO",
+    "@eftintro": {
+        "description": "The conventional newborn programmer greeting"
+    },
+    "youreft": "YOUR EFT",
+    "@youreft": {
+        "description": "The conventional newborn programmer greeting"
+    },
+    "contactme": "CONTACT ME",
+    "sharingiscaring": "Sharing is caring!",
+    "myfeeling":"My feeling or symptom is...",
+    "theintensity": "The intensity is (0->10)...",
+    "myfeelingrecorded": "My feeling or symptom is recorded",
+    "theintensityrecorded": "The intensity is recorded",
+    "recordproblem": "Record problem",
+    "recordintensity": "Record intensity",
+    "recordingintensity" : "Recording intensity...",
+    "recordprefferedemotion" :"Record preferred emotion",
+    "recording" :"Recording...",
+    "record" : "Record"
+
+}
