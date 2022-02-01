@@ -1,8 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(MyApp());
@@ -104,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget getTitleSection() {
     return Container(
       padding: const EdgeInsets.all(1),
+      color: Colors.black,
       child: Row(
         children: [
           Icon(
@@ -114,6 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
               child: Slider(
             value: double.parse(currentpos.toString()),
+            activeColor: Colors.blue[200],
+            inactiveColor: Colors.white,
             min: 0,
             max: double.parse(maxduration.toString()),
             divisions: maxduration,
@@ -147,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView(
         children: [
           getTitleSection(),
-          Stack(alignment: Alignment.topCenter, children: [
+          Stack(fit: StackFit.expand, children: [
             Image.asset('assets/images/eng_bg.png', fit: BoxFit.cover),
             Positioned(
               left: MediaQuery.of(context).size.width / 2 - 140,
@@ -182,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Positioned(
               left: MediaQuery.of(context).size.width / 2 - 140,
-              top: MediaQuery.of(context).size.height / 4,
+              top: MediaQuery.of(context).size.height / 4 * 1.05,
               child: Material(
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
@@ -192,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/bluebutton.png"),
+                      image: AssetImage("assets/images/greenbutton.png"),
                       fit: BoxFit.cover,
                       width: 280,
                       height: 70,
@@ -213,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Positioned(
               left: MediaQuery.of(context).size.width / 2 - 140,
-              top: MediaQuery.of(context).size.height / 4 * 1.4,
+              top: MediaQuery.of(context).size.height / 4 * 1.5,
               child: Material(
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
@@ -223,7 +229,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/bluebutton.png"),
+                      image:
+                          AssetImage("assets/images/orangecontactbutton.png"),
                       fit: BoxFit.cover,
                       width: 280,
                       height: 70,
@@ -241,7 +248,120 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-            )
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 - 140,
+              top: MediaQuery.of(context).size.height / 4 * 2,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: AssetImage("assets/images/bluebutton.png"),
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 70,
+                      child: InkWell(onTap: () {}),
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("English",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 - 46,
+              top: MediaQuery.of(context).size.height / 4 * 2,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: AssetImage("assets/images/greenbutton.png"),
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 70,
+                      child: InkWell(onTap: () {}),
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Swedish",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 + 50,
+              top: MediaQuery.of(context).size.height / 4 * 2,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image:
+                          AssetImage("assets/images/orangecontactbutton.png"),
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 70,
+                      child: InkWell(onTap: () {}),
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Arabic",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: 45,
+              top: MediaQuery.of(context).size.height / 3 * 2,
+              child: Material(
+                elevation: 4.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Ink.image(
+                    image: AssetImage("assets/images/fbshare.png"),
+                    fit: BoxFit.cover,
+                    width: 30,
+                    height: 30,
+                    child: InkWell(onTap: () {}),
+                  ),
+                ),
+              ),
+            ),
           ])
         ],
       ),

@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  font_awesome_flutter: '>= 4.7.0'
   flutter:
     sdk: flutter
 
@@ -63,6 +64,9 @@ flutter:
     - assets/images/eng_bg.png
     - assets/images/333.jpg
     - assets/images/bluebutton.png
+    - assets/images/greenbutton.png
+    - assets/images/orangecontactbutton.png
+    - assets/images/fbshare.png
     - assets/audio/
   #   - images/a_dot_ham.jpeg
 
