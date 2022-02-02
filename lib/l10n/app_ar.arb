@@ -1,0 +1,20 @@
+{
+    "helloWorld": "¡Hola Mundo!",
+     "goefttapping": "GO EFT Tapping",
+    "thesound": "Ljudet kan avbrytas med vilken knapp som helst",
+    "copyright": "©",
+    "eftintro" : "EFT INTRO",
+    "youreft" : "DIN EFT ",
+    "contactme": "Kontakta mig",
+    "sharingiscaring" :"Att dela är omtänksamt!",
+    "myfeeling": "Min känsla eller symptom är...",
+    "theintensity": "Intensiteten är (0->10) ...",
+    "myfeelingrecorded": "Känslan eller symptomet är inspelat",
+    "theintensityrecorded": "Intensiteten är inspelad",
+    "recordproblem": "Inspelning av problemet",
+    "recordintensity": "Inspelning av intensiteten",
+    "recordingintensity" : "Inspelning pågår...",
+    "recordprefferedemotion" :"Inspelning av föredragen känsla",
+    "recording" :"Inspelning pågår...",
+    "record" : "Spela in"
+}

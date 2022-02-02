@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+//import 'package:go_eft_tapping/locale/app_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,14 +23,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       localizationsDelegates: [
-        AppLocalizations.delegate, // Add this line
+        AppLocalizations.delegate, // # Add this line
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
-        Locale('en', ''), // English, no country code
+        Locale('en', 'US'), // English, no country code
         Locale('sv', ''), // Spanish, no country code
+        Locale('ar', ''),
       ],
       theme: ThemeData(
         // This is the theme of your application.
@@ -245,6 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  var localeEN = const Locale("en");
   @override
   Widget build(BuildContext context) {
     void _yourFunction(String searchqueries) {}
@@ -438,21 +441,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/bluebutton.png"),
+                      image: AssetImage("assets/images/btnenglish.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: 50,
-                      child: InkWell(onTap: () {}),
+                      child: InkWell(onTap: () {
+                        //    AppLocalization.load(Locale('en', ''));
+                        //  context.read<LocaleProvider>().setLocale(localeEN);
+                      }),
                     ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("ENGLISH",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -471,21 +468,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/greenbutton.png"),
+                      image: AssetImage("assets/images/btnswedish.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: 50,
                       child: InkWell(onTap: () {}),
                     ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("Swedish\nSVENSKA",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -504,22 +492,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image:
-                          AssetImage("assets/images/orangecontactbutton.png"),
+                      image: AssetImage("assets/images/btnarabic.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: 50,
                       child: InkWell(onTap: () {}),
                     ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("Arabic\n",
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    )
                   ],
                 ),
               ),
