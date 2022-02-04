@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'localization/keys/locale_keys.g.dart';
 
 class EFTIntroPage extends StatelessWidget {
   //const EFTIntroPage({Key? key}) : super(key: key);
@@ -13,7 +16,7 @@ class EFTIntroPage extends StatelessWidget {
       body: Center(
         child: Column(children: <Widget>[
           Container(
-              height: MediaQuery.of(context).size.height - 40,
+              height: MediaQuery.of(context).size.height - 80,
               child: WebView(
                 key: Key("webview1"),
                 debuggingEnabled: true,
@@ -37,8 +40,8 @@ class EFTIntroPage extends StatelessWidget {
   }
 
   loadAsset() async {
-    String fileHtmlContents =
-        await rootBundle.loadString('assets/html/engintro.html');
+    String fileHtmlContents = await rootBundle
+        .loadString('assets/html/' + LocaleKeys.lang.tr() + 'intro.html');
     _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());

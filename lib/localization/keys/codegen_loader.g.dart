@@ -15,6 +15,7 @@ class CodegenLoader extends AssetLoader{
   }
 
   static const Map<String,dynamic> ar_AE = {
+  "lang": "ara",
   "title": "مرحبا!",
   "Message": "هذه هي اللغة العربي",
   "goefttapping": "XXXXXXXXXX",
@@ -36,6 +37,7 @@ class CodegenLoader extends AssetLoader{
   "record": "قم بالتسجيل"
 };
 static const Map<String,dynamic> en_US = {
+  "lang": "eng",
   "title": "Hello!",
   "Message": "This is English",
   "goefttapping": "GO EFT Tapping",
@@ -57,6 +59,7 @@ static const Map<String,dynamic> en_US = {
   "record": "Record"
 };
 static const Map<String,dynamic> sv_SE = {
+  "lang": "swe",
   "title": "Hello Sw!",
   "Message": "This is Swedish",
   "goefttapping": "GO EFT Tapping",
