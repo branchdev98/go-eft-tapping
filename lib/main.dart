@@ -1,17 +1,23 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:typed_data';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
+import 'package:go_eft_tapping/intro.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 //import 'package:go_eft_tapping/locale/app_localization.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
+import 'package:go_eft_tapping/manager/localization_manager.dart';
+import 'provider/multi_provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ProviderList(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,17 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      localizationsDelegates: [
-        AppLocalizations.delegate, // # Add this line
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('en', 'US'), // English, no country code
-        Locale('sv', ''), // Spanish, no country code
-        Locale('ar', ''),
-      ],
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -247,7 +245,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  var localeEN = const Locale("en");
   @override
   Widget build(BuildContext context) {
     void _yourFunction(String searchqueries) {}
@@ -284,50 +281,53 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Positioned(
-              left: MediaQuery.of(context).size.width / 10,
+              left: MediaQuery.of(context).size.width / 2 -
+                  (MediaQuery.of(context).size.width / 10) * 3.6,
               top: 10,
               child: Material(
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Text(AppLocalizations.of(context)!.goefttapping,
-                      style: const TextStyle(
-                        fontSize: 36,
+                  child: Text(LocaleKeys.goefttapping,
+                      style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width / 10),
                         color: Colors.black,
-                      )),
+                      )).tr(),
                 ),
               ),
             ),
             Positioned(
-              left: MediaQuery.of(context).size.width / 8 * 7.2,
+              left: MediaQuery.of(context).size.width / 2 +
+                  (MediaQuery.of(context).size.width / 10) * 3.6,
               top: 5,
               child: Material(
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Text(AppLocalizations.of(context)!.copyright,
-                      style: const TextStyle(
-                        fontSize: 22,
+                  child: Text(LocaleKeys.copyright,
+                      style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width / 15),
                         color: Colors.black,
-                      )),
+                      )).tr(),
                 ),
               ),
             ),
             Positioned(
-              left: MediaQuery.of(context).size.width / 8,
-              top: 55,
+              left: MediaQuery.of(context).size.width / 2 -
+                  (MediaQuery.of(context).size.width / 10) * 3.6,
+              top: (MediaQuery.of(context).size.width / 10) + 20,
               child: Material(
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Text(AppLocalizations.of(context)!.thesound,
-                      style: const TextStyle(
-                        fontSize: 10,
+                  child: Text(LocaleKeys.thesound,
+                      style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width / 32),
                         color: Colors.black,
-                      )),
+                      )).tr(),
                 ),
               ),
             ),
@@ -347,16 +347,37 @@ class _MyHomePageState extends State<MyHomePage> {
                       image: AssetImage("assets/images/bluebutton.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 3,
-                      height: 50,
-                      child: InkWell(onTap: () {}),
+                      height: MediaQuery.of(context).size.width / 6,
+                      child: Flexible(
+                        child: InkWell(onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const EFTIntroPage()),
+                          );
+                        }),
+                      ),
                     ),
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text(AppLocalizations.of(context)!.eftintro,
-                            style:
-                                TextStyle(fontSize: 30, color: Colors.white)),
+                        child: InkWell(
+                          child: Text(
+                            LocaleKeys.eftintro,
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 15,
+                                color: Colors.white),
+                          ).tr(),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const EFTIntroPage()),
+                            );
+                          },
+                        ),
                       ),
                     )
                   ],
@@ -379,16 +400,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       image: AssetImage("assets/images/greenbutton.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 3,
-                      height: 50,
+                      height: MediaQuery.of(context).size.width / 6,
                       child: InkWell(onTap: () {}),
                     ),
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text(AppLocalizations.of(context)!.youreft,
-                            style:
-                                TextStyle(fontSize: 30, color: Colors.white)),
+                        child: Text(LocaleKeys.youreft,
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 15,
+                                    color: Colors.white))
+                            .tr(),
                       ),
                     )
                   ],
@@ -412,16 +436,19 @@ class _MyHomePageState extends State<MyHomePage> {
                           AssetImage("assets/images/orangecontactbutton.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 3,
-                      height: 50,
+                      height: MediaQuery.of(context).size.width / 6,
                       child: InkWell(onTap: () {}),
                     ),
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(AppLocalizations.of(context)!.contactme,
-                            style: const TextStyle(
-                                fontSize: 30, color: Colors.white)),
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(LocaleKeys.contactme,
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 15,
+                                    color: Colors.white))
+                            .tr(),
                       ),
                     )
                   ],
@@ -434,7 +461,7 @@ class _MyHomePageState extends State<MyHomePage> {
               top: MediaQuery.of(context).size.height / 4 * 2.2,
               child: Material(
                 elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
+                clipBehavior: Clip.antiAlias,
                 color: Colors.transparent,
                 child: Stack(
                   alignment: Alignment.center,
@@ -444,10 +471,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       image: AssetImage("assets/images/btnenglish.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
-                      height: 50,
-                      child: InkWell(onTap: () {
+                      height: MediaQuery.of(context).size.width / 6,
+                      child: InkWell(onTap: () async {
                         //    AppLocalization.load(Locale('en', ''));
                         //  context.read<LocaleProvider>().setLocale(localeEN);
+                        await context
+                            .setLocale(LocalizationManager.instance.enUSLocale);
                       }),
                     ),
                   ],
@@ -469,10 +498,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Ink.image(
                       image: AssetImage("assets/images/btnswedish.png"),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitWidth,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
-                      height: 50,
-                      child: InkWell(onTap: () {}),
+                      height: MediaQuery.of(context).size.width / 6,
+                      child: InkWell(onTap: () async {
+                        await context
+                            .setLocale(LocalizationManager.instance.svSELocale);
+                      }),
                     ),
                   ],
                 ),
@@ -493,10 +525,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Ink.image(
                       image: AssetImage("assets/images/btnarabic.png"),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitWidth,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
-                      height: 50,
-                      child: InkWell(onTap: () {}),
+                      height: MediaQuery.of(context).size.width / 6,
+                      child: InkWell(onTap: () async {
+                        await context
+                            .setLocale(LocalizationManager.instance.arAELocale);
+                      }),
                     ),
                   ],
                 ),
@@ -516,7 +551,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     fit: BoxFit.cover,
                     width: 30,
                     height: 30,
-                    child: InkWell(onTap: () {}),
+                    child: InkWell(onTap: () {
+                      //    AppLocalization.load(Locale('en', ''));
+                      //  context.read<LocaleProvider>().setLocale(localeEN);
+                    }),
                   ),
                 ),
               ),
@@ -549,11 +587,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.transparent,
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Text(AppLocalizations.of(context)!.sharingiscaring,
+                  child: Text(LocaleKeys.sharingiscaring,
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white,
-                      )),
+                      )).tr(),
                 ),
               ),
             ),
