@@ -68,6 +68,7 @@ flutter:
   assets:
     - assets/html/engintro.html
     - assets/html/sweintro.html
+    - assets/html/araintro.html
     - assets/images/infobutton.png
     - assets/images/pausebutton.png
     - assets/images/bluebutton.png
