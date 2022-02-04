@@ -13,7 +13,7 @@ class EFTIntroPage extends StatelessWidget {
       body: Center(
         child: Column(children: <Widget>[
           Container(
-              height: MediaQuery.of(context).size.height - 80,
+              height: MediaQuery.of(context).size.height - 40,
               child: WebView(
                 key: Key("webview1"),
                 debuggingEnabled: true,
