@@ -348,15 +348,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 3,
                       height: MediaQuery.of(context).size.width / 6,
-                      child: Flexible(
-                        child: InkWell(onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EFTIntroPage()),
-                          );
-                        }),
-                      ),
+                      child: InkWell(onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EFTIntroPage()),
+                        );
+                      }),
                     ),
                     Align(
                       alignment: Alignment.center,
@@ -374,7 +372,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const EFTIntroPage()),
+                                  builder: (context) => EFTIntroPage()),
                             );
                           },
                         ),
