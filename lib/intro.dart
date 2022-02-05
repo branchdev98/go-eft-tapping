@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -9,14 +10,23 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'localization/keys/locale_keys.g.dart';
 
-class EFTIntroPage extends StatefulWidget {
-  //const EFTIntroPage({Key? key}) : super(key: key);
+class EFTIntroPage extends StatelessWidget {
+//  const EFTIntroPage({Key? key}) : super(key: key);
+
   late WebViewController _webViewController;
   String audioasset = "assets/audio/audiob.mp3";
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
   Future play() async {
-    final result = await player.play(audioasset);
+    // final file = new File(audioasset);
+    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
+    audiobytes =
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    //convert ByteData to Uint8List
+    await player.playBytes(audiobytes);
+    //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
+    //final result = await player.play(file.path, isLocal: true);
+    //final result = await player.play(audioasset);
     //if (result == 1) setState(() => playerState = PlayerState.playing);
   }
 
@@ -59,6 +69,7 @@ class EFTIntroPage extends StatefulWidget {
                 height: 80,
                 child: InkWell(onTap: () {
                   Navigator.pop(context);
+                  player.stop();
                 }),
               ),
             ),
@@ -70,6 +81,7 @@ class EFTIntroPage extends StatefulWidget {
   }
 
   loadAsset() async {
+    play();
     String fileHtmlContents = await rootBundle
         .loadString('assets/html/' + LocaleKeys.lang.tr() + 'intro.html');
     _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
