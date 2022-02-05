@@ -15,13 +15,18 @@ class EFTIntroPage extends StatefulWidget {
   String audioasset = "assets/audio/audiob.mp3";
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
+  Future play() async {
+    final result = await player.play(audioasset);
+    //if (result == 1) setState(() => playerState = PlayerState.playing);
+  }
 
   void initState() {
-    ByteData bytes =
+    /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);
+    player.playBytes(audiobytes);*/
+    play();
   }
 
   @override
