@@ -58,7 +58,9 @@ class EFTIntroPage extends StatelessWidget {
                 },
               )),
           Positioned(
-            left: 20,
+            left: LocaleKeys.lang.tr() == "ara"
+                ? MediaQuery.of(context).size.width - 120
+                : 20,
             top: (MediaQuery.of(context).size.height - 100),
             child: Material(
               clipBehavior: Clip.hardEdge,
