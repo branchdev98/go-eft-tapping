@@ -14,9 +14,9 @@ class EFTIntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(children: <Widget>[
+        child: Stack(children: <Widget>[
           Container(
-              height: MediaQuery.of(context).size.height - 80,
+              height: MediaQuery.of(context).size.height - 20,
               child: WebView(
                 key: Key("webview1"),
                 debuggingEnabled: true,
@@ -27,12 +27,23 @@ class EFTIntroPage extends StatelessWidget {
                   loadAsset();
                 },
               )),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Go back!'),
-          )
+          Positioned(
+            left: 20,
+            top: (MediaQuery.of(context).size.height - 100),
+            child: Material(
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: Ink.image(
+                image: AssetImage("assets/images/btnhome.png"),
+                fit: BoxFit.cover,
+                width: 80,
+                height: 80,
+                child: InkWell(onTap: () {
+                  Navigator.pop(context);
+                }),
+              ),
+            ),
+          ),
         ]),
         /*,*/
       ),

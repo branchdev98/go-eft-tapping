@@ -81,6 +81,7 @@ flutter:
     - assets/images/btnenglish.png
     - assets/images/btnswedish.png
     - assets/images/btnarabic.png
+    - assets/images/btnhome.png
     - assets/audio/
 
   #   - images/a_dot_ham.jpeg
