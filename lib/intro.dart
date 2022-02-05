@@ -14,7 +14,8 @@ class EFTIntroPage extends StatelessWidget {
 //  const EFTIntroPage({Key? key}) : super(key: key);
 
   late WebViewController _webViewController;
-  String audioasset = "assets/audio/audiob.mp3";
+
+  String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioc.mp3';
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
   Future play() async {
