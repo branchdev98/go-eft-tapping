@@ -12,6 +12,7 @@ import 'package:go_eft_tapping/intro.dart';
 
 import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
 import 'package:go_eft_tapping/manager/localization_manager.dart';
+import 'package:go_eft_tapping/youreft.dart';
 import 'provider/multi_provider.dart';
 
 void main() {
@@ -399,7 +400,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 3,
                       height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () {}),
+                      child: InkWell(onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => YourEFTPage()),
+                        );
+                      }),
                     ),
                     Align(
                       alignment: Alignment.center,

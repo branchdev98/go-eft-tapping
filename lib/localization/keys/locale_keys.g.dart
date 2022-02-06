@@ -6,11 +6,13 @@ abstract class  LocaleKeys {
   static const Message = 'Message';
   static const goefttapping = 'goefttapping';
   static const thesound = 'thesound';
+  static const yourrecording = 'yourrecording';
   static const copyright = 'copyright';
   static const eftintro = 'eftintro';
   static const youreft = 'youreft';
   static const contactme = 'contactme';
   static const sharingiscaring = 'sharingiscaring';
+  static const ihaveheard = 'ihaveheard';
   static const myfeeling = 'myfeeling';
   static const theintensity = 'theintensity';
   static const myfeelingrecorded = 'myfeelingrecorded';
