@@ -6,12 +6,11 @@ import '../types/theme_green.dart';
 import '../types/theme_orange.dart';
 import 'interface_theme_manager.dart';
 
-enum ThemeEnum { GREEN, ORANGE, BLUE }
+enum ThemeEnum { green, orange, blue }
 
 extension ThemeContextExtension on BuildContext {
-  ThemeData? get theme => this
-      .watch<ThemeManager>()
-      .generateTheme(this.watch<ThemeManager>().currentTheme!);
+  ThemeData? get theme =>
+      watch<ThemeManager>().generateTheme(watch<ThemeManager>().currentTheme!);
 }
 
 class ThemeManager extends ChangeNotifier implements IThemeManager {
@@ -24,7 +23,7 @@ class ThemeManager extends ChangeNotifier implements IThemeManager {
   ThemeManager._init();
 
   @override
-  ThemeEnum? currentTheme = ThemeEnum.BLUE;
+  ThemeEnum? currentTheme = ThemeEnum.blue;
 
   @override
   void changeTheme(ThemeEnum theme) {
@@ -35,11 +34,11 @@ class ThemeManager extends ChangeNotifier implements IThemeManager {
   @override
   ThemeData generateTheme(ThemeEnum theme) {
     switch (theme) {
-      case ThemeEnum.GREEN:
+      case ThemeEnum.green:
         return ThemeGreen.instance.theme!;
-      case ThemeEnum.ORANGE:
+      case ThemeEnum.orange:
         return ThemeOrange.instance.theme!;
-      case ThemeEnum.BLUE:
+      case ThemeEnum.blue:
         return ThemeBlue.instance.theme!;
       default:
         return ThemeBlue.instance.theme!;

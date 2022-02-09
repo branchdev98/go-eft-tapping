@@ -10,6 +10,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'localization/keys/locale_keys.g.dart';
 
+// ignore: must_be_immutable
 class EFTIntroPage extends StatelessWidget {
 //  const EFTIntroPage({Key? key}) : super(key: key);
 
@@ -18,6 +19,8 @@ class EFTIntroPage extends StatelessWidget {
   String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioc.mp3';
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
+
+  EFTIntroPage({Key? key}) : super(key: key);
   Future play() async {
     // final file = new File(audioasset);
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
@@ -45,10 +48,10 @@ class EFTIntroPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Stack(children: <Widget>[
-          Container(
+          SizedBox(
               height: MediaQuery.of(context).size.height - 20,
               child: WebView(
-                key: Key("webview1"),
+                key: const Key("webview1"),
                 debuggingEnabled: true,
                 javascriptMode: JavascriptMode.unrestricted,
                 initialUrl: "",
@@ -66,7 +69,7 @@ class EFTIntroPage extends StatelessWidget {
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: Ink.image(
-                image: AssetImage("assets/images/btnhome.png"),
+                image: const AssetImage("assets/images/btnhome.png"),
                 fit: BoxFit.cover,
                 width: 80,
                 height: 80,
@@ -92,9 +95,5 @@ class EFTIntroPage extends StatelessWidget {
         .toString());
   }
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  State<StatefulWidget> createState() => throw UnimplementedError();
 }

@@ -15,9 +15,9 @@ class LocalizationConfig extends StatelessWidget {
     return EasyLocalization(
       path: LocalizationManager.instance.localePath!,
       supportedLocales: LocalizationManager.instance.supportedLocales,
-      startLocale: LocalizationEnum.ENGLISH.translate,
-      assetLoader: CodegenLoader(),
-      child: MyApp(),
+      startLocale: LocalizationEnum.english.translate,
+      assetLoader: const CodegenLoader(),
+      child: const MyApp(),
     );
   }
 }

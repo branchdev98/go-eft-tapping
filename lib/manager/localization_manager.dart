@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'interface_localization_manager.dart';
 
 enum LocalizationEnum {
-  SVENSKA,
-  ENGLISH,
-  ARABIC,
+  svenska,
+  english,
+  arabic,
 }
 
 extension LocalizationExtension on LocalizationEnum {
   Locale? get translate {
     switch (this) {
-      case LocalizationEnum.SVENSKA:
+      case LocalizationEnum.svenska:
         return LocalizationManager.instance.svSELocale;
-      case LocalizationEnum.ARABIC:
+      case LocalizationEnum.arabic:
         return LocalizationManager.instance.arAELocale;
-      case LocalizationEnum.ENGLISH:
+      case LocalizationEnum.english:
         return LocalizationManager.instance.enUSLocale;
       default:
         return LocalizationManager.instance.enUSLocale;
@@ -35,13 +35,13 @@ class LocalizationManager implements ILocalizationManager {
   @override
   String? localePath = 'assets/translations';
 
-  final enUSLocale = Locale('en', 'US');
-  final svSELocale = Locale('sv', 'SE');
-  final arAELocale = Locale('ar', 'AE');
+  final enUSLocale = const Locale('en', 'US');
+  final svSELocale = const Locale('sv', 'SE');
+  final arAELocale = const Locale('ar', 'AE');
 
   @override
   List<Locale> get supportedLocales => [enUSLocale, svSELocale, arAELocale];
 
   @override
-  LocalizationEnum currentLocale = LocalizationEnum.ENGLISH;
+  LocalizationEnum currentLocale = LocalizationEnum.english;
 }

@@ -2,6 +2,7 @@
 
 import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
@@ -14,15 +15,19 @@ import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
 import 'package:go_eft_tapping/manager/localization_manager.dart';
 import 'package:go_eft_tapping/youreft.dart';
 import 'provider/multi_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
+//import 'package:share/share.dart';
+// @dart=2.9
 void main() {
   runApp(
-    ProviderList(),
+    const ProviderList(),
   );
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -44,6 +49,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: true,
       home: const MyHomePage(title: 'GO EFT Tapping'),
     );
   }
@@ -103,8 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
         final total = Duration(seconds: sseconds);
 
-        maxpostlabel = "${_printDuration(total)}";
-        print("${_printDuration(total)}");
+        maxpostlabel = _printDuration(total);
+        if (kDebugMode) {
+          print(_printDuration(total));
+        }
+
         setState(() {});
       });
 
@@ -113,17 +122,17 @@ class _MyHomePageState extends State<MyHomePage> {
             p.inMilliseconds; //get the current position of playing audio
 
         //generating the duration label
-        int shours = Duration(milliseconds: currentpos).inHours;
-        int sminutes = Duration(milliseconds: currentpos).inMinutes;
+        //    int shours = Duration(milliseconds: currentpos).inHours;
+        //     int sminutes = Duration(milliseconds: currentpos).inMinutes;
         int sseconds = Duration(milliseconds: currentpos).inSeconds;
 
-        int rhours = shours;
-        int rminutes = sminutes - (shours * 60);
-        int rseconds = sseconds - (sminutes * 60 + shours * 60 * 60);
+        //  int rhours = shours;
+        //  int rminutes = sminutes - (shours * 60);
+        //  int rseconds = sseconds - (sminutes * 60 + shours * 60 * 60);
 
         final now = Duration(seconds: sseconds);
 
-        currentpostlabel = "${_printDuration(now)}";
+        currentpostlabel = _printDuration(now);
 
         setState(() {
           //refresh the UI
@@ -149,8 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Ink.image(
                     image: isplaying
-                        ? AssetImage("assets/images/pausebutton.png")
-                        : AssetImage("assets/images/infobutton.png"),
+                        ? const AssetImage("assets/images/pausebutton.png")
+                        : const AssetImage("assets/images/infobutton.png"),
                     fit: BoxFit.cover,
                     width: 40,
                     height: 40,
@@ -165,7 +174,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               audioplayed = true;
                             });
                           } else {
-                            print("Error while playing audio.");
+                            if (kDebugMode) {
+                              print("Error while playing audio.");
+                            }
                           }
                         } else if (audioplayed && !isplaying) {
                           int result = await player.resume();
@@ -176,7 +187,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               audioplayed = true;
                             });
                           } else {
-                            print("Error on resume audio.");
+                            if (kDebugMode) {
+                              print("Error on resume audio.");
+                            }
                           }
                         } else {
                           int result = await player.pause();
@@ -186,7 +199,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               isplaying = false;
                             });
                           } else {
-                            print("Error on pause audio.");
+                            if (kDebugMode) {
+                              print("Error on pause audio.");
+                            }
                           }
                         }
                       },
@@ -198,27 +213,27 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  child: Slider(
-                    value: double.parse(currentpos.toString()),
-                    activeColor: Colors.blue[200],
-                    inactiveColor: Colors.white,
-                    min: 0,
-                    max: double.parse(maxduration.toString()),
-                    divisions: maxduration,
-                    label: currentpostlabel,
-                    onChanged: (double value) async {
-                      int seekval = value.round();
-                      int result =
-                          await player.seek(Duration(milliseconds: seekval));
-                      if (result == 1) {
-                        //seek successful
-                        currentpos = seekval;
-                      } else {
+                Slider(
+                  value: double.parse(currentpos.toString()),
+                  activeColor: Colors.blue[200],
+                  inactiveColor: Colors.white,
+                  min: 0,
+                  max: double.parse(maxduration.toString()),
+                  divisions: maxduration,
+                  label: currentpostlabel,
+                  onChanged: (double value) async {
+                    int seekval = value.round();
+                    int result =
+                        await player.seek(Duration(milliseconds: seekval));
+                    if (result == 1) {
+                      //seek successful
+                      currentpos = seekval;
+                    } else {
+                      if (kDebugMode) {
                         print("Seek unsuccessful.");
                       }
-                    },
-                  ),
+                    }
+                  },
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -229,13 +244,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           fontSize: 12,
                           color: Colors.white,
                         )),
-                    SizedBox(width: 10), // use Spacer
+                    const SizedBox(width: 10), // use Spacer
                     Text(maxpostlabel,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                         )),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                   ],
                 )
               ],
@@ -246,9 +261,90 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  _launchURL(String toMailId, String subject, String body) async {
+    var url = 'mailto:$toMailId?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Widget getFooterSection() {
+    return Stack(children: <Widget>[
+      Image.asset(
+        "assets/images/bottombg.png",
+        fit: BoxFit.fill,
+        width: MediaQuery.of(context).size.width,
+        height: 70,
+      ),
+      Container(
+          margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+          child: Row(children: [
+            Material(
+              elevation: 4.0,
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: const AssetImage("assets/images/fbshare.png"),
+                      fit: BoxFit.cover,
+                      width: 30,
+                      height: 30,
+                      child: InkWell(onTap: () async {
+                        if (await canLaunch("https://www.facebook.com")) {
+                          await launch("https://www.facebook.com");
+                        } else {
+                          throw 'Could not launch https://www.facebook.com';
+                        }
+                      }),
+                    ),
+                  ]),
+            ),
+            const SizedBox(width: 10),
+            Material(
+              elevation: 4.0,
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: const AssetImage("assets/images/shareall.png"),
+                      fit: BoxFit.cover,
+                      width: 30,
+                      height: 30,
+                      child: InkWell(onTap: () {
+                        Share.share('check out my website https://sarabern.com',
+                            subject: 'Look what I made!');
+                      }),
+                    ),
+                  ]),
+            ),
+            const SizedBox(width: 10),
+            Material(
+              elevation: 4.0,
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: const Text(LocaleKeys.sharingiscaring,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    )).tr(),
+              ),
+            ),
+          ])),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _yourFunction(String searchqueries) {}
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -264,20 +360,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height - 85,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: new AssetImage("assets/images/background.png"),
-                ),
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 85,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: new AssetImage("assets/images/bottombg.png"),
+                  image: AssetImage("assets/images/background.png"),
                 ),
               ),
             ),
@@ -340,46 +426,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: AssetImage("assets/images/bluebutton.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 4 * 3,
-                      height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EFTIntroPage()),
-                        );
-                      }),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: InkWell(
-                          child: Text(
-                            LocaleKeys.eftintro,
-                            style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 15,
-                                color: Colors.white),
-                          ).tr(),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EFTIntroPage()),
-                            );
-                          },
-                        ),
+                child: InkWell(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    fit: StackFit.passthrough,
+                    children: [
+                      Ink.image(
+                        image: const AssetImage("assets/images/bluebutton.png"),
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width / 4 * 3,
+                        height: MediaQuery.of(context).size.width / 6,
                       ),
-                    )
-                  ],
+                      Text(
+                        LocaleKeys.eftintro,
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width / 15,
+                            color: Colors.white),
+                      ).tr(),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EFTIntroPage()),
+                    );
+                  },
                 ),
               ),
             ),
@@ -391,37 +462,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: AssetImage("assets/images/greenbutton.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 4 * 3,
-                      height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => YourEFTPage()),
-                        );
-                      }),
-                    ),
-                    Align(
+                child: InkWell(
+                    child: Stack(
                       alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(LocaleKeys.youreft,
+                      fit: StackFit.passthrough,
+                      children: [
+                        Ink.image(
+                          image:
+                              const AssetImage("assets/images/greenbutton.png"),
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width / 4 * 3,
+                          height: MediaQuery.of(context).size.width / 6,
+                        ),
+                        Text(LocaleKeys.youreft,
                                 style: TextStyle(
                                     fontSize:
                                         MediaQuery.of(context).size.width / 15,
                                     color: Colors.white))
                             .tr(),
-                      ),
-                    )
-                  ],
-                ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const YourEFT()),
+                      );
+                    }),
               ),
             ),
             Positioned(
@@ -432,32 +499,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 4.0,
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image:
-                          AssetImage("assets/images/orangecontactbutton.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 4 * 3,
-                      height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () {}),
-                    ),
-                    Align(
+                child: InkWell(
+                    child: Stack(
                       alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(LocaleKeys.contactme,
+                      fit: StackFit.passthrough,
+                      children: [
+                        Ink.image(
+                          image: const AssetImage(
+                              "assets/images/orangecontactbutton.png"),
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width / 4 * 3,
+                          height: MediaQuery.of(context).size.width / 6,
+                        ),
+                        Text(LocaleKeys.contactme,
                                 style: TextStyle(
                                     fontSize:
                                         MediaQuery.of(context).size.width / 15,
                                     color: Colors.white))
                             .tr(),
-                      ),
-                    )
-                  ],
-                ),
+                      ],
+                    ),
+                    onTap: () {
+                      _launchURL(
+                          'sara@goldenopportunity.se',
+                          '[From GO EFT Tapping App] I have a question',
+                          'Hello Sara! ');
+                    }),
               ),
             ),
             Positioned(
@@ -473,7 +540,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/btnenglish.png"),
+                      image: const AssetImage("assets/images/btnenglish.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: MediaQuery.of(context).size.width / 6,
@@ -502,7 +569,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/btnswedish.png"),
+                      image: const AssetImage("assets/images/btnswedish.png"),
                       fit: BoxFit.fitWidth,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: MediaQuery.of(context).size.width / 6,
@@ -529,7 +596,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: AssetImage("assets/images/btnarabic.png"),
+                      image: const AssetImage("assets/images/btnarabic.png"),
                       fit: BoxFit.fitWidth,
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: MediaQuery.of(context).size.width / 6,
@@ -542,64 +609,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Positioned(
-              left: 10,
-              top: MediaQuery.of(context).size.height - 130,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Ink.image(
-                    image: AssetImage("assets/images/fbshare.png"),
-                    fit: BoxFit.cover,
-                    width: 30,
-                    height: 30,
-                    child: InkWell(onTap: () {
-                      //    AppLocalization.load(Locale('en', ''));
-                      //  context.read<LocaleProvider>().setLocale(localeEN);
-                    }),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 50,
-              top: MediaQuery.of(context).size.height - 130,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Ink.image(
-                    image: AssetImage("assets/images/shareall.png"),
-                    fit: BoxFit.cover,
-                    width: 30,
-                    height: 30,
-                    child: InkWell(onTap: () {}),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 100,
-              top: MediaQuery.of(context).size.height - 120,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(LocaleKeys.sharingiscaring,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                      )).tr(),
-                ),
-              ),
-            ),
+            getFooterSection(),
           ])
         ],
       ),

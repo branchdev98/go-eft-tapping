@@ -15,7 +15,7 @@ class ProviderList extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeManager.instance),
       ],
-      child: LocalizationConfig(),
+      child: const LocalizationConfig(),
     );
   }
 }
