@@ -32,6 +32,8 @@ dependencies:
   flutter:
     sdk: flutter
   share_plus: ^3.0.4
+  flutter_sound: ^1.0.6
+  record: ^3.0.2
   flutter_localizations: # Add this line
     sdk: flutter         # Add this line
   intl: ^0.17.0 # Add this line
@@ -45,6 +47,10 @@ dependencies:
   easy_localization: ^3.0.0
   url_launcher: ^6.0.18
   shared_preferences: ^2.0.13
+  permission_handler: ^8.3.0
+  record_mp3: ^3.0.0
+  path_provider: ^2.0.9
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

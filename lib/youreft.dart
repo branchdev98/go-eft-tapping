@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'dart:typed_data';
 
@@ -7,9 +8,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/keys/locale_keys.g.dart';
+
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record_mp3/record_mp3.dart';
 
 class YourEFT extends StatefulWidget {
   const YourEFT({Key? key}) : super(key: key);
@@ -77,6 +82,50 @@ class _YourEFTState extends State<YourEFT> {
     });
   }
 
+/*
+  Future<void> _start() async {
+    try {
+      if (await _audioRecorder.hasPermission()) {
+        await _audioRecorder.start();
+
+        bool isRecording = await _audioRecorder.isRecording();
+        setState(() {
+          _isRecording = isRecording;
+          _recordDuration = 0;
+        });
+
+        _startTimer();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _stop() async {
+    _timer?.cancel();
+    _ampTimer?.cancel();
+    final path = await _audioRecorder.stop();
+
+    widget.onStop(path!);
+
+    setState(() => _isRecording = false);
+  }
+
+  Future<void> _pause() async {
+    _timer?.cancel();
+    _ampTimer?.cancel();
+    await _audioRecorder.pause();
+
+    setState(() => _isPaused = true);
+  }
+
+  Future<void> _resume() async {
+    _startTimer();
+    await _audioRecorder.resume();
+
+    setState(() => _isPaused = false);
+  }
+*/
   Widget getDisclamierSection() {
     return Stack(children: <Widget>[
       Image.asset(
@@ -489,6 +538,43 @@ class _YourEFTState extends State<YourEFT> {
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
   }
+/*
+  Future<bool> checkPermission() async {
+    Map<PermissionGroup, PermissionStatus> map = await new PermissionHandler()
+        .requestPermissions(
+            [PermissionGroup.storage, PermissionGroup.microphone]);
+    print(map[PermissionGroup.microphone]);
+    return map[PermissionGroup.microphone] == PermissionStatus.granted;
+  }*/
+
+  bool isComplete = false;
+  String statusText = "";
+  late String recordFilePath;
+  void startRecord() async {
+    // bool hasPermission = await checkPermission();
+    //  if (hasPermission) {
+    statusText = "正在录音中...";
+    recordFilePath = await getFilePath();
+    isComplete = false;
+    RecordMp3.instance.start(recordFilePath, (type) {
+      statusText = "录音失败--->$type";
+      setState(() {});
+    });
+    //   } else {
+    //    statusText = "没有录音权限";
+    //  }
+    setState(() {});
+  }
+
+  Future<String> getFilePath() async {
+    Directory storageDirectory = await getApplicationDocumentsDirectory();
+    String sdPath = storageDirectory.path + "/record";
+    var d = Directory(sdPath);
+    if (!d.existsSync()) {
+      d.createSync(recursive: true);
+    }
+    return sdPath + "/userproblem.mp3";
+  }
 
   Widget getFooterSection() {
     return Container(
@@ -519,8 +605,19 @@ class _YourEFTState extends State<YourEFT> {
                             height: MediaQuery.of(context).size.width / 10,
                           ),
                         ]),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pop(context);
+                      int result = await player.stop();
+                      if (result == 1) {
+                        //pause success
+                        setState(() {
+                          // isplaying = false;
+                        });
+                      } else {
+                        if (kDebugMode) {
+                          print("Error on pause audio.");
+                        }
+                      }
                     }),
               ),
             ),
@@ -564,7 +661,7 @@ class _YourEFTState extends State<YourEFT> {
                                 : Colors.white),
                       ).tr(),
                     ]),
-                onTap: () {
+                onTap: () async {
                   if (problemState == record_state.before) {
                     problemState = record_state.recording;
                   }
@@ -573,6 +670,7 @@ class _YourEFTState extends State<YourEFT> {
                   }
                   disableBtn = true;
                   setState(() {});
+                  startRecord();
                 }),
           ),
           Visibility(
