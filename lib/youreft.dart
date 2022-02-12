@@ -16,14 +16,35 @@ import 'localization/keys/locale_keys.g.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record_mp3/record_mp3.dart';
 
+enum record_state { none, before, recording, recorded }
+
+bool isComplete = false;
+String statusText = "";
+late String recordFilePath;
+
+/*void pauseRecord() {
+      if (RecordMp3.instance.status == RecordStatus.PAUSE) {
+        bool s = RecordMp3.instance.resume();
+        if (s) {
+          statusText = "正在录音中...";
+          setState(() {});
+        }
+      } else {
+        bool s = RecordMp3.instance.pause();
+        if (s) {
+          statusText = "录音暂停中...";
+          setState(() {});
+        }
+      }
+    }
+*/
+
 class YourEFT extends StatefulWidget {
   const YourEFT({Key? key}) : super(key: key);
 
   @override
   State<YourEFT> createState() => _YourEFTState();
 }
-
-enum record_state { none, before, recording, recorded }
 
 class _YourEFTState extends State<YourEFT> {
   //const YourEFTPage({Key? key}) : super(key: key);
@@ -35,24 +56,150 @@ class _YourEFTState extends State<YourEFT> {
 
   late WebViewController _webViewController;
 
-  String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioc.mp3';
+  String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audiod1.mp3';
 
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
-  Future play() async {
-    // final file = new File(audioasset);
-    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    //convert ByteData to Uint8List
-    if (kDebugMode) {
-      print(audioasset);
-    }
-    await player.playBytes(audiobytes);
-    //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
-    //final result = await player.play(file.path, isLocal: true);
-    //final result = await player.play(audioasset);
-    //if (result == 1) setState(() => playerState = PlayerState.playing);
+
+  var checkeddisclaimer = false;
+  var disableBtn = false;
+
+  Widget getFooterSection() {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          IgnorePointer(
+            ignoring: disableBtn,
+            child: Container(
+              foregroundDecoration: disableBtn
+                  ? const BoxDecoration(
+                      color: Colors.grey,
+                      backgroundBlendMode: BlendMode.lighten)
+                  : null,
+              child: Material(
+                elevation: 5.0,
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: InkWell(
+                    child: Stack(
+                        alignment: Alignment.bottomLeft,
+                        fit: StackFit.passthrough,
+                        children: [
+                          Ink.image(
+                            image:
+                                const AssetImage("assets/images/btnhome.png"),
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width / 10,
+                            height: MediaQuery.of(context).size.width / 10,
+                          ),
+                        ]),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      int result = await player.stop();
+                      if (result == 1) {
+                        //pause success
+                        setState(() {
+                          // isplaying = false;
+                        });
+                      } else {
+                        if (kDebugMode) {
+                          print("Error on pause audio.");
+                        }
+                      }
+                    }),
+              ),
+            ),
+          ),
+          Material(
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: InkWell(
+                child: Stack(
+                    alignment: Alignment.center,
+                    fit: StackFit.passthrough,
+                    children: [
+                      Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: (problemState == record_state.before) ||
+                            (intensityState == record_state.before),
+                        child: Image.asset(
+                          "assets/images/btnred.png",
+                          fit: BoxFit.fitHeight,
+                          width: MediaQuery.of(context).size.width / 2.13,
+                          height: MediaQuery.of(context).size.width / 10,
+                        ),
+                      ),
+                      Text(
+                        (problemState == record_state.before)
+                            ? LocaleKeys.recordproblem
+                            : (intensityState == record_state.before)
+                                ? LocaleKeys.recordintensity
+                                : (problemState == record_state.recording)
+                                    ? LocaleKeys.recordingproblem
+                                    : (intensityState == record_state.recording)
+                                        ? LocaleKeys.recordingintensity
+                                        : "",
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width / 30,
+                            color: (problemState == record_state.recording ||
+                                    intensityState == record_state.recording)
+                                ? Colors.red
+                                : Colors.white),
+                      ).tr(),
+                    ]),
+                onTap: () async {
+                  if (problemState == record_state.before) {
+                    startRecord("problem");
+                    //   problemState = record_state.recording;
+                  }
+                  if (intensityState == record_state.before) {
+                    startRecord("intensity");
+                    //   intensityState = record_state.recording;
+                  }
+                  disableBtn = true;
+                  setState(() {});
+                }),
+          ),
+          Visibility(
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            visible: (problemState == record_state.recording) ||
+                (intensityState == record_state.recording),
+            child: Material(
+              elevation: 8.0,
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.passthrough,
+                  children: [
+                    Ink.image(
+                      image: const AssetImage("assets/images/btnstop.png"),
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width / 10,
+                      height: MediaQuery.of(context).size.width / 10,
+                      child: InkWell(onTap: () {
+                        disableBtn = false;
+                        if (problemState == record_state.recording) {
+                          problemState = record_state.recorded;
+                        }
+                        if (intensityState == record_state.recording) {
+                          intensityState = record_state.recorded;
+                        }
+
+                        //    AppLocalization.load(Locale('en', ''));
+                        //  context.read<LocaleProvider>().setLocale(localeEN);
+                        setState(() {});
+                        stopRecord();
+                      }),
+                    ),
+                  ]),
+            ),
+          ),
+        ]));
   }
 
   Future<bool> isFirstTime() async {
@@ -68,136 +215,18 @@ class _YourEFTState extends State<YourEFT> {
     }
   }
 
-  @override
-  // ignore: must_call_super
-  void initState() {
-    /*  ByteData bytes =
-        rootBundle.load(audioasset) as ByteData; //load audio from assets
+  Future play() async {
+    // final file = new File(audioasset);
+    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);*/
-
-    isFirstTime().then((isFirstTime) {
-      isFirstTime ? play() : print("Not first time");
-    });
-  }
-
-/*
-  Future<void> _start() async {
-    try {
-      if (await _audioRecorder.hasPermission()) {
-        await _audioRecorder.start();
-
-        bool isRecording = await _audioRecorder.isRecording();
-        setState(() {
-          _isRecording = isRecording;
-          _recordDuration = 0;
-        });
-
-        _startTimer();
-      }
-    } catch (e) {
-      print(e);
+    //convert ByteData to Uint8List
+    if (kDebugMode) {
+      print(audioasset);
     }
+    await player.playBytes(audiobytes);
   }
 
-  Future<void> _stop() async {
-    _timer?.cancel();
-    _ampTimer?.cancel();
-    final path = await _audioRecorder.stop();
-
-    widget.onStop(path!);
-
-    setState(() => _isRecording = false);
-  }
-
-  Future<void> _pause() async {
-    _timer?.cancel();
-    _ampTimer?.cancel();
-    await _audioRecorder.pause();
-
-    setState(() => _isPaused = true);
-  }
-
-  Future<void> _resume() async {
-    _startTimer();
-    await _audioRecorder.resume();
-
-    setState(() => _isPaused = false);
-  }
-*/
-  Widget getDisclamierSection() {
-    return Stack(children: <Widget>[
-      Image.asset(
-        "assets/images/bottombg.png",
-        fit: BoxFit.fill,
-        width: MediaQuery.of(context).size.width,
-        height: 70,
-      ),
-      Container(
-          margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-          child: Row(children: [
-            Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/fbshare.png"),
-                      fit: BoxFit.cover,
-                      width: 30,
-                      height: 30,
-                      child: InkWell(onTap: () {
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                      }),
-                    ),
-                  ]),
-            ),
-            const SizedBox(width: 10),
-            Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/shareall.png"),
-                      fit: BoxFit.cover,
-                      width: 30,
-                      height: 30,
-                      child: InkWell(onTap: () {
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                      }),
-                    ),
-                  ]),
-            ),
-            const SizedBox(width: 10),
-            Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: const Text(LocaleKeys.sharingiscaring,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    )).tr(),
-              ),
-            ),
-          ])),
-    ]);
-  }
-
-  var checkeddisclaimer = false;
-  var disableBtn = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -355,6 +384,9 @@ class _YourEFTState extends State<YourEFT> {
                           ? "assets/images/checked.png"
                           : "assets/images/unchecked.png";
 
+                      isFirstTime().then((isFirstTime) {
+                        isFirstTime ? play() : print("Not first time");
+                      });
                       setState(() {});
                     },
                   ),
@@ -517,6 +549,7 @@ class _YourEFTState extends State<YourEFT> {
                           problemState = record_state.none;
                         }
                         intensityState = record_state.before;
+                        playRecorded("problem");
                         setState(() {});
                       }),
                 ),
@@ -530,187 +563,81 @@ class _YourEFTState extends State<YourEFT> {
     ]));
   }
 
-  loadAsset() async {
-    play();
-    String fileHtmlContents = await rootBundle
-        .loadString('assets/html/' + LocaleKeys.lang.tr() + 'intro.html');
-    _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
-  }
-/*
   Future<bool> checkPermission() async {
-    Map<PermissionGroup, PermissionStatus> map = await new PermissionHandler()
-        .requestPermissions(
-            [PermissionGroup.storage, PermissionGroup.microphone]);
-    print(map[PermissionGroup.microphone]);
-    return map[PermissionGroup.microphone] == PermissionStatus.granted;
-  }*/
+    await Permission.microphone.request();
 
-  bool isComplete = false;
-  String statusText = "";
-  late String recordFilePath;
-  void startRecord() async {
-    // bool hasPermission = await checkPermission();
-    //  if (hasPermission) {
-    statusText = "正在录音中...";
-    recordFilePath = await getFilePath();
-    isComplete = false;
-    RecordMp3.instance.start(recordFilePath, (type) {
-      statusText = "录音失败--->$type";
-      setState(() {});
-    });
-    //   } else {
-    //    statusText = "没有录音权限";
-    //  }
-    setState(() {});
+    return Permission.microphone.isGranted;
   }
 
-  Future<String> getFilePath() async {
+  int i = 0;
+
+  Future<String> getFilePath(String what) async {
     Directory storageDirectory = await getApplicationDocumentsDirectory();
     String sdPath = storageDirectory.path + "/record";
     var d = Directory(sdPath);
     if (!d.existsSync()) {
       d.createSync(recursive: true);
     }
-    return sdPath + "/userproblem.mp3";
+    return sdPath + "/user" + what + ".mp3";
   }
 
-  Widget getFooterSection() {
-    return Container(
-        margin: const EdgeInsets.fromLTRB(20, 30, 20, 20),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          IgnorePointer(
-            ignoring: disableBtn,
-            child: Container(
-              foregroundDecoration: disableBtn
-                  ? const BoxDecoration(
-                      color: Colors.grey,
-                      backgroundBlendMode: BlendMode.lighten)
-                  : null,
-              child: Material(
-                elevation: 5.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: InkWell(
-                    child: Stack(
-                        alignment: Alignment.bottomLeft,
-                        fit: StackFit.passthrough,
-                        children: [
-                          Ink.image(
-                            image:
-                                const AssetImage("assets/images/btnhome.png"),
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 10,
-                            height: MediaQuery.of(context).size.width / 10,
-                          ),
-                        ]),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      int result = await player.stop();
-                      if (result == 1) {
-                        //pause success
-                        setState(() {
-                          // isplaying = false;
-                        });
-                      } else {
-                        if (kDebugMode) {
-                          print("Error on pause audio.");
-                        }
-                      }
-                    }),
-              ),
-            ),
-          ),
-          Material(
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: InkWell(
-                child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.passthrough,
-                    children: [
-                      Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: (problemState == record_state.before) ||
-                            (intensityState == record_state.before),
-                        child: Image.asset(
-                          "assets/images/btnred.png",
-                          fit: BoxFit.fitHeight,
-                          width: MediaQuery.of(context).size.width / 2.13,
-                          height: MediaQuery.of(context).size.width / 10,
-                        ),
-                      ),
-                      Text(
-                        (problemState == record_state.before)
-                            ? LocaleKeys.recordproblem
-                            : (intensityState == record_state.before)
-                                ? LocaleKeys.recordintensity
-                                : (problemState == record_state.recording)
-                                    ? LocaleKeys.recordingproblem
-                                    : (intensityState == record_state.recording)
-                                        ? LocaleKeys.recordingintensity
-                                        : "",
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 30,
-                            color: (problemState == record_state.recording ||
-                                    intensityState == record_state.recording)
-                                ? Colors.red
-                                : Colors.white),
-                      ).tr(),
-                    ]),
-                onTap: () async {
-                  if (problemState == record_state.before) {
-                    problemState = record_state.recording;
-                  }
-                  if (intensityState == record_state.before) {
-                    intensityState = record_state.recording;
-                  }
-                  disableBtn = true;
-                  setState(() {});
-                  startRecord();
-                }),
-          ),
-          Visibility(
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            visible: (problemState == record_state.recording) ||
-                (intensityState == record_state.recording),
-            child: Material(
-              elevation: 8.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnstop.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 10,
-                      height: MediaQuery.of(context).size.width / 10,
-                      child: InkWell(onTap: () {
-                        disableBtn = false;
-                        if (problemState == record_state.recording) {
-                          problemState = record_state.recorded;
-                        }
-                        if (intensityState == record_state.recording) {
-                          intensityState = record_state.recorded;
-                        }
-
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                        setState(() {});
-                      }),
-                    ),
-                  ]),
-            ),
-          ),
-        ]));
+  void playRecorded(String what) async {
+    recordFilePath = await getFilePath(what);
+    if (recordFilePath != null && File(recordFilePath).existsSync()) {
+      //   AudioPlayer audioPlayer = AudioPlayer();
+      player.play(recordFilePath, isLocal: true);
+    }
   }
 
-  State<StatefulWidget> createState() => throw UnimplementedError();
+  void startRecord(String what) async {
+    bool hasPermission = await checkPermission();
+    if (hasPermission) {
+      statusText = "正在录音中...";
+      print(statusText);
+      recordFilePath = await getFilePath(what);
+      isComplete = false;
+      RecordMp3.instance.start(recordFilePath, (type) {
+        statusText = "录音失败--->$type";
+        setState(() {});
+      });
+      //   } else {
+      //    statusText = "没有录音权限";
+      //  }
+      setState(() {
+        if (what == "problem") problemState = record_state.recording;
+        if (what == "intensity") intensityState = record_state.recording;
+      });
+    }
+
+    /* void resumeRecord() {
+      bool s = RecordMp3.instance.resume();
+      if (s) {
+        statusText = "正在录音中...";
+        setState(() {});
+      }
+    }*/
+
+    @override
+    // ignore: must_call_super
+    void initState() {
+      /*  ByteData bytes =
+        rootBundle.load(audioasset) as ByteData; //load audio from assets
+    audiobytes =
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    player.playBytes(audiobytes);*/
+    }
+
+    //late String recordFilePath;
+
+    State<StatefulWidget> createState() => throw UnimplementedError();
+  }
+}
+
+void stopRecord() {
+  bool s = RecordMp3.instance.stop();
+  if (s) {
+    statusText = "录音已完成";
+    isComplete = true;
+    //   setState(() {});
+  }
 }

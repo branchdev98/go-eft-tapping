@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   share_plus: ^3.0.4
-  flutter_sound: ^1.0.6
+  flutter_sound: '>= 8.0.0'
   record: ^3.0.2
   flutter_localizations: # Add this line
     sdk: flutter         # Add this line
