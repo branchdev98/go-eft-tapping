@@ -11,16 +11,20 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'localization/keys/locale_keys.g.dart';
 
 // ignore: must_be_immutable
-class EFTIntroPage extends StatelessWidget {
-//  const EFTIntroPage({Key? key}) : super(key: key);
+class EFTIntroPage extends StatefulWidget {
+  const EFTIntroPage({Key? key}) : super(key: key);
 
+  @override
+  State<EFTIntroPage> createState() => _EFTIntroState();
+}
+
+class _EFTIntroState extends State<EFTIntroPage> {
   late WebViewController _webViewController;
 
   String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioc.mp3';
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
 
-  EFTIntroPage({Key? key}) : super(key: key);
   Future play() async {
     // final file = new File(audioasset);
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
@@ -49,17 +53,22 @@ class EFTIntroPage extends StatelessWidget {
       body: Center(
         child: Stack(children: <Widget>[
           SizedBox(
-              height: MediaQuery.of(context).size.height - 20,
-              child: WebView(
-                key: const Key("webview1"),
-                debuggingEnabled: true,
-                javascriptMode: JavascriptMode.unrestricted,
-                initialUrl: "",
-                onWebViewCreated: (WebViewController webViewController) {
-                  _webViewController = webViewController;
-                  loadAsset();
-                },
-              )),
+              height: MediaQuery.of(context).size.height - 0,
+              child: (LocaleKeys.lang.tr() == "ara")
+                  ? FittedBox(
+                      child: Image.asset("assets/images/araacubg.png"),
+                      fit: BoxFit.fill,
+                    )
+                  : WebView(
+                      key: const Key("webview1"),
+                      debuggingEnabled: true,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      initialUrl: "",
+                      onWebViewCreated: (WebViewController webViewController) {
+                        _webViewController = webViewController;
+                        loadAsset();
+                      },
+                    )),
           Positioned(
             left: LocaleKeys.lang.tr() == "ara"
                 ? MediaQuery.of(context).size.width - 120
@@ -87,7 +96,7 @@ class EFTIntroPage extends StatelessWidget {
   }
 
   loadAsset() async {
-    play();
+    // play();
     String fileHtmlContents = await rootBundle
         .loadString('assets/html/' + LocaleKeys.lang.tr() + 'intro.html');
     _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,

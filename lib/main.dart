@@ -18,9 +18,14 @@ import 'package:share_plus/share_plus.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:record/record.dart';
+
 //import 'package:share/share.dart';
 // @dart=2.9
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(
     const ProviderList(),
   );

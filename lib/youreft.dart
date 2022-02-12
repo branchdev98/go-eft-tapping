@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_eft_tapping/goefttapping.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,8 +56,6 @@ class _YourEFTState extends State<YourEFT> {
   var intensityState = record_state.none;
 
   late WebViewController _webViewController;
-
-  String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audiod1.mp3';
 
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
@@ -215,8 +214,12 @@ class _YourEFTState extends State<YourEFT> {
     }
   }
 
-  Future play() async {
+  Future play(String what) async {
     // final file = new File(audioasset);
+
+    String audioasset =
+        'assets/audio/' + LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
+
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
@@ -385,7 +388,8 @@ class _YourEFTState extends State<YourEFT> {
                           : "assets/images/unchecked.png";
 
                       isFirstTime().then((isFirstTime) {
-                        isFirstTime ? play() : print("Not first time");
+                        isFirstTime ? play("d1") : print("Not first time");
+                        //play();
                       });
                       setState(() {});
                     },
@@ -441,6 +445,7 @@ class _YourEFTState extends State<YourEFT> {
                           intensityState = record_state.none;
                         }
                         problemState = record_state.before;
+                        play("d2");
                         setState(() {});
                       }),
                 ),
@@ -496,6 +501,7 @@ class _YourEFTState extends State<YourEFT> {
                           problemState = record_state.none;
                         }
                         intensityState = record_state.before;
+                        play("d3");
                         setState(() {});
                       }),
                 ),
@@ -545,11 +551,28 @@ class _YourEFTState extends State<YourEFT> {
                       onTap: () {
                         if (problemState == record_state.recording ||
                             intensityState == record_state.recording) return;
+
+                        if (checkeddisclaimer) {
+                          if (problemState == record_state.recorded) {
+                            if (intensityState == record_state.recorded) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const GoEFTTappingPage()),
+                              );
+                              return;
+                            }
+                          }
+                        }
                         if (problemState != record_state.recorded) {
                           problemState = record_state.none;
                         }
-                        intensityState = record_state.before;
-                        playRecorded("problem");
+                        if (intensityState != record_state.recorded) {
+                          intensityState = record_state.none;
+                        }
+                        play("d4");
+                        //playRecorded("problem");
                         setState(() {});
                       }),
                 ),
@@ -590,6 +613,7 @@ class _YourEFTState extends State<YourEFT> {
   }
 
   void startRecord(String what) async {
+    await player.stop();
     bool hasPermission = await checkPermission();
     if (hasPermission) {
       statusText = "正在录音中...";
