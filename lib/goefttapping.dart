@@ -9,9 +9,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_eft_tapping/goeftbridge.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+//import 'package:assets_audio_player/assets_audio_player.dart';
 import 'localization/keys/locale_keys.g.dart';
 
 // ignore: must_be_immutable
@@ -22,16 +23,29 @@ class GoEFTTappingPage extends StatefulWidget {
   State<GoEFTTappingPage> createState() => _GoEFTTappingState();
 }
 
+int audiofilepos = 1;
+bool userrecorded = false;
+
 class _GoEFTTappingState extends State<GoEFTTappingPage> {
   late WebViewController _webViewController;
 
-  String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
+  // String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
-  late AssetsAudioPlayer _assetsAudioPlayer;
 
+  String audioasset = "assets/audio/" +
+      LocaleKeys.lang.tr() +
+      "audioe" +
+      audiofilepos.toString() +
+      ".mp3";
+  bool playCompleted = false;
   Future play() async {
-    // final file = new File(audioasset);
+    userrecorded = false;
+    audioasset = "assets/audio/" +
+        LocaleKeys.lang.tr() +
+        "audioe" +
+        audiofilepos.toString() +
+        ".mp3";
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
@@ -41,6 +55,55 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
     //final result = await player.play(file.path, isLocal: true);
     //final result = await player.play(audioasset);
     //if (result == 1) setState(() => playerState = PlayerState.playing);
+    player.onPlayerCompletion.listen((event) async {
+      print("audiofilepos=" + audiofilepos.toString());
+      print("userrecorded=" + userrecorded.toString());
+      if ((audiofilepos == 14 && nextflow == false && userrecorded == false) ||
+          (audiofilepos == 23 && nextflow == true && userrecorded == false)) {
+        setState(() {
+          playCompleted = true;
+
+          nextflow = false;
+          audiofilepos = 1;
+          pause = true;
+        });
+      }
+      if (playCompleted == true) return;
+      if (userrecorded == true) {
+        audioasset = "assets/audio/" +
+            LocaleKeys.lang.tr() +
+            "audioe" +
+            audiofilepos.toString() +
+            ".mp3";
+
+        ByteData bytes =
+            await rootBundle.load(audioasset); //load audio from assets
+        audiobytes =
+            bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+        //convert ByteData to Uint8List
+        int result = await player.playBytes(audiobytes);
+        if (result == 1) {
+          userrecorded = false;
+          print("original sound" + audiofilepos.toString() + " is playing");
+        }
+      } else {
+        if (audiofilepos == 13 || audiofilepos == 22) {
+          audioasset = await getFilePath("intensity");
+        } else {
+          audioasset = await getFilePath("problem");
+        }
+      }
+
+      //String playingFile;
+      if (File(audioasset).existsSync()) {
+        int result = await player.play(audioasset);
+        if (result == 1) {
+          userrecorded = true;
+          print("user sound is playing");
+          audiofilepos++;
+        }
+      }
+    });
   }
 
   void initState() {
@@ -49,7 +112,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
     player.playBytes(audiobytes);*/
-    loadAssetsPlay();
+    //loadAssetsPlay();
+    play();
   }
 
   int i = 0;
@@ -76,17 +140,35 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
   bool pause = false;
   bool nextflow = false;
   int filepos = 1;
-  bool userrecord = true;
 
   Widget getFooterSection() {
     return Column(children: [
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Image.asset(
-          "assets/images/btnengbridge.png",
-          fit: BoxFit.fitHeight,
-          width: MediaQuery.of(context).size.width / 3,
-          height: MediaQuery.of(context).size.height / 8,
-        ),
+        InkWell(
+            child: Image.asset(
+              (LocaleKeys.lang == "ara")
+                  ? "assets/images/btnarabridge.png"
+                  : "assets/images/btnengbridge.png",
+              fit: BoxFit.fitHeight,
+              width: MediaQuery.of(context).size.width / 3,
+              height: MediaQuery.of(context).size.height / 8,
+            ),
+            onTap: () async {
+              int result = await player.stop();
+
+              if (result == 1) {
+                //pause success
+                nextflow = false;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GoEFTBridge()),
+                );
+                setState(() {
+                  audiofilepos = 1;
+                  userrecorded = false;
+                });
+              }
+            }),
         SizedBox(width: MediaQuery.of(context).size.width / 3 * 2),
       ]),
       SizedBox(height: 10),
@@ -118,8 +200,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
 
                     if (result == 1) {
                       //pause success
+                      nextflow = false;
+
                       setState(() {
                         Navigator.pop(context);
+
+                        audiofilepos = 1;
+                        userrecorded = false;
                       });
                     } else {
                       if (kDebugMode) {
@@ -148,12 +235,16 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                         ),
                   onTap: () async {
                     //disableBtn = true;
-                    if (pause == false)
-                      await player.pause();
-                    else
-                      await player.resume();
-                    pause = !pause;
-                    setState(() {});
+                    int result = 0;
+                    if (pause == false) {
+                      result = await player.pause();
+                    } else {
+                      result = await player.resume();
+                    }
+
+                    setState(() {
+                      if (result == 1) pause = !pause;
+                    });
                   }),
             ),
             const SizedBox(width: 10),
@@ -168,16 +259,17 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                 height: MediaQuery.of(context).size.width / 8,
                 child: InkWell(onTap: () async {
                   disableBtn = false;
-                  await player.stop();
-                  pause = true;
-                  if (nextflow == false)
-                    audioasset =
-                        'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
-                  else
-                    audioasset =
-                        'assets/audio/' + LocaleKeys.lang.tr() + 'audioe15.mp3';
+                  int result = await player.stop();
 
-                  setState(() {});
+                  setState(() {
+                    if (result == 1) {
+                      pause = true;
+                      if (nextflow == false)
+                        audiofilepos = 1;
+                      else
+                        audiofilepos = 15;
+                    }
+                  });
                   //  stopRecord();
                 }),
               ),
@@ -202,13 +294,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                       height: MediaQuery.of(context).size.width / 8,
                       child: InkWell(onTap: () async {
                         disableBtn = true;
-                        await player.stop();
+                        int result = await player.stop();
+                        if (result == 1) {
+                          pause = false;
+                          audiofilepos = 15;
+                          play();
+                          nextflow = true;
+                        }
 
-                        audioasset = 'assets/audio/' +
-                            LocaleKeys.lang.tr() +
-                            'audioe15.mp3';
-                        play();
-                        nextflow = true;
                         setState(() {});
                         //  stopRecord();
                       }),
@@ -249,47 +342,6 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
     _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
-  }
-
-  loadAssetsPlay() async {
-    String recordFilePath = await getFilePath("problem");
-    if (recordFilePath != null && File(recordFilePath).existsSync()) {}
-    _assetsAudioPlayer.open(
-        Playlist(audios: [
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe1.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe2.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe3.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe4.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe5.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe6.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe7.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe8.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe9.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe10.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe11.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe12.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe13.mp3"),
-          Audio(recordFilePath),
-          Audio("assets/audio/" + LocaleKeys.lang.tr() + "audioe14.mp3"),
-        ]),
-        loopMode: LoopMode.single //loop the full playlist
-        );
-
-    //_assetsAudioPlayer.next();
-    //_assetsAudioPlayer.prev();
-    _assetsAudioPlayer.playlistPlayAtIndex(1);
   }
 
   State<StatefulWidget> createState() => throw UnimplementedError();

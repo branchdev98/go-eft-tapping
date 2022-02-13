@@ -17,7 +17,7 @@ import 'package:go_eft_tapping/youreft.dart';
 import 'package:share_plus/share_plus.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:record/record.dart';
+//import 'package:record/record.dart';
 
 //import 'package:share/share.dart';
 // @dart=2.9

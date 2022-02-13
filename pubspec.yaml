@@ -33,7 +33,7 @@ dependencies:
     sdk: flutter
   share_plus: ^3.0.4
   flutter_sound: '>= 8.0.0'
-  record: ^3.0.2
+  
   flutter_localizations: # Add this line
     sdk: flutter         # Add this line
   intl: ^0.17.0 # Add this line
@@ -49,7 +49,7 @@ dependencies:
   shared_preferences: ^2.0.13
   permission_handler: ^8.3.0
   record_mp3: ^3.0.0
-  path_provider: ^2.0.9
+  path_provider: ^2.0.8
   assets_audio_player: ^3.0.4+1
   
 dev_dependencies:
