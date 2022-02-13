@@ -533,8 +533,8 @@ class _YourEFTState extends State<YourEFT> {
                         fit: StackFit.passthrough,
                         children: [
                           Ink.image(
-                            image: const AssetImage(
-                                "assets/images/greenbutton.png"),
+                            image:
+                                const AssetImage("assets/images/btngreen.png"),
                             fit: BoxFit.cover,
                             width: MediaQuery.of(context).size.width / 4 * 3,
                             height: MediaQuery.of(context).size.width / 6,

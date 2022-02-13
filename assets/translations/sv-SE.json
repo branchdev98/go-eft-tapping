@@ -20,7 +20,9 @@
     "goefttappingc": "GO EFT TAPPING©",
     "recordingproblem" : "Recording problem...",
     "recordingintensity" : "Inspelning pågår...",
-    "recordprefferedemotion" :"Inspelning av föredragen känsla",
+    "recordprefferedemotion" :"Inspelning av föredragen\nkänsla",
     "recording" :"Inspelning pågår...",
-    "record" : "Spela in"
+    "record" : "Spela in",
+    "whenihavethis" : "When I have this: \n[feeling or symptom]",
+    "ichoosetofeel" : "I choose to feel: \n[preferred emotion]"
   }

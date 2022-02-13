@@ -19,8 +19,11 @@
     "recordintensity": "قم بتسجيل الشدة",
     "recordingproblem" : "Recording problem...",
     "recordingintensity" : "تسجيل الشدة ...",
-    "goefttappingc": "GO EFT TAPPING©",
+    "goefttappingc": "EFT انطلق بالنقر",
+    "goeftbridgec" : "EFT انطلق عبر الجسر",
     "recordprefferedemotion" :"قم بالتسجيل",
     "recording" :"...  تسجيل",
-    "record" : "قم بالتسجيل"
+    "record" : "قم بالتسجيل",
+    "whenihavethis" : "When I have this: \n[feeling or symptom]",
+    "ichoosetofeel" : "I choose to feel: \n[preferred emotion]"
 }

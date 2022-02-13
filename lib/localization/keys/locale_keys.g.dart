@@ -22,8 +22,11 @@ abstract class  LocaleKeys {
   static const recordingproblem = 'recordingproblem';
   static const recordingintensity = 'recordingintensity';
   static const goefttappingc = 'goefttappingc';
+  static const goeftbridgec = 'goeftbridgec';
   static const recordprefferedemotion = 'recordprefferedemotion';
   static const recording = 'recording';
   static const record = 'record';
+  static const whenihavethis = 'whenihavethis';
+  static const ichoosetofeel = 'ichoosetofeel';
 
 }

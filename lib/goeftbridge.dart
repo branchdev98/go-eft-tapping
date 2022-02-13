@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'dart:typed_data';
-
+import 'dart:math' as math;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -51,7 +51,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
   //const YourEFTPage({Key? key}) : super(key: key);
   String checkedImagePath = "assets/images/unchecked.png";
 
-  var problemState = record_state.none;
+  var problemState = record_state.before;
   // ignore: non_constant_identifier_names
   var intensityState = record_state.none;
 
@@ -108,6 +108,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
             ),
           ),
           Material(
+            elevation: 8.0,
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
             child: InkWell(
@@ -124,13 +125,13 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                         child: Image.asset(
                           "assets/images/btnred.png",
                           fit: BoxFit.fitHeight,
-                          width: MediaQuery.of(context).size.width / 2.13,
-                          height: MediaQuery.of(context).size.width / 10,
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.width / 9,
                         ),
                       ),
                       Text(
                         (problemState == record_state.before)
-                            ? LocaleKeys.recordproblem
+                            ? LocaleKeys.recordprefferedemotion
                             : (intensityState == record_state.before)
                                 ? LocaleKeys.recordintensity
                                 : (problemState == record_state.recording)
@@ -138,8 +139,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                                     : (intensityState == record_state.recording)
                                         ? LocaleKeys.recordingintensity
                                         : "",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 30,
+                            fontSize: MediaQuery.of(context).size.width / 25,
                             color: (problemState == record_state.recording ||
                                     intensityState == record_state.recording)
                                 ? Colors.red
@@ -163,7 +165,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
             maintainSize: true,
             maintainAnimation: true,
             maintainState: true,
-            visible: (problemState == record_state.recording) ||
+            visible: (problemState == record_state.before) ||
                 (intensityState == record_state.recording),
             child: Material(
               elevation: 8.0,
@@ -174,7 +176,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                   fit: StackFit.passthrough,
                   children: [
                     Ink.image(
-                      image: const AssetImage("assets/images/btnstop.png"),
+                      image: const AssetImage("assets/images/btnpause.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 10,
                       height: MediaQuery.of(context).size.width / 10,
@@ -234,7 +236,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
         //key: YourEFT,
         body: ListView(children: [
       Stack(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.topCenter,
         children: [
           //background
           Container(
@@ -248,337 +250,76 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
             ),
           ),
           //Title
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                (MediaQuery.of(context).size.width / 10) * 3.6,
-            top: 30,
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(LocaleKeys.goefttapping,
-                    style: TextStyle(
-                      fontSize: (MediaQuery.of(context).size.width / 10),
-                      color: Colors.black,
-                    )).tr(),
+          Column(
+            children: [
+              SizedBox(
+                height: 30,
               ),
-            ),
-          ),
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 +
-                (MediaQuery.of(context).size.width / 10) * 3.6,
-            top: 25,
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(LocaleKeys.copyright,
-                    style: TextStyle(
-                      fontSize: (MediaQuery.of(context).size.width / 15),
-                      color: Colors.black,
-                    )).tr(),
+              Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(LocaleKeys.goeftbridgec,
+                      style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width / 10),
+                        color: Colors.black,
+                      )).tr(),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                (MediaQuery.of(context).size.width / 10) * 3.6,
-            top: (MediaQuery.of(context).size.width / 10) + 40,
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(LocaleKeys.thesound,
-                    style: TextStyle(
-                      fontSize: (MediaQuery.of(context).size.width / 32),
-                      color: Colors.black,
-                    )).tr(),
+              SizedBox(
+                height: 30,
               ),
-            ),
-          ),
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                (MediaQuery.of(context).size.width / 10) * 4.0,
-            top: (MediaQuery.of(context).size.width / 10) + 54,
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(LocaleKeys.yourrecording,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    LocaleKeys.whenihavethis,
                     style: TextStyle(
-                      fontSize: (MediaQuery.of(context).size.width / 32),
-                      color: Colors.black,
-                    )).tr(),
+                        fontSize: MediaQuery.of(context).size.width / 30,
+                        color: Colors.black),
+                  ).tr(),
+                  const SizedBox(width: 30),
+                  Material(
+                    //elevation: 0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(
+                          (LocaleKeys.lang.tr() == "ara") ? math.pi : 0),
+                      child: Image.asset(
+                        "assets/images/arrow.png",
+                        fit: BoxFit.fitWidth,
+                        width: MediaQuery.of(context).size.width / 5,
+                        height: MediaQuery.of(context).size.width / 5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 30),
+                  Text(
+                    LocaleKeys.ichoosetofeel,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 30,
+                        color: Colors.black),
+                  ).tr(),
+                ],
               ),
-            ),
+              SizedBox(
+                height: 30,
+              ),
+              Image.asset("assets/images/bridge.png"),
+              SizedBox(height: 100),
+              getFooterSection(),
+            ],
           ),
 
           //Disclaimer Button
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                MediaQuery.of(context).size.width / 4 * 3 / 2,
-            top: MediaQuery.of(context).size.height / 4 * 0.9,
-            child: Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: IgnorePointer(
-                ignoring: disableBtn,
-                child: Container(
-                  foregroundDecoration: disableBtn
-                      ? const BoxDecoration(
-                          color: Colors.grey,
-                          backgroundBlendMode: BlendMode.lighten)
-                      : null,
-                  child: InkWell(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
-                      children: [
-                        Ink.image(
-                          image: const AssetImage("assets/images/btnwhite.png"),
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width / 4 * 3,
-                          height: MediaQuery.of(context).size.width / 6,
-                        ),
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                Material(
-                                  //elevation: 0,
-                                  clipBehavior: Clip.hardEdge,
-                                  color: Colors.transparent,
-                                  child: Image.asset(
-                                    checkedImagePath,
-                                    fit: BoxFit.fitWidth,
-                                    width:
-                                        MediaQuery.of(context).size.width / 20,
-                                    height:
-                                        MediaQuery.of(context).size.width / 20,
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.width / 10),
-                              ],
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              LocaleKeys.ihaveheard,
-                              style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.width / 25,
-                                  color: Colors.black),
-                            ).tr(),
-                          ],
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      checkeddisclaimer = !checkeddisclaimer;
-                      checkedImagePath = checkeddisclaimer
-                          ? "assets/images/checked.png"
-                          : "assets/images/unchecked.png";
-
-                      isFirstTime().then((isFirstTime) {
-                        isFirstTime ? play("d1") : print("Not first time");
-                        //play();
-                      });
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
 
           //feeling button
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                MediaQuery.of(context).size.width / 4 * 3 / 2,
-            top: MediaQuery.of(context).size.height / 4 * 1.4,
-            child: IgnorePointer(
-              ignoring: disableBtn,
-              child: Container(
-                foregroundDecoration: disableBtn
-                    ? const BoxDecoration(
-                        color: Colors.grey,
-                        backgroundBlendMode: BlendMode.lighten)
-                    : null,
-                child: Material(
-                  elevation: 4.0,
-                  clipBehavior: Clip.hardEdge,
-                  color: Colors.transparent,
-                  child: InkWell(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.passthrough,
-                        children: [
-                          Ink.image(
-                            image: const AssetImage("assets/images/btnred.png"),
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 4 * 3,
-                            height: MediaQuery.of(context).size.width / 6,
-                          ),
-                          Text(
-                                  problemState == record_state.recorded
-                                      ? LocaleKeys.myfeelingrecorded
-                                      : LocaleKeys.myfeeling,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              20,
-                                      color: Colors.white))
-                              .tr(),
-                        ],
-                      ),
-                      onTap: () {
-                        if (intensityState != record_state.recorded) {
-                          intensityState = record_state.none;
-                        }
-                        problemState = record_state.before;
-                        play("d2");
-                        setState(() {});
-                      }),
-                ),
-              ),
-            ),
-          ),
-          //intensity button.
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                MediaQuery.of(context).size.width / 4 * 3 / 2,
-            top: MediaQuery.of(context).size.height / 4 * 1.9,
-            child: IgnorePointer(
-              ignoring: disableBtn,
-              child: Container(
-                foregroundDecoration: disableBtn
-                    ? const BoxDecoration(
-                        color: Colors.grey,
-                        backgroundBlendMode: BlendMode.lighten)
-                    : null,
-                child: Material(
-                  elevation: 4.0,
-                  clipBehavior: Clip.hardEdge,
-                  color: Colors.transparent,
-                  child: InkWell(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.passthrough,
-                        children: [
-                          Ink.image(
-                            image:
-                                const AssetImage("assets/images/btnblue.png"),
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 4 * 3,
-                            height: MediaQuery.of(context).size.width / 6,
-                          ),
-                          Text(
-                                  intensityState == record_state.recorded
-                                      ? LocaleKeys.theintensityrecorded
-                                      : LocaleKeys.theintensity,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              20,
-                                      color: Colors.white))
-                              .tr(),
-                        ],
-                      ),
-                      onTap: () {
-                        if (problemState == record_state.recording ||
-                            intensityState == record_state.recording) return;
-                        if (problemState != record_state.recorded) {
-                          problemState = record_state.none;
-                        }
-                        intensityState = record_state.before;
-                        play("d3");
-                        setState(() {});
-                      }),
-                ),
-              ),
-            ),
-          ),
 
           //    Positioned(child: child)
           //go eft tapping button
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 -
-                MediaQuery.of(context).size.width / 4 * 3 / 2,
-            top: MediaQuery.of(context).size.height / 4 * 2.5,
-            child: IgnorePointer(
-              ignoring: disableBtn,
-              child: Container(
-                foregroundDecoration: disableBtn
-                    ? const BoxDecoration(
-                        color: Colors.grey,
-                        backgroundBlendMode: BlendMode.lighten)
-                    : null,
-                child: Material(
-                  elevation: 4.0,
-                  clipBehavior: Clip.antiAlias,
-                  color: Colors.transparent,
-                  child: InkWell(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.passthrough,
-                        children: [
-                          Ink.image(
-                            image: const AssetImage(
-                                "assets/images/greenbutton.png"),
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 4 * 3,
-                            height: MediaQuery.of(context).size.width / 6,
-                          ),
-                          Text(LocaleKeys.goefttappingc,
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              20,
-                                      color: Colors.white))
-                              .tr(),
-                        ],
-                      ),
-                      onTap: () {
-                        if (problemState == record_state.recording ||
-                            intensityState == record_state.recording) return;
-
-                        if (checkeddisclaimer) {
-                          if (problemState == record_state.recorded) {
-                            if (intensityState == record_state.recorded) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const GoEFTTappingPage()),
-                              );
-                              return;
-                            }
-                          }
-                        }
-                        if (problemState != record_state.recorded) {
-                          problemState = record_state.none;
-                        }
-                        if (intensityState != record_state.recorded) {
-                          intensityState = record_state.none;
-                        }
-                        play("d4");
-                        //playRecorded("problem");
-                        setState(() {});
-                      }),
-                ),
-              ),
-            ),
-          ),
-
-          getFooterSection(),
         ],
       ),
     ]));

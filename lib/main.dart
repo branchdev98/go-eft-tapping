@@ -438,7 +438,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     fit: StackFit.passthrough,
                     children: [
                       Ink.image(
-                        image: const AssetImage("assets/images/bluebutton.png"),
+                        image: const AssetImage("assets/images/btnblue.png"),
                         fit: BoxFit.cover,
                         width: MediaQuery.of(context).size.width / 4 * 3,
                         height: MediaQuery.of(context).size.width / 6,
@@ -474,8 +474,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       fit: StackFit.passthrough,
                       children: [
                         Ink.image(
-                          image:
-                              const AssetImage("assets/images/greenbutton.png"),
+                          image: const AssetImage("assets/images/btngreen.png"),
                           fit: BoxFit.cover,
                           width: MediaQuery.of(context).size.width / 4 * 3,
                           height: MediaQuery.of(context).size.width / 6,

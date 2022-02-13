@@ -18,9 +18,13 @@
     "recordproblem": "Record problem",
     "recordintensity": "Record intensity",
     "goefttappingc": "GO EFT TAPPING©",
+    "goeftbridgec": "GO EFT Bridge©",
     "recordingproblem" : "Recording problem...",
     "recordingintensity" : "Recording intensity...",
-    "recordprefferedemotion" :"Record preferred emotion",
+    "recordprefferedemotion" :"Record preferred \nemotion",
     "recording" :"Recording...",
-    "record" : "Record"
+    "record" : "Record",
+    "whenihavethis" : "When I have this: \n[feeling or symptom]",
+    "ichoosetofeel" : "I choose to feel: \n[preferred emotion]"
+
   }
