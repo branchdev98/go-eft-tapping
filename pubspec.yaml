@@ -50,7 +50,6 @@ dependencies:
   permission_handler: ^8.3.0
   record_mp3: ^3.0.0
   path_provider: ^2.0.8
-  assets_audio_player: ^3.0.4+1
   social_share: ^2.2.1
   
 dev_dependencies:
