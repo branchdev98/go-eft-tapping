@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'dart:typed_data';
@@ -8,16 +7,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_eft_tapping/goefttapping.dart';
+import 'package:go_eft_tapping/goefttappingf.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/keys/locale_keys.g.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record_mp3/record_mp3.dart';
 
-enum record_state { none, before, recording, recorded }
+enum RecordState { none, before, recording, recorded }
 
 bool isComplete = false;
 String statusText = "";
@@ -47,68 +45,139 @@ class GoEFTBridge extends StatefulWidget {
   State<GoEFTBridge> createState() => _GoEFTBridgeState();
 }
 
+var state = RecordState.before;
+
 class _GoEFTBridgeState extends State<GoEFTBridge> {
   //const YourEFTPage({Key? key}) : super(key: key);
   String checkedImagePath = "assets/images/unchecked.png";
 
-  var problemState = record_state.before;
   // ignore: non_constant_identifier_names
-  var intensityState = record_state.none;
 
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
-
+  var audiofilepos = 1;
   var checkeddisclaimer = false;
   var disableBtn = false;
+  var audioasset = "";
+  var pause = false;
+  var playCompleted = false;
+  var userrecorded = false;
+  Future play() async {
+    userrecorded = false;
+    audioasset = "assets/audio/" +
+        LocaleKeys.lang.tr() +
+        "audiof" +
+        audiofilepos.toString() +
+        ".mp3";
+    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
+    audiobytes =
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    //convert ByteData to Uint8List
+    await player.playBytes(audiobytes);
+    //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
+    //final result = await player.play(file.path, isLocal: true);
+    //final result = await player.play(audioasset);
+    //if (result == 1) setState(() => playerState = PlayerState.playing);
+    player.onPlayerCompletion.listen((event) async {
+      if (audiofilepos == 2 && userrecorded == false) {
+        setState(() {
+          playCompleted = true;
+
+          audiofilepos = 1;
+          pause = true;
+        });
+      }
+      if (playCompleted == true) return;
+      if (userrecorded == true) {
+        audioasset = "assets/audio/" +
+            LocaleKeys.lang.tr() +
+            "audiof" +
+            audiofilepos.toString() +
+            ".mp3";
+
+        ByteData bytes =
+            await rootBundle.load(audioasset); //load audio from assets
+        audiobytes =
+            bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+        //convert ByteData to Uint8List
+        int result = await player.playBytes(audiobytes);
+        if (result == 1) {
+          userrecorded = false;
+          print("original sound" + audiofilepos.toString() + " is playing");
+        }
+      } else {
+        if (audiofilepos == 1) {
+          audioasset = await getFilePath("intensity");
+        } else {
+          audioasset = await getFilePath("problem");
+        }
+      }
+
+      //String playingFile;
+      if (File(audioasset).existsSync()) {
+        int result = await player.play(audioasset);
+        if (result == 1) {
+          userrecorded = true;
+          print("user sound is playing");
+          audiofilepos++;
+        }
+      }
+    });
+  }
+
+  void initState() {
+    /*  ByteData bytes =
+        rootBundle.load(audioasset) as ByteData; //load audio from assets
+    audiobytes =
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    player.playBytes(audiobytes);*/
+    //loadAssetsPlay();
+
+    audiofilepos = 1;
+    disableBtn = false;
+    pause = false;
+    playCompleted = false;
+    userrecorded = false;
+
+    play();
+  }
 
   Widget getFooterSection() {
     return Container(
         margin: const EdgeInsets.fromLTRB(20, 30, 20, 20),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          IgnorePointer(
-            ignoring: disableBtn,
-            child: Container(
-              foregroundDecoration: disableBtn
-                  ? const BoxDecoration(
-                      color: Colors.grey,
-                      backgroundBlendMode: BlendMode.lighten)
-                  : null,
-              child: Material(
-                elevation: 5.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: InkWell(
-                    child: Stack(
-                        alignment: Alignment.bottomLeft,
-                        fit: StackFit.passthrough,
-                        children: [
-                          Ink.image(
-                            image:
-                                const AssetImage("assets/images/btnhome.png"),
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 10,
-                            height: MediaQuery.of(context).size.width / 10,
-                          ),
-                        ]),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      int result = await player.stop();
-                      if (result == 1) {
-                        //pause success
-                        setState(() {
-                          // isplaying = false;
-                        });
-                      } else {
-                        if (kDebugMode) {
-                          print("Error on pause audio.");
-                        }
-                      }
-                    }),
-              ),
-            ),
+          Material(
+            elevation: 5.0,
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: InkWell(
+                child: Stack(
+                    alignment: Alignment.bottomLeft,
+                    fit: StackFit.passthrough,
+                    children: [
+                      Ink.image(
+                        image: const AssetImage("assets/images/btnhome.png"),
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width / 10,
+                        height: MediaQuery.of(context).size.width / 10,
+                      ),
+                    ]),
+                onTap: () async {
+                  int result = await player.stop();
+                  if (result == 1) {
+                    //pause success
+                    setState(() {
+                      // isplaying = false;
+                    });
+                  } else {
+                    if (kDebugMode) {
+                      print("Error on pause audio.");
+                    }
+                  }
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                }),
           ),
           Material(
-            elevation: 8.0,
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
             child: InkWell(
@@ -120,8 +189,8 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                         maintainSize: true,
                         maintainAnimation: true,
                         maintainState: true,
-                        visible: (problemState == record_state.before) ||
-                            (intensityState == record_state.before),
+                        visible: (state == RecordState.before ||
+                            state == RecordState.recorded),
                         child: Image.asset(
                           "assets/images/btnred.png",
                           fit: BoxFit.fitHeight,
@@ -130,74 +199,86 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                         ),
                       ),
                       Text(
-                        (problemState == record_state.before)
+                        (state == RecordState.before ||
+                                state == RecordState.recorded)
                             ? LocaleKeys.recordprefferedemotion
-                            : (intensityState == record_state.before)
-                                ? LocaleKeys.recordintensity
-                                : (problemState == record_state.recording)
-                                    ? LocaleKeys.recordingproblem
-                                    : (intensityState == record_state.recording)
-                                        ? LocaleKeys.recordingintensity
-                                        : "",
+                            : (state == RecordState.recording)
+                                ? LocaleKeys.recording
+                                : "",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: MediaQuery.of(context).size.width / 25,
-                            color: (problemState == record_state.recording ||
-                                    intensityState == record_state.recording)
+                            color: (state == RecordState.recording)
                                 ? Colors.red
                                 : Colors.white),
                       ).tr(),
                     ]),
                 onTap: () async {
-                  if (problemState == record_state.before) {
-                    startRecord("problem");
-                    //   problemState = record_state.recording;
+                  if (state == RecordState.before ||
+                      state == RecordState.recorded) {
+                    startRecord("preferred");
+                    //   problemState = RecordState.recording;
                   }
-                  if (intensityState == record_state.before) {
-                    startRecord("intensity");
-                    //   intensityState = record_state.recording;
-                  }
+
                   disableBtn = true;
                   setState(() {});
                 }),
           ),
-          Visibility(
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            visible: (problemState == record_state.before) ||
-                (intensityState == record_state.recording),
-            child: Material(
-              elevation: 8.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnpause.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 10,
-                      height: MediaQuery.of(context).size.width / 10,
-                      child: InkWell(onTap: () {
-                        disableBtn = false;
-                        if (problemState == record_state.recording) {
-                          problemState = record_state.recorded;
-                        }
-                        if (intensityState == record_state.recording) {
-                          intensityState = record_state.recorded;
-                        }
-
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                        setState(() {});
+          Material(
+            elevation: 8.0,
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.passthrough,
+                children: [
+                  Ink.image(
+                    image: (state == RecordState.recording)
+                        ? const AssetImage("assets/images/btnstop.png")
+                        : pause
+                            ? const AssetImage("assets/images/btnplay.png")
+                            : const AssetImage("assets/images/btnpause.png"),
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width / 10,
+                    height: MediaQuery.of(context).size.width / 10,
+                    child: InkWell(onTap: () async {
+                      if (state == RecordState.recording) {
                         stopRecord();
-                      }),
-                    ),
-                  ]),
-            ),
-          ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GoEFTTappingFPage()),
+                        ).then((_) {
+                          setState(() {
+                            pause = false;
+                          });
+
+                          initState();
+                        });
+                      }
+                      int result = 0;
+                      if (pause == false) {
+                        result = await player.pause();
+                      } else {
+                        result = await player.resume();
+                      }
+
+                      setState(() {
+                        if (result == 1) pause = !pause;
+                      });
+                      //  disableBtn = false;
+                      //   if (state == RecordState.recording) {
+                      //    state = RecordState.recorded;
+                      //  }
+
+                      //    AppLocalization.load(Locale('en', ''));
+                      //  context.read<LocaleProvider>().setLocale(localeEN);
+                      //   setState(() {});
+                      //   stopRecord();
+                    }),
+                  ),
+                ]),
+          )
         ]));
   }
 
@@ -214,6 +295,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
     }
   }
 
+/*
   Future play(String what) async {
     // final file = new File(audioasset);
 
@@ -229,7 +311,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
     }
     await player.playBytes(audiobytes);
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,8 +333,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
           ),
           //Title
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Material(
@@ -367,8 +450,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
       //    statusText = "没有录音权限";
       //  }
       setState(() {
-        if (what == "problem") problemState = record_state.recording;
-        if (what == "intensity") intensityState = record_state.recording;
+        state = RecordState.recording;
       });
     }
 
@@ -400,6 +482,7 @@ void stopRecord() {
   bool s = RecordMp3.instance.stop();
   if (s) {
     statusText = "录音已完成";
+    state = RecordState.recorded;
     isComplete = true;
     //   setState(() {});
   }

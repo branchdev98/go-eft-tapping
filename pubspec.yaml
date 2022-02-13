@@ -51,6 +51,7 @@ dependencies:
   record_mp3: ^3.0.0
   path_provider: ^2.0.8
   assets_audio_player: ^3.0.4+1
+  social_share: ^2.2.1
   
 dev_dependencies:
   flutter_test:
@@ -109,6 +110,7 @@ flutter:
     - assets/images/btnswedish.png
     - assets/images/btnarabic.png
     - assets/images/btnhome.png
+    - assets/images/bluebutton.png
     - assets/audio/
 
   #   - images/a_dot_ham.jpeg

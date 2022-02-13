@@ -1,5 +1,5 @@
 // ignore_for_file: deprecated_member_use
-
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -14,9 +14,11 @@ import 'package:go_eft_tapping/intro.dart';
 import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
 import 'package:go_eft_tapping/manager/localization_manager.dart';
 import 'package:go_eft_tapping/youreft.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:social_share/social_share.dart';
 //import 'package:record/record.dart';
 
 //import 'package:share/share.dart';
@@ -163,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Ink.image(
                     image: isplaying
-                        ? const AssetImage("assets/images/pausebutton.png")
+                        ? const AssetImage("assets/images/btnpause.png")
                         : const AssetImage("assets/images/infobutton.png"),
                     fit: BoxFit.cover,
                     width: 40,
@@ -275,6 +277,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<String> getFilePath() async {
+    final bytes = await rootBundle.load('assets/images/bluebutton.png');
+    final list = bytes.buffer.asUint8List();
+
+    final tempDir = await getTemporaryDirectory();
+    final file = await File('${tempDir.path}/image.jpg').create();
+    file.writeAsBytesSync(list);
+    return file.path;
+  }
+
   Widget getFooterSection() {
     return Stack(children: <Widget>[
       Image.asset(
@@ -300,11 +312,24 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 30,
                       height: 30,
                       child: InkWell(onTap: () async {
-                        if (await canLaunch("https://www.facebook.com")) {
-                          await launch("https://www.facebook.com");
-                        } else {
-                          throw 'Could not launch https://www.facebook.com';
-                        }
+                        Platform.isAndroid
+                            ? SocialShare.shareFacebookStory(
+                                await getFilePath(),
+                                "#ffffff",
+                                "#000000",
+                                "https://google.com",
+                                appId: "387153361760890",
+                              ).then((data) {
+                                print(data);
+                              })
+                            : SocialShare.shareFacebookStory(
+                                await getFilePath(),
+                                "#ffffff",
+                                "#000000",
+                                "https://google.com",
+                              ).then((data) {
+                                print(data);
+                              });
                       }),
                     ),
                   ]),
@@ -438,7 +463,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     fit: StackFit.passthrough,
                     children: [
                       Ink.image(
-                        image: const AssetImage("assets/images/btnblue.png"),
+                        image: const AssetImage("assets/images/bluebutton.png"),
                         fit: BoxFit.cover,
                         width: MediaQuery.of(context).size.width / 4 * 3,
                         height: MediaQuery.of(context).size.width / 6,
