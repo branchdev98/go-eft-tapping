@@ -17,26 +17,10 @@ import 'package:record_mp3/record_mp3.dart';
 
 enum RecordState { none, before, recording, recorded }
 
-bool isComplete = false;
+
 String statusText = "";
 late String recordFilePath;
 
-/*void pauseRecord() {
-      if (RecordMp3.instance.status == RecordStatus.PAUSE) {
-        bool s = RecordMp3.instance.resume();
-        if (s) {
-          statusText = "正在录音中...";
-          setState(() {});
-        }
-      } else {
-        bool s = RecordMp3.instance.pause();
-        if (s) {
-          statusText = "录音暂停中...";
-          setState(() {});
-        }
-      }
-    }
-*/
 
 class GoEFTBridge extends StatefulWidget {
   const GoEFTBridge({Key? key}) : super(key: key);
@@ -46,7 +30,7 @@ class GoEFTBridge extends StatefulWidget {
 }
 
 var state = RecordState.before;
-
+var pause = false;
 class _GoEFTBridgeState extends State<GoEFTBridge> {
   //const YourEFTPage({Key? key}) : super(key: key);
   String checkedImagePath = "assets/images/unchecked.png";
@@ -59,7 +43,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
   var checkeddisclaimer = false;
   var disableBtn = false;
   var audioasset = "";
-  var pause = false;
+
   var playCompleted = false;
   var userrecorded = false;
   Future play() async {
@@ -74,10 +58,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
     //convert ByteData to Uint8List
     await player.playBytes(audiobytes);
-    //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
-    //final result = await player.play(file.path, isLocal: true);
-    //final result = await player.play(audioasset);
-    //if (result == 1) setState(() => playerState = PlayerState.playing);
+  pause = false;
     player.onPlayerCompletion.listen((event) async {
       if (audiofilepos == 2 && userrecorded == false) {
         setState(() {
@@ -125,7 +106,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
     });
   }
 
+
   void initState() {
+    super.initState();
+
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
@@ -138,6 +122,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
     pause = false;
     playCompleted = false;
     userrecorded = false;
+    state = RecordState.before;
 
     play();
   }
@@ -166,6 +151,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                   int result = await player.stop();
                   if (result == 1) {
                     //pause success
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                     setState(() {
                       // isplaying = false;
                     });
@@ -174,7 +160,6 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                       print("Error on pause audio.");
                     }
                   }
-                  Navigator.of(context).popUntil((route) => route.isFirst);
                 }),
           ),
           Material(
@@ -242,39 +227,29 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                     width: MediaQuery.of(context).size.width / 10,
                     height: MediaQuery.of(context).size.width / 10,
                     child: InkWell(onTap: () async {
+                      int result = 0;
                       if (state == RecordState.recording) {
+                        pause = false;
                         stopRecord();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const GoEFTTappingFPage()),
-                        ).then((_) {
+
+                      }else
+
+                      if (state == RecordState.before) {
+                        if (pause == false) {
+                          result = await player.pause();
+                          print("pause");
+                        } else {
+                          result = await player.resume();
+                          print("resume");
+                        }
+                        if (result ==1)
                           setState(() {
-                            pause = false;
+                            pause = !pause;
                           });
 
-                          initState();
-                        });
-                      }
-                      int result = 0;
-                      if (pause == false) {
-                        result = await player.pause();
-                      } else {
-                        result = await player.resume();
                       }
 
-                      setState(() {
-                        if (result == 1) pause = !pause;
-                      });
-                      //  disableBtn = false;
-                      //   if (state == RecordState.recording) {
-                      //    state = RecordState.recorded;
-                      //  }
 
-                      //    AppLocalization.load(Locale('en', ''));
-                      //  context.read<LocaleProvider>().setLocale(localeEN);
-                      //   setState(() {});
-                      //   stopRecord();
                     }),
                   ),
                 ]),
@@ -295,23 +270,6 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
     }
   }
 
-/*
-  Future play(String what) async {
-    // final file = new File(audioasset);
-
-    String audioasset =
-        'assets/audio/' + LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
-
-    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    //convert ByteData to Uint8List
-    if (kDebugMode) {
-      print(audioasset);
-    }
-    await player.playBytes(audiobytes);
-  }
-*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -428,7 +386,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
 
   void playRecorded(String what) async {
     recordFilePath = await getFilePath(what);
-    if (recordFilePath != null && File(recordFilePath).existsSync()) {
+    if (File(recordFilePath).existsSync()) {
       //   AudioPlayer audioPlayer = AudioPlayer();
       player.play(recordFilePath, isLocal: true);
     }
@@ -441,7 +399,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
       statusText = "正在录音中...";
       print(statusText);
       recordFilePath = await getFilePath(what);
-      isComplete = false;
+
       RecordMp3.instance.start(recordFilePath, (type) {
         statusText = "录音失败--->$type";
         setState(() {});
@@ -452,7 +410,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
       setState(() {
         state = RecordState.recording;
       });
-    }
+    } }
 
     /* void resumeRecord() {
       bool s = RecordMp3.instance.resume();
@@ -462,28 +420,32 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
       }
     }*/
 
-    @override
-    // ignore: must_call_super
-    void initState() {
-      /*  ByteData bytes =
-        rootBundle.load(audioasset) as ByteData; //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);*/
-    }
+
 
     //late String recordFilePath;
 
-    State<StatefulWidget> createState() => throw UnimplementedError();
-  }
-}
+    void stopRecord() async {
+      bool s = await RecordMp3.instance.stop();
+      if (s) {
+        statusText = "录音已完成";
 
-void stopRecord() {
-  bool s = RecordMp3.instance.stop();
-  if (s) {
-    statusText = "录音已完成";
-    state = RecordState.recorded;
-    isComplete = true;
-    //   setState(() {});
-  }
+
+        setState(() {
+          state = RecordState.before;
+        //  pause = true;
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const GoEFTTappingFPage()),
+        ).then((_) {
+
+          pause = false;
+          initState();
+        });
+      }
+    }
+
+    State<StatefulWidget> createState() => throw UnimplementedError();
+
 }

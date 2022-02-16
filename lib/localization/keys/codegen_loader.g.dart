@@ -33,15 +33,15 @@ class CodegenLoader extends AssetLoader{
   "theintensityrecorded": "تم تسجيل الشّدة",
   "recordproblem": "اقول مشكلتك",
   "recordintensity": "قم بتسجيل الشدة",
-  "recordingproblem": "Recording problem...",
+  "recordingproblem": "...  تسجيل",
   "recordingintensity": "تسجيل الشدة ...",
   "goefttappingc": "EFT انطلق بالنقر",
   "goeftbridgec": "EFT انطلق عبر الجسر",
   "recordprefferedemotion": "قم بالتسجيل",
   "recording": "...  تسجيل",
   "record": "قم بالتسجيل",
-  "whenihavethis": "When I have this: \n[feeling or symptom]",
-  "ichoosetofeel": "I choose to feel: \n[preferred emotion]"
+  "whenihavethis": "عندما يكون لدي هذا\n (الشعور/الأعراض)",
+  "ichoosetofeel": " فإني اختار الاحساس \n:(الشعور المفضل لدي)"
 };
 static const Map<String,dynamic> en_US = {
   "lang": "eng",
@@ -92,7 +92,7 @@ static const Map<String,dynamic> sv_SE = {
   "recordproblem": "Inspelning av problemet",
   "recordintensity": "Inspelning av intensiteten",
   "goefttappingc": "GO EFT TAPPING©",
-  "recordingproblem": "Recording problem...",
+  "recordingproblem": "Inspelning pågår...",
   "recordingintensity": "Inspelning pågår...",
   "recordprefferedemotion": "Inspelning av föredragen\nkänsla",
   "recording": "Inspelning pågår...",

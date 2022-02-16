@@ -9,7 +9,7 @@ xmlns:tools="http://schemas.android.com/tools"
    <application
         android:label="go_eft_tapping"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
