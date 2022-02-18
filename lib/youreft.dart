@@ -62,6 +62,16 @@ class _YourEFTState extends State<YourEFT> {
 
   var checkeddisclaimer = false;
   var disableBtn = false;
+  @override
+  void initState() {
+    super.initState();
+    /*  ByteData bytes =
+        rootBundle.load(audioasset) as ByteData; //load audio from assets
+    audiobytes =
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    player.playBytes(audiobytes);*/
+    isDisclaimercheck().then((checkeddisclaimer) => true);
+  }
 
   Widget getFooterSection() {
     return Container(
@@ -201,17 +211,25 @@ class _YourEFTState extends State<YourEFT> {
         ]));
   }
 
-  Future<bool> isFirstTime() async {
+  Future<bool> isDisclaimercheck() async {
     final prefs = await SharedPreferences.getInstance();
 
-    var isFirstTime = prefs.getBool('first_time');
-    if (isFirstTime != null && !isFirstTime) {
-      prefs.setBool('first_time', false);
+    var disclaimerchecked = prefs.getBool('disclaimercheck');
+    if (disclaimerchecked != null && !disclaimerchecked) {
       return false;
     } else {
-      prefs.setBool('first_time', false);
+      setState(() {
+        checkeddisclaimer = true;
+      });
       return true;
     }
+  }
+
+  Future<bool> setDisclaimercheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    play("d1");
+    prefs.setBool('disclaimercheck', true);
+    return true;
   }
 
   Future play(String what) async {
@@ -329,7 +347,7 @@ class _YourEFTState extends State<YourEFT> {
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: IgnorePointer(
-                ignoring: disableBtn,
+                ignoring: disableBtn || checkeddisclaimer,
                 child: Container(
                   foregroundDecoration: disableBtn
                       ? const BoxDecoration(
@@ -356,7 +374,9 @@ class _YourEFTState extends State<YourEFT> {
                                   clipBehavior: Clip.hardEdge,
                                   color: Colors.transparent,
                                   child: Image.asset(
-                                    checkedImagePath,
+                                    checkeddisclaimer
+                                        ? "assets/images/checked.png"
+                                        : "assets/images/unchecked.png",
                                     fit: BoxFit.fitWidth,
                                     width:
                                         MediaQuery.of(context).size.width / 20,
@@ -382,15 +402,11 @@ class _YourEFTState extends State<YourEFT> {
                       ],
                     ),
                     onTap: () {
-                      checkeddisclaimer = !checkeddisclaimer;
-                      checkedImagePath = checkeddisclaimer
-                          ? "assets/images/checked.png"
-                          : "assets/images/unchecked.png";
+                      if (checkeddisclaimer) return;
+                      checkeddisclaimer = true;
+                      checkedImagePath = "assets/images/checked.png";
+                      setDisclaimercheck();
 
-                      isFirstTime().then((isFirstTime) {
-                        isFirstTime ? play("d1") : print("Not first time");
-                        //play();
-                      });
                       setState(() {});
                     },
                   ),
@@ -549,6 +565,8 @@ class _YourEFTState extends State<YourEFT> {
                         ],
                       ),
                       onTap: () {
+                        print("checked:");
+                        print(checkeddisclaimer);
                         if (problemState == record_state.recording ||
                             intensityState == record_state.recording) return;
 
@@ -573,7 +591,6 @@ class _YourEFTState extends State<YourEFT> {
                         }
                         play("d4");
                         //playRecorded("problem");
-                        setState(() {});
                       }),
                 ),
               ),
@@ -640,16 +657,6 @@ class _YourEFTState extends State<YourEFT> {
         setState(() {});
       }
     }*/
-
-    @override
-    // ignore: must_call_super
-    void initState() {
-      /*  ByteData bytes =
-        rootBundle.load(audioasset) as ByteData; //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);*/
-    }
 
     //late String recordFilePath;
 

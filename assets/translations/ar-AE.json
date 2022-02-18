@@ -10,7 +10,7 @@
     "youreft" : "الحرية الانفعالية الخاصة بك",
     "contactme": "اكتب لي",
     "sharingiscaring": "المشاركة تعنى الاهتمام!",
-    "ihaveheard": "I have heard the introduction and \nI take own responsibility for my \ntapping.",
+    "ihaveheard": "لقد سمعت المقدمة وأنا\n أتحمل مسؤلية النقر",
     "myfeeling": "شعوري أوأعراضي\n هي ....",
     "theintensity": "شدّة الأعر\nاض (0->10) ...",
     "myfeelingrecorded": "تم تسجيل  شعوري\n أوأعراضي",
@@ -25,5 +25,7 @@
     "recording" :"...  تسجيل",
     "record" : "قم بالتسجيل",
     "whenihavethis" : "عندما يكون لدي هذا\n (الشعور/الأعراض)",
-    "ichoosetofeel" : " فإني اختار الاحساس \n:(الشعور المفضل لدي)"
+    "ichoosetofeel" : " فإني اختار الاحساس \n:(الشعور المفضل لدي)",
+    "ihaveaquestion" : "ihaveaquestion",
+    "hellosara": "hellosara"
 }

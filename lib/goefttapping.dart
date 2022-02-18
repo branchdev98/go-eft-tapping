@@ -146,8 +146,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                   ? "assets/images/btnarabridge.png"
                   : "assets/images/btnengbridge.png",
               fit: BoxFit.fitHeight,
-              width: MediaQuery.of(context).size.width / 3,
-              height: MediaQuery.of(context).size.height / 8,
+              width: MediaQuery.of(context).size.width / 5,
+              height: MediaQuery.of(context).size.height / 10,
             ),
             onTap: () async {
               int result = await player.stop();
@@ -325,7 +325,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
               )),
           Positioned(
             left: 0,
-            top: (MediaQuery.of(context).size.height - 166),
+            top: (MediaQuery.of(context).size.height - 136),
             child: getFooterSection(),
           ),
         ]),

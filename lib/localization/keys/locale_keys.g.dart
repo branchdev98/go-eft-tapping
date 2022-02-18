@@ -28,5 +28,7 @@ abstract class  LocaleKeys {
   static const record = 'record';
   static const whenihavethis = 'whenihavethis';
   static const ichoosetofeel = 'ichoosetofeel';
+  static const ihaveaquestion = 'ihaveaquestion';
+  static const hellosara = 'hellosara';
 
 }

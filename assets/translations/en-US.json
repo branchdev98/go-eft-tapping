@@ -17,14 +17,16 @@
     "theintensityrecorded": "The intensity is recorded",
     "recordproblem": "Record problem",
     "recordintensity": "Record intensity",
-    "goefttappingc": "GO EFT TAPPING©",
-    "goeftbridgec": "GO EFT Bridge©",
+    "goefttappingc": "GO EFT TAPPING",
+    "goeftbridgec": "GO EFT Bridge",
     "recordingproblem" : "Recording problem...",
     "recordingintensity" : "Recording intensity...",
     "recordprefferedemotion" :"Record preferred \nemotion",
     "recording" :"Recording...",
     "record" : "Record",
     "whenihavethis" : "When I have this: \n[feeling or symptom]",
-    "ichoosetofeel" : "I choose to feel: \n[preferred emotion]"
+    "ichoosetofeel" : "I choose to feel: \n[preferred emotion]",
+    "ihaveaquestion" : "[From GO EFT Tapping app] I have a question",
+    "hellosara": "Hello Sara!"
 
   }

@@ -17,10 +17,8 @@ import 'package:record_mp3/record_mp3.dart';
 
 enum RecordState { none, before, recording, recorded }
 
-
 String statusText = "";
 late String recordFilePath;
-
 
 class GoEFTBridge extends StatefulWidget {
   const GoEFTBridge({Key? key}) : super(key: key);
@@ -31,7 +29,8 @@ class GoEFTBridge extends StatefulWidget {
 
 var state = RecordState.before;
 var pause = false;
-class _GoEFTBridgeState extends State<GoEFTBridge> {
+
+class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   //const YourEFTPage({Key? key}) : super(key: key);
   String checkedImagePath = "assets/images/unchecked.png";
 
@@ -46,6 +45,20 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
 
   var playCompleted = false;
   var userrecorded = false;
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      //stop your audio player
+      int result = await player.stop();
+      if (result == 1) {
+        initState();
+      } else {
+        print(state.toString());
+      }
+    }
+  }
+
   Future play() async {
     userrecorded = false;
     audioasset = "assets/audio/" +
@@ -58,7 +71,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
     //convert ByteData to Uint8List
     await player.playBytes(audiobytes);
-  pause = false;
+    pause = false;
     player.onPlayerCompletion.listen((event) async {
       if (audiofilepos == 2 && userrecorded == false) {
         setState(() {
@@ -88,9 +101,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
         }
       } else {
         if (audiofilepos == 1) {
-          audioasset = await getFilePath("intensity");
-        } else {
           audioasset = await getFilePath("problem");
+        } else {
+          audioasset = await getFilePath("preferred");
         }
       }
 
@@ -106,10 +119,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
     });
   }
 
-
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addObserver(this);
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
@@ -231,10 +243,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                       if (state == RecordState.recording) {
                         pause = false;
                         stopRecord();
-
-                      }else
-
-                      if (state == RecordState.before) {
+                      } else if (state == RecordState.before) {
                         if (pause == false) {
                           result = await player.pause();
                           print("pause");
@@ -242,14 +251,11 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
                           result = await player.resume();
                           print("resume");
                         }
-                        if (result ==1)
+                        if (result == 1)
                           setState(() {
                             pause = !pause;
                           });
-
                       }
-
-
                     }),
                   ),
                 ]),
@@ -286,6 +292,23 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
               image: DecorationImage(
                 fit: BoxFit.fill,
                 image: AssetImage("assets/images/background.png"),
+              ),
+            ),
+          ),
+          Positioned(
+            left: MediaQuery.of(context).size.width / 2 +
+                (MediaQuery.of(context).size.width / 10) * 3.2,
+            top: 25,
+            child: Material(
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Text(LocaleKeys.copyright,
+                    style: TextStyle(
+                      fontSize: (MediaQuery.of(context).size.width / 25),
+                      color: Colors.black,
+                    )).tr(),
               ),
             ),
           ),
@@ -349,7 +372,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
               SizedBox(
                 height: 30,
               ),
-              Image.asset("assets/images/bridge.png"),
+              Image.asset(
+                "assets/images/bridge.png",
+              ),
               SizedBox(height: 100),
               getFooterSection(),
             ],
@@ -410,9 +435,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
       setState(() {
         state = RecordState.recording;
       });
-    } }
+    }
+  }
 
-    /* void resumeRecord() {
+  /* void resumeRecord() {
       bool s = RecordMp3.instance.resume();
       if (s) {
         statusText = "正在录音中...";
@@ -420,32 +446,26 @@ class _GoEFTBridgeState extends State<GoEFTBridge> {
       }
     }*/
 
+  //late String recordFilePath;
 
+  void stopRecord() async {
+    bool s = await RecordMp3.instance.stop();
+    if (s) {
+      statusText = "录音已完成";
 
-    //late String recordFilePath;
-
-    void stopRecord() async {
-      bool s = await RecordMp3.instance.stop();
-      if (s) {
-        statusText = "录音已完成";
-
-
-        setState(() {
-          state = RecordState.before;
+      setState(() {
+        state = RecordState.before;
         //  pause = true;
-        });
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const GoEFTTappingFPage()),
-        ).then((_) {
-
-          pause = false;
-          initState();
-        });
-      }
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const GoEFTTappingFPage()),
+      ).then((_) {
+        pause = false;
+        initState();
+      });
     }
+  }
 
-    State<StatefulWidget> createState() => throw UnimplementedError();
-
+  State<StatefulWidget> createState() => throw UnimplementedError();
 }

@@ -7,10 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:go_eft_tapping/intro.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-//import 'package:go_eft_tapping/locale/app_localization.dart';
-
 import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
 import 'package:go_eft_tapping/manager/localization_manager.dart';
 import 'package:go_eft_tapping/youreft.dart';
@@ -18,11 +14,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:social_share/social_share.dart';
+//import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:social_share_plugin/social_share_plugin.dart';
+//import 'package:social_share/social_share.dart';
 //import 'package:record/record.dart';
 
 //import 'package:share/share.dart';
-// @dart=2.9
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -80,18 +78,18 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int currentpos = 0;
-  String currentpostlabel = "00:00";
-  String maxpostlabel = "00:00";
-  int maxduration = 40;
+bool isplaying = false;
+bool audioplayed = false;
+AudioPlayer player = AudioPlayer();
+late Uint8List audiobytes;
+int currentpos = 0;
+String currentpostlabel = "00:00";
+String maxpostlabel = "00:00";
+int maxduration = 40;
 
-  String audioasset = "assets/audio/audiob.mp3";
-  bool isplaying = false;
-  bool audioplayed = false;
-  late Uint8List audiobytes;
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+  String audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
 
-  AudioPlayer player = AudioPlayer();
   String _printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -102,7 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     Future.delayed(Duration.zero, () async {
+      audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
       ByteData bytes =
           await rootBundle.load(audioasset); //load audio from assets
       audiobytes =
@@ -147,231 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
     super.initState();
-  }
-
-  Widget getTitleSection() {
-    return Container(
-      padding: const EdgeInsets.all(1),
-      color: Colors.black,
-      child: Row(
-        children: [
-          Material(
-            elevation: 4.0,
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: Stack(
-                alignment: Alignment.center,
-                fit: StackFit.passthrough,
-                children: [
-                  Ink.image(
-                    image: isplaying
-                        ? const AssetImage("assets/images/btnpause.png")
-                        : const AssetImage("assets/images/infobutton.png"),
-                    fit: BoxFit.cover,
-                    width: 40,
-                    height: 40,
-                    child: InkWell(
-                      onTap: () async {
-                        if (!isplaying && !audioplayed) {
-                          int result = await player.playBytes(audiobytes);
-                          if (result == 1) {
-                            //play success
-                            setState(() {
-                              isplaying = true;
-                              audioplayed = true;
-                            });
-                          } else {
-                            if (kDebugMode) {
-                              print("Error while playing audio.");
-                            }
-                          }
-                        } else if (audioplayed && !isplaying) {
-                          int result = await player.resume();
-                          if (result == 1) {
-                            //resume success
-                            setState(() {
-                              isplaying = true;
-                              audioplayed = true;
-                            });
-                          } else {
-                            if (kDebugMode) {
-                              print("Error on resume audio.");
-                            }
-                          }
-                        } else {
-                          int result = await player.pause();
-                          if (result == 1) {
-                            //pause success
-                            setState(() {
-                              isplaying = false;
-                            });
-                          } else {
-                            if (kDebugMode) {
-                              print("Error on pause audio.");
-                            }
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ]),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Slider(
-                  value: double.parse(currentpos.toString()),
-                  activeColor: Colors.blue[200],
-                  inactiveColor: Colors.white,
-                  min: 0,
-                  max: double.parse(maxduration.toString()),
-                  divisions: maxduration,
-                  label: currentpostlabel,
-                  onChanged: (double value) async {
-                    int seekval = value.round();
-                    int result =
-                        await player.seek(Duration(milliseconds: seekval));
-                    if (result == 1) {
-                      //seek successful
-                      currentpos = seekval;
-                    } else {
-                      if (kDebugMode) {
-                        print("Seek unsuccessful.");
-                      }
-                    }
-                  },
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(currentpostlabel,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                        )),
-                    const SizedBox(width: 10), // use Spacer
-                    Text(maxpostlabel,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        )),
-                    const SizedBox(width: 20),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _launchURL(String toMailId, String subject, String body) async {
-    var url = 'mailto:$toMailId?subject=$subject&body=$body';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<String> getFilePath() async {
-    final bytes = await rootBundle.load('assets/images/bluebutton.png');
-    final list = bytes.buffer.asUint8List();
-
-    final tempDir = await getTemporaryDirectory();
-    final file = await File('${tempDir.path}/image.jpg').create();
-    file.writeAsBytesSync(list);
-    return file.path;
-  }
-
-  Widget getFooterSection() {
-    return Stack(children: <Widget>[
-      Image.asset(
-        "assets/images/bottombg.png",
-        fit: BoxFit.fill,
-        width: MediaQuery.of(context).size.width,
-        height: 70,
-      ),
-      Container(
-          margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-          child: Row(children: [
-            Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/fbshare.png"),
-                      fit: BoxFit.cover,
-                      width: 30,
-                      height: 30,
-                      child: InkWell(onTap: () async {
-                        Platform.isAndroid
-                            ? SocialShare.shareFacebookStory(
-                                await getFilePath(),
-                                "#ffffff",
-                                "#000000",
-                                "https://google.com",
-                                appId: "387153361760890",
-                              ).then((data) {
-                                print(data);
-                              })
-                            : SocialShare.shareFacebookStory(
-                                await getFilePath(),
-                                "#ffffff",
-                                "#000000",
-                                "https://google.com",
-                              ).then((data) {
-                                print(data);
-                              });
-                      }),
-                    ),
-                  ]),
-            ),
-            const SizedBox(width: 10),
-            Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/shareall.png"),
-                      fit: BoxFit.cover,
-                      width: 30,
-                      height: 30,
-                      child: InkWell(onTap: () {
-                        //  shareFile();
-                        Share.share('check out my website https://sarabern.com',
-                            subject: 'Look what I made!');
-                      }),
-                    ),
-                  ]),
-            ),
-            const SizedBox(width: 10),
-            Material(
-              elevation: 4.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: const Text(LocaleKeys.sharingiscaring,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    )).tr(),
-              ),
-            ),
-          ])),
-    ]);
   }
 
   @override
@@ -476,11 +251,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       ).tr(),
                     ],
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EFTIntroPage()),
-                    );
+                  onTap: () async {
+                    int result = await player.pause();
+                    if (result == 1) {
+                      setState(() {
+                        isplaying = false;
+                      });
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EFTIntroPage()),
+                      );
+                    }
                   },
                 ),
               ),
@@ -512,12 +294,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             .tr(),
                       ],
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const YourEFT()),
-                      );
+                    onTap: () async {
+                      int result = await player.pause();
+                      if (result == 1) {
+                        setState(() {
+                          isplaying = false;
+                        });
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const YourEFT()),
+                        );
+                      }
                     }),
               ),
             ),
@@ -549,11 +338,18 @@ class _MyHomePageState extends State<MyHomePage> {
                             .tr(),
                       ],
                     ),
-                    onTap: () {
-                      _launchURL(
-                          'sara@goldenopportunity.se',
-                          '[From GO EFT Tapping App] I have a question',
-                          'Hello Sara! ');
+                    onTap: () async {
+                      int result = await player.pause();
+                      if (result == 1) {
+                        setState(() {
+                          isplaying = false;
+                        });
+
+                        _launchURL(
+                            'sara@goldenopportunity.se',
+                            LocaleKeys.ihaveaquestion.tr(),
+                            LocaleKeys.hellosara.tr());
+                      }
                     }),
               ),
             ),
@@ -575,10 +371,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: MediaQuery.of(context).size.width / 6,
                       child: InkWell(onTap: () async {
+                        int result = await player.stop();
+                        if (result == 1) {
+                          setState(() {
+                            isplaying = false;
+                            audioplayed = false;
+                          });
+                          await context.setLocale(
+                              LocalizationManager.instance.enUSLocale);
+                          initState();
+                        }
                         //    AppLocalization.load(Locale('en', ''));
                         //  context.read<LocaleProvider>().setLocale(localeEN);
-                        await context
-                            .setLocale(LocalizationManager.instance.enUSLocale);
                       }),
                     ),
                   ],
@@ -604,8 +408,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: MediaQuery.of(context).size.width / 6,
                       child: InkWell(onTap: () async {
-                        await context
-                            .setLocale(LocalizationManager.instance.svSELocale);
+                        int result = await player.stop();
+                        if (result == 1) {
+                          setState(() {
+                            isplaying = false;
+                            audioplayed = false;
+                          });
+                          await context.setLocale(
+                              LocalizationManager.instance.svSELocale);
+                          initState();
+                        }
                       }),
                     ),
                   ],
@@ -631,18 +443,260 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: MediaQuery.of(context).size.width / 4 * 0.95,
                       height: MediaQuery.of(context).size.width / 6,
                       child: InkWell(onTap: () async {
-                        await context
-                            .setLocale(LocalizationManager.instance.arAELocale);
+                        int result = await player.stop();
+                        if (result == 1) {
+                          setState(() {
+                            isplaying = false;
+                            audioplayed = false;
+                          });
+                          await context.setLocale(
+                              LocalizationManager.instance.arAELocale);
+                          initState();
+                        }
                       }),
                     ),
                   ],
                 ),
               ),
             ),
-            getFooterSection(),
+            getFooterSection(context),
           ])
         ],
       ),
     );
   }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      //stop your audio player
+      int result = await player.stop();
+      if (result == 1) {
+        setState(() {
+          isplaying = false;
+          audioplayed = false;
+        });
+      } else {
+        print(state.toString());
+      }
+    }
+  }
+
+  Widget getTitleSection() {
+    return Container(
+      padding: const EdgeInsets.all(1),
+      color: Colors.black,
+      child: Row(
+        children: [
+          Material(
+            elevation: 4.0,
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.passthrough,
+                children: [
+                  Ink.image(
+                    image: !audioplayed
+                        ? const AssetImage("assets/images/infobutton.png")
+                        : isplaying
+                            ? const AssetImage("assets/images/btnpause.png")
+                            : const AssetImage("assets/images/btnplay.png"),
+                    fit: BoxFit.cover,
+                    width: 40,
+                    height: 40,
+                    child: InkWell(
+                      onTap: () async {
+                        if (!isplaying && !audioplayed) {
+                          int result = await player.playBytes(audiobytes);
+                          if (result == 1) {
+                            //play success
+                            setState(() {
+                              isplaying = true;
+                              audioplayed = true;
+                            });
+                          } else {
+                            if (kDebugMode) {
+                              print("Error while playing audio.");
+                            }
+                          }
+                        } else if (audioplayed && !isplaying) {
+                          int result = await player.resume();
+                          if (result == 1) {
+                            //resume success
+                            setState(() {
+                              isplaying = true;
+                              audioplayed = true;
+                            });
+                          } else {
+                            if (kDebugMode) {
+                              print("Error on resume audio.");
+                            }
+                          }
+                        } else {
+                          int result = await player.pause();
+                          if (result == 1) {
+                            //pause success
+                            setState(() {
+                              isplaying = false;
+                            });
+                          } else {
+                            if (kDebugMode) {
+                              print("Error on pause audio.");
+                            }
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ]),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Slider(
+                  value: double.parse(currentpos.toString()),
+                  activeColor: Colors.blue[200],
+                  inactiveColor: Colors.white,
+                  min: 0,
+                  max: double.parse(maxduration.toString()),
+                  divisions: maxduration,
+                  label: currentpostlabel,
+                  onChanged: (double value) async {
+                    int seekval = value.round();
+                    int result =
+                        await player.seek(Duration(milliseconds: seekval));
+                    if (result == 1) {
+                      //seek successful
+                      currentpos = seekval;
+                    } else {
+                      if (kDebugMode) {
+                        print("Seek unsuccessful.");
+                      }
+                    }
+                  },
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(currentpostlabel,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        )),
+                    const SizedBox(width: 10), // use Spacer
+                    Text(maxpostlabel,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        )),
+                    const SizedBox(width: 20),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Future<String> getFilePath() async {
+  final bytes = await rootBundle.load('assets/images/bluebutton.png');
+  final list = bytes.buffer.asUint8List();
+
+  final tempDir = await getTemporaryDirectory();
+  final file = await File('${tempDir.path}/image.jpg').create();
+  file.writeAsBytesSync(list);
+  return file.path;
+}
+
+_launchURL(String toMailId, String subject, String body) async {
+  var url = 'mailto:$toMailId?subject=$subject&body=$body';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+Widget getFooterSection(context) {
+  return Stack(children: <Widget>[
+    Image.asset(
+      "assets/images/bottombg.png",
+      fit: BoxFit.fill,
+      width: MediaQuery.of(context).size.width,
+      height: 70,
+    ),
+    Container(
+        margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+        child: Row(children: [
+          Material(
+            elevation: 4.0,
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.passthrough,
+                children: [
+                  Ink.image(
+                    image: const AssetImage("assets/images/fbshare.png"),
+                    fit: BoxFit.cover,
+                    width: 30,
+                    height: 30,
+                    child: InkWell(onTap: () async {
+                      //    url: "https://sarabern.com", msg: "share");
+                      await SocialSharePlugin.shareToFeedFacebookLink(
+                              quote: 'check out my website',
+                              url: 'https://sarabern.com')
+                          .catchError((e) =>
+                              print("[facebook error]: " + e.toString()));
+                      //   } else {
+                      //     Fluttertoast.showToast(msg: "permission is denied");
+                      //   }
+                    }),
+                  ),
+                ]),
+          ),
+          const SizedBox(width: 10),
+          Material(
+            elevation: 4.0,
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.passthrough,
+                children: [
+                  Ink.image(
+                    image: const AssetImage("assets/images/shareall.png"),
+                    fit: BoxFit.cover,
+                    width: 30,
+                    height: 30,
+                    child: InkWell(onTap: () {
+                      //  shareFile();
+                      Share.share('check out my website https://sarabern.com',
+                          subject: 'Look what I made!');
+                    }),
+                  ),
+                ]),
+          ),
+          const SizedBox(width: 10),
+          Material(
+            elevation: 4.0,
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: const Text(LocaleKeys.sharingiscaring,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  )).tr(),
+            ),
+          ),
+        ])),
+  ]);
 }

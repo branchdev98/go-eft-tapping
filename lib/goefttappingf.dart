@@ -51,7 +51,8 @@ var arrPlayList = [
   16,
   1,
   17,
-  1
+  1,
+  18
 ];
 
 class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
@@ -171,8 +172,8 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
                   ? "assets/images/btnarabridge.png"
                   : "assets/images/btnengbridge.png",
               fit: BoxFit.fitHeight,
-              width: MediaQuery.of(context).size.width / 3,
-              height: MediaQuery.of(context).size.height / 8,
+              width: MediaQuery.of(context).size.width / 5,
+              height: MediaQuery.of(context).size.height / 10,
             ),
             onTap: () async {
               int result = await player.stop();
@@ -332,7 +333,7 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
               )),
           Positioned(
             left: 0,
-            top: (MediaQuery.of(context).size.height - 166),
+            top: (MediaQuery.of(context).size.height - 136),
             child: getFooterSection(),
           ),
         ]),

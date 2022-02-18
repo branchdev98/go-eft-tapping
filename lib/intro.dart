@@ -80,11 +80,13 @@ class _EFTIntroState extends State<EFTIntroPage> {
               child: Ink.image(
                 image: const AssetImage("assets/images/btnhome.png"),
                 fit: BoxFit.cover,
-                width: 80,
-                height: 80,
-                child: InkWell(onTap: () {
-                  Navigator.pop(context);
-                  player.stop();
+                width: MediaQuery.of(context).size.width / 6,
+                height: MediaQuery.of(context).size.width / 6,
+                child: InkWell(onTap: () async {
+                  int result = await player.stop();
+                  if (result == 1) {
+                    Navigator.pop(context);
+                  }
                 }),
               ),
             ),

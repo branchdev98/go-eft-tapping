@@ -50,8 +50,11 @@ dependencies:
   permission_handler: ^8.3.0
   record_mp3: ^3.0.0
   path_provider: ^2.0.8
-  social_share: ^2.2.1
-  
+  social_share_plugin: 0.3.1+1
+  #social_share: ^2.2.1
+ # flutter_share_me: 1.2.0
+
+
 dev_dependencies:
   flutter_launcher_icons: "^0.9.2"
   flutter_test:
