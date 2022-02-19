@@ -1,3 +1,4 @@
+// @dart=2.9
 // ignore_for_file: deprecated_member_use
 import 'dart:io';
 import 'dart:typed_data';
@@ -32,7 +33,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -81,7 +82,7 @@ class MyHomePage extends StatefulWidget {
 bool isplaying = false;
 bool audioplayed = false;
 AudioPlayer player = AudioPlayer();
-late Uint8List audiobytes;
+Uint8List audiobytes;
 int currentpos = 0;
 String currentpostlabel = "00:00";
 String maxpostlabel = "00:00";
@@ -100,6 +101,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
     Future.delayed(Duration.zero, () async {
       audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
@@ -146,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         });
       });
     });
-    super.initState();
+    //   super.initState();
   }
 
   @override
@@ -468,7 +470,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.paused) {
+    if (state != AppLifecycleState.resumed) {
       //stop your audio player
       int result = await player.stop();
       if (result == 1) {
@@ -480,6 +482,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         print(state.toString());
       }
     }
+  }
+
+  @override
+  Future<void> dispose() async {
+    int result = await player.stop();
+    if (result == 1) {
+      setState(() {
+        isplaying = true;
+      });
+    } else {}
+    print("Back To old Screen");
+    super.dispose();
   }
 
   Widget getTitleSection() {

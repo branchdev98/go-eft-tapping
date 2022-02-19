@@ -18,7 +18,7 @@ class EFTIntroPage extends StatefulWidget {
   State<EFTIntroPage> createState() => _EFTIntroState();
 }
 
-class _EFTIntroState extends State<EFTIntroPage> {
+class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
   late WebViewController _webViewController;
 
   String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioc.mp3';
@@ -38,7 +38,11 @@ class _EFTIntroState extends State<EFTIntroPage> {
     //if (result == 1) setState(() => playerState = PlayerState.playing);
   }
 
+  bool isplaying = false;
+  @override
   void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
@@ -50,8 +54,9 @@ class _EFTIntroState extends State<EFTIntroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Stack(children: <Widget>[
+        body: Center(
+      child: Stack(
+        children: <Widget>[
           SizedBox(
               height: MediaQuery.of(context).size.height - 0,
               child: (LocaleKeys.lang.tr() == "ara")
@@ -71,17 +76,17 @@ class _EFTIntroState extends State<EFTIntroPage> {
                     )),
           Positioned(
             left: LocaleKeys.lang.tr() == "ara"
-                ? MediaQuery.of(context).size.width - 120
+                ? MediaQuery.of(context).size.width - 60
                 : 20,
-            top: (MediaQuery.of(context).size.height - 100),
+            top: (MediaQuery.of(context).size.height - 70),
             child: Material(
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: Ink.image(
                 image: const AssetImage("assets/images/btnhome.png"),
                 fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width / 6,
-                height: MediaQuery.of(context).size.width / 6,
+                width: MediaQuery.of(context).size.width / 8,
+                height: MediaQuery.of(context).size.width / 8,
                 child: InkWell(onTap: () async {
                   int result = await player.stop();
                   if (result == 1) {
@@ -91,10 +96,69 @@ class _EFTIntroState extends State<EFTIntroPage> {
               ),
             ),
           ),
-        ]),
+          Positioned(
+              left: LocaleKeys.lang.tr() == "ara"
+                  ? 20
+                  : MediaQuery.of(context).size.width - 60,
+              top: (MediaQuery.of(context).size.height - 70),
+              child: Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Ink.image(
+                  image: (isplaying)
+                      ? const AssetImage("assets/images/btnplay.png")
+                      : const AssetImage("assets/images/btnpause.png"),
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width / 8,
+                  height: MediaQuery.of(context).size.width / 8,
+                  child: InkWell(onTap: () async {
+                    int result = 0;
+
+                    if (isplaying == false) {
+                      result = await player.pause();
+                      print("pause");
+                    } else {
+                      result = await player.resume();
+                      print("resume");
+                    }
+                    if (result == 1)
+                      setState(() {
+                        isplaying = !isplaying;
+                      });
+                  }),
+                ),
+              ))
+        ],
         /*,*/
       ),
-    );
+    ));
+  }
+
+  @override
+  Future<void> dispose() async {
+    int result = await player.stop();
+    if (result == 1) {
+      setState(() {
+        isplaying = true;
+      });
+    } else {}
+    print("Back To old Screen");
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state != AppLifecycleState.resumed) {
+      //stop your audio player
+      int result = await player.stop();
+      if (result == 1) {
+        setState(() {
+          isplaying = true;
+        });
+      } else {
+        print(state.toString());
+      }
+    }
   }
 
   loadAsset() async {

@@ -86,7 +86,7 @@ class _YourEFTState extends State<YourEFT> {
                       backgroundBlendMode: BlendMode.lighten)
                   : null,
               child: Material(
-                elevation: 5.0,
+                //  elevation: 5.0,
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
                 child: InkWell(
@@ -136,8 +136,8 @@ class _YourEFTState extends State<YourEFT> {
                         child: Image.asset(
                           "assets/images/btnred.png",
                           fit: BoxFit.fitHeight,
-                          width: MediaQuery.of(context).size.width / 2.13,
-                          height: MediaQuery.of(context).size.width / 10,
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.width / 9,
                         ),
                       ),
                       Text(
@@ -151,7 +151,12 @@ class _YourEFTState extends State<YourEFT> {
                                         ? LocaleKeys.recordingintensity
                                         : "",
                         style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 30,
+                            fontSize: (LocaleKeys.lang.tr() == "ara")
+                                ? MediaQuery.of(context).size.width / 20
+                                : MediaQuery.of(context).size.width / 30,
+                            fontWeight: (LocaleKeys.lang.tr() == "ara")
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: (problemState == record_state.recording ||
                                     intensityState == record_state.recording)
                                 ? Colors.red
@@ -178,7 +183,7 @@ class _YourEFTState extends State<YourEFT> {
             visible: (problemState == record_state.recording) ||
                 (intensityState == record_state.recording),
             child: Material(
-              elevation: 8.0,
+              //  elevation: 8.0,
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: Stack(
@@ -555,7 +560,7 @@ class _YourEFTState extends State<YourEFT> {
                             width: MediaQuery.of(context).size.width / 4 * 3,
                             height: MediaQuery.of(context).size.width / 6,
                           ),
-                          Text(LocaleKeys.goefttappingc,
+                          Text(LocaleKeys.goefttapping,
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /

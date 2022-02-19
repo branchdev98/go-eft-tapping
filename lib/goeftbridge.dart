@@ -48,11 +48,13 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.paused) {
+    if (state != AppLifecycleState.resumed) {
       //stop your audio player
       int result = await player.stop();
       if (result == 1) {
-        initState();
+        setState(() {
+          initState();
+        });
       } else {
         print(state.toString());
       }
@@ -135,7 +137,6 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     playCompleted = false;
     userrecorded = false;
     state = RecordState.before;
-
     play();
   }
 
@@ -144,7 +145,6 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
         margin: const EdgeInsets.fromLTRB(20, 30, 20, 20),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Material(
-            elevation: 5.0,
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
             child: InkWell(
@@ -222,7 +222,6 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 }),
           ),
           Material(
-            elevation: 8.0,
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
             child: Stack(
@@ -261,6 +260,18 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 ]),
           )
         ]));
+  }
+
+  @override
+  Future<void> dispose() async {
+    int result = await player.stop();
+    if (result == 1) {
+      setState(() {
+        initState();
+      });
+    } else {}
+    print("Back To old Screen");
+    super.dispose();
   }
 
   Future<bool> isFirstTime() async {
@@ -341,6 +352,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                     LocaleKeys.whenihavethis,
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width / 30,
+                        fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ).tr(),
                   const SizedBox(width: 30),
@@ -365,6 +377,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                     LocaleKeys.ichoosetofeel,
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width / 30,
+                        fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ).tr(),
                 ],
@@ -377,6 +390,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
               ),
               SizedBox(height: 100),
               getFooterSection(),
+              SizedBox(height: 20),
             ],
           ),
 
@@ -461,8 +475,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
         context,
         MaterialPageRoute(builder: (context) => const GoEFTTappingFPage()),
       ).then((_) {
+        print("pause false reutnred");
         pause = false;
-        initState();
+        play();
+        // play();
       });
     }
   }

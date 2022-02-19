@@ -26,7 +26,8 @@ class GoEFTTappingPage extends StatefulWidget {
 int audiofilepos = 1;
 bool userrecorded = false;
 
-class _GoEFTTappingState extends State<GoEFTTappingPage> {
+class _GoEFTTappingState extends State<GoEFTTappingPage>
+    with WidgetsBindingObserver {
   late WebViewController _webViewController;
 
   // String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
@@ -103,6 +104,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
   }
 
   void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    pause = false;
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
@@ -175,7 +179,6 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Material(
-              elevation: 5.0,
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: InkWell(
@@ -248,7 +251,6 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
             ),
             const SizedBox(width: 10),
             Material(
-              elevation: 8.0,
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: Ink.image(
@@ -283,7 +285,6 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                           backgroundBlendMode: BlendMode.lighten)
                       : null,
                   child: Material(
-                    elevation: 8.0,
                     clipBehavior: Clip.hardEdge,
                     color: Colors.transparent,
                     child: Ink.image(
@@ -295,6 +296,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                         disableBtn = true;
                         int result = await player.stop();
                         if (result == 1) {
+                          playCompleted = false;
                           pause = false;
                           audiofilepos = 15;
                           play();
@@ -309,6 +311,33 @@ class _GoEFTTappingState extends State<GoEFTTappingPage> {
                 )),
           ]))
     ]);
+  }
+
+  @override
+  Future<void> dispose() async {
+    int result = await player.stop();
+    if (result == 1) {
+      setState(() {
+        initState();
+      });
+    } else {}
+    print("Back To old Screen");
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state != AppLifecycleState.resumed) {
+      //stop your audio player
+      int result = await player.stop();
+      if (result == 1) {
+        setState(() {
+          initState();
+        });
+      } else {
+        print(state.toString());
+      }
+    }
   }
 
   @override

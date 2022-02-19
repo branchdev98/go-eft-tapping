@@ -55,7 +55,8 @@ var arrPlayList = [
   18
 ];
 
-class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
+class _GoEFTTappingFState extends State<GoEFTTappingFPage>
+    with WidgetsBindingObserver {
   late WebViewController _webViewController;
 
   // String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
@@ -129,6 +130,10 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
   }
 
   void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    pause = false;
+
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
@@ -196,7 +201,6 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Material(
-              elevation: 5.0,
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: InkWell(
@@ -268,7 +272,6 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
             ),
             const SizedBox(width: 10),
             Material(
-              elevation: 8.0,
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: Ink.image(
@@ -300,7 +303,6 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
                           backgroundBlendMode: BlendMode.lighten)
                       : null,
                   child: Material(
-                    elevation: 8.0,
                     clipBehavior: Clip.hardEdge,
                     color: Colors.transparent,
                     child: Ink.image(
@@ -317,6 +319,33 @@ class _GoEFTTappingFState extends State<GoEFTTappingFPage> {
                 )),
           ]))
     ]);
+  }
+
+  @override
+  Future<void> dispose() async {
+    int result = await player.stop();
+    if (result == 1) {
+      setState(() {
+        initState();
+      });
+    } else {}
+    print("Back To old Screen");
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state != AppLifecycleState.resumed) {
+      //stop your audio player
+      int result = await player.stop();
+      if (result == 1) {
+        setState(() {
+          initState();
+        });
+      } else {
+        print(state.toString());
+      }
+    }
   }
 
   @override
