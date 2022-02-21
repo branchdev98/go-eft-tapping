@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'dart:typed_data';
@@ -8,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:go_eft_tapping/goefttapping.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -54,8 +54,6 @@ class _YourEFTState extends State<YourEFT> {
   var problemState = record_state.none;
   // ignore: non_constant_identifier_names
   var intensityState = record_state.none;
-
-  late WebViewController _webViewController;
 
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
@@ -220,7 +218,7 @@ class _YourEFTState extends State<YourEFT> {
     final prefs = await SharedPreferences.getInstance();
 
     var disclaimerchecked = prefs.getBool('disclaimercheck');
-    if (disclaimerchecked != null && !disclaimerchecked) {
+    if (disclaimerchecked == null || !disclaimerchecked) {
       return false;
     } else {
       setState(() {

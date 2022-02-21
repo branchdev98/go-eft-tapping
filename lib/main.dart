@@ -167,7 +167,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           Stack(alignment: Alignment.bottomCenter, children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 85,
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.bottom -
+                  75,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
@@ -210,9 +212,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               ),
             ),
             Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  (MediaQuery.of(context).size.width / 10) * 3.6,
+              left: 0,
               top: (MediaQuery.of(context).size.width / 10) + 20,
+              width: MediaQuery.of(context).size.width,
               child: Material(
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
@@ -472,13 +474,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) {
       //stop your audio player
-      int result = await player.stop();
+      int result = await player.pause();
       if (result == 1) {
         setState(() {
           isplaying = false;
-          audioplayed = false;
+          //audioplayed = false;
         });
       } else {
+        int result = await player.resume();
+        if (result == 1) {
+          isplaying = true;
+        }
         print(state.toString());
       }
     }
@@ -643,7 +649,7 @@ Widget getFooterSection(context) {
       "assets/images/bottombg.png",
       fit: BoxFit.fill,
       width: MediaQuery.of(context).size.width,
-      height: 70,
+      height: 75,
     ),
     Container(
         margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
@@ -664,8 +670,9 @@ Widget getFooterSection(context) {
                     child: InkWell(onTap: () async {
                       //    url: "https://sarabern.com", msg: "share");
                       await SocialSharePlugin.shareToFeedFacebookLink(
-                              quote: 'check out my website',
-                              url: 'https://sarabern.com')
+                              quote: 'check out GO EFT TAPPING app!',
+                              url:
+                                  'https://apps.apple.com/us/app/go-eft-tapping/id582597439')
                           .catchError((e) =>
                               print("[facebook error]: " + e.toString()));
                       //   } else {

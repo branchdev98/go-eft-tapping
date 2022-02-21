@@ -7,9 +7,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_eft_tapping/goefttappingf.dart';
+
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/keys/locale_keys.g.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -50,12 +50,17 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) {
       //stop your audio player
-      int result = await player.stop();
+      int result = await player.pause();
       if (result == 1) {
         setState(() {
-          initState();
+          pause = true;
+          //initState();
         });
       } else {
+        int result = await player.resume();
+        if (result == 1) {
+          pause = false;
+        }
         print(state.toString());
       }
     }
@@ -131,11 +136,11 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     player.playBytes(audiobytes);*/
     //loadAssetsPlay();
 
-    audiofilepos = 1;
-    disableBtn = false;
-    pause = false;
-    playCompleted = false;
-    userrecorded = false;
+    audiofilepos = 1; //set the play position to first like stop function
+    disableBtn = false; //no disable btn
+    pause = false; //pause button is showing
+    playCompleted = false; //play is not completed, need to start
+    userrecorded = false; //
     state = RecordState.before;
     play();
   }
@@ -267,24 +272,12 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     int result = await player.stop();
     if (result == 1) {
       setState(() {
-        initState();
+        // initState();
+        pause = true;
       });
     } else {}
     print("Back To old Screen");
     super.dispose();
-  }
-
-  Future<bool> isFirstTime() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    var isFirstTime = prefs.getBool('first_time');
-    if (isFirstTime != null && !isFirstTime) {
-      prefs.setBool('first_time', false);
-      return false;
-    } else {
-      prefs.setBool('first_time', false);
-      return true;
-    }
   }
 
   @override
@@ -471,15 +464,16 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
         state = RecordState.before;
         //  pause = true;
       });
-      Navigator.push(
+      Navigator.pop(context, true);
+      /*Navigator.pop((
         context,
         MaterialPageRoute(builder: (context) => const GoEFTTappingFPage()),
-      ).then((_) {
-        print("pause false reutnred");
-        pause = false;
-        play();
-        // play();
-      });
+      ).then((_) {*/
+      //print("pause false reutnred");
+      //pause = false;
+      //play();
+      // play();
+      //});
     }
   }
 

@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_eft_tapping/goeftbridge.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 //import 'package:assets_audio_player/assets_audio_player.dart';
@@ -23,8 +24,90 @@ class GoEFTTappingPage extends StatefulWidget {
   State<GoEFTTappingPage> createState() => _GoEFTTappingState();
 }
 
-int audiofilepos = 1;
-bool userrecorded = false;
+var arrPlayList = [];
+var audiofilepos = 0;
+
+var arrPlayListF = [
+  3,
+  0,
+  -2,
+  5,
+  0,
+  -2,
+  7,
+  0,
+  -2,
+  9,
+  0,
+  10,
+  11,
+  0,
+  12,
+  -2,
+  13,
+  0,
+  14,
+  -2,
+  15,
+  0,
+  16,
+  -2,
+  17,
+  -2,
+  18
+];
+
+var arrPlayListE1 = [
+  1,
+  0,
+  2,
+  0,
+  3,
+  0,
+  4,
+  0,
+  5,
+  0,
+  6,
+  0,
+  7,
+  0,
+  8,
+  0,
+  9,
+  0,
+  10,
+  0,
+  11,
+  0,
+  12,
+  0,
+  13,
+  -1,
+  14
+];
+
+var arrPlayListE2 = [
+  15,
+  0,
+  16,
+  0,
+  17,
+  0,
+  18,
+  0,
+  19,
+  0,
+  20,
+  0,
+  21,
+  0,
+  22,
+  -1,
+  23
+];
+var mode;
+enum track { E1, E2, F }
 
 class _GoEFTTappingState extends State<GoEFTTappingPage>
     with WidgetsBindingObserver {
@@ -36,43 +119,44 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
   String audioasset = "";
   bool playCompleted = false;
+
   Future play() async {
-    userrecorded = false;
-    audioasset = "assets/audio/" +
-        LocaleKeys.lang.tr() +
-        "audioe" +
-        audiofilepos.toString() +
-        ".mp3";
+    audioasset = await getAssetFile(mode, audiofilepos);
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
     //convert ByteData to Uint8List
-    await player.playBytes(audiobytes);
+    int result = await player.playBytes(audiobytes);
+    if (result == 1) {
+      audiofilepos++;
+
+      setState(() {
+        pause = false;
+        playCompleted = false;
+      });
+    }
+  }
+
+  Future startPlaylist() async {
+    play();
     //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
     //final result = await player.play(file.path, isLocal: true);
     //final result = await player.play(audioasset);
     //if (result == 1) setState(() => playerState = PlayerState.playing);
     player.onPlayerCompletion.listen((event) async {
-      print("audiofilepos=" + audiofilepos.toString());
-      print("userrecorded=" + userrecorded.toString());
-      if ((audiofilepos == 14 && nextflow == false && userrecorded == false) ||
-          (audiofilepos == 23 && nextflow == true && userrecorded == false)) {
+      if (audiofilepos == arrPlayList.length) {
         setState(() {
           playCompleted = true;
-
-          nextflow = false;
-          audiofilepos = 1;
+          audiofilepos = 0;
           pause = true;
         });
       }
-      if (playCompleted == true) return;
-      if (userrecorded == true) {
-        audioasset = "assets/audio/" +
-            LocaleKeys.lang.tr() +
-            "audioe" +
-            audiofilepos.toString() +
-            ".mp3";
 
+      if (playCompleted == true) return;
+
+      audioasset = await getAssetFile(mode, audiofilepos);
+
+      if (arrPlayList[audiofilepos] >= 1) {
         ByteData bytes =
             await rootBundle.load(audioasset); //load audio from assets
         audiobytes =
@@ -80,40 +164,110 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
         //convert ByteData to Uint8List
         int result = await player.playBytes(audiobytes);
         if (result == 1) {
-          userrecorded = false;
-          print("original sound" + audiofilepos.toString() + " is playing");
+          print(audioasset + " PLAYING NOW!!!");
+
+          audiofilepos++;
         }
       } else {
-        if (audiofilepos == 13 || audiofilepos == 22) {
-          audioasset = await getFilePath("intensity");
-        } else {
-          audioasset = await getFilePath("problem");
-        }
-      }
+        //String playingFile;
+        print("ready to play user");
 
-      //String playingFile;
-      if (File(audioasset).existsSync()) {
-        int result = await player.play(audioasset);
-        if (result == 1) {
-          userrecorded = true;
-          print("user sound is playing");
-          audiofilepos++;
+        if (File(audioasset).existsSync()) {
+          print("user problem exist");
+          int result = await player.play(audioasset, isLocal: true);
+          if (result == 1) {
+            print(audioasset + "  PLAYING NOW!!!");
+
+            audiofilepos++;
+          }
         }
       }
     });
   }
 
+  String getAssetPath(var mode) {
+    String audiopath = "";
+    switch (mode) {
+      case track.F:
+        audiopath = "assets/audio/" + LocaleKeys.lang.tr() + "audiof";
+
+        break;
+      case track.E1:
+        audiopath = "assets/audio/" + LocaleKeys.lang.tr() + "audioe";
+
+        break;
+      case track.E2:
+        audiopath = "assets/audio/" + LocaleKeys.lang.tr() + "audioe";
+
+        break;
+    }
+    return audiopath;
+  }
+
+  Future<String> getAssetFile(var mode, var audiofilepos) async {
+    print("arrplaylist");
+    switch (mode) {
+      case track.F:
+        arrPlayList = arrPlayListF;
+        break;
+      case track.E1:
+        arrPlayList = arrPlayListE1;
+        break;
+      case track.E2:
+        arrPlayList = arrPlayListE2;
+        break;
+    }
+    print("arrplaylist1");
+
+    print(audiofilepos);
+    print(arrPlayList[audiofilepos]);
+    if (arrPlayList[audiofilepos] == -2) {
+      audioasset = await getFilePath("preferred");
+    } else if (arrPlayList[audiofilepos] == 0) {
+      audioasset = await getFilePath("problem");
+    } else if (arrPlayList[audiofilepos] == -1) {
+      audioasset = await getFilePath("intensity");
+    } else {
+      audioasset =
+          getAssetPath(mode) + arrPlayList[audiofilepos].toString() + ".mp3";
+    }
+    return audioasset;
+  }
+
+  Future<void> whatismode(frombridge) async {
+    // print("what is mode ");
+    // String temp;
+    //temp = await getFilePath("preferred");
+    // print("audioasset = " + audioasset);
+    //if (File(temp).existsSync()) {
+    if (frombridge == true) {
+      mode = track.F;
+    } else {
+      if (nextflow == false) {
+        print("track e1:");
+        mode = track.E1;
+      } else {
+        print("track e2:");
+        mode = track.E2;
+      }
+    }
+    print(mode);
+  }
+
   void initState() {
     super.initState();
+    print("initstate");
     WidgetsBinding.instance.addObserver(this);
     pause = false;
+    whatismode(false);
+    //".mp3";
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
     player.playBytes(audiobytes);*/
     //loadAssetsPlay();
-    play();
+    startPlaylist();
   }
 
   int i = 0;
@@ -125,15 +279,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     if (!d.existsSync()) {
       d.createSync(recursive: true);
     }
+    print("get file path passed");
     return sdPath + "/user" + what + ".mp3";
-  }
-
-  void playRecorded(String what) async {
-    recordFilePath = await getFilePath(what);
-    if (recordFilePath != null && File(recordFilePath).existsSync()) {
-      //   AudioPlayer audioPlayer = AudioPlayer();
-      player.play(recordFilePath, isLocal: true);
-    }
   }
 
   var disableBtn = false;
@@ -158,16 +305,28 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
               if (result == 1) {
                 //pause success
-                nextflow = false;
-                Navigator.push(
+                //nextflow = false;
+                // audioasset = await getFilePath("preferred");
+                //  if (File(audioasset).existsSync()) {
+                //    File(audioasset).deleteSync();
+                //  }
+                //  Navigator.pop(context);
+                var result = false;
+                result = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const GoEFTBridge()),
-                ); //.then((_) {
-                //initState();
-                //});
+                ); /*.then((_) {
+                 
+                });
+               */
+                whatismode(result);
+                pause = false;
+                audiofilepos = 0;
+                setState(() {});
+                play();
+
                 setState(() {
-                  audiofilepos = 1;
-                  userrecorded = false;
+                  audiofilepos = 0;
                 });
               }
             }),
@@ -201,14 +360,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
                     if (result == 1) {
                       //pause success
-                      nextflow = false;
+                      //nextflow = false;
 
                       setState(() {
                         Navigator.of(context)
                             .popUntil((route) => route.isFirst);
 
-                        audiofilepos = 1;
-                        userrecorded = false;
+                        audiofilepos = 0;
                       });
                     } else {
                       if (kDebugMode) {
@@ -238,10 +396,16 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   onTap: () async {
                     //disableBtn = true;
                     int result = 0;
+
                     if (pause == false) {
                       result = await player.pause();
                     } else {
-                      result = await player.resume();
+                      if (playCompleted) {
+                        audiofilepos = 0;
+                        play();
+                      } else {
+                        result = await player.resume();
+                      }
                     }
 
                     setState(() {
@@ -264,11 +428,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
                   setState(() {
                     if (result == 1) {
+                      playCompleted = true;
                       pause = true;
-                      if (nextflow == false)
-                        audiofilepos = 1;
-                      else
-                        audiofilepos = 15;
+                      audiofilepos = 0;
                     }
                   });
                   //  stopRecord();
@@ -277,9 +439,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
             ),
             const SizedBox(width: 10),
             IgnorePointer(
-                ignoring: nextflow,
+                ignoring: mode == track.E2 || mode == track.F,
                 child: Container(
-                  foregroundDecoration: nextflow
+                  foregroundDecoration: mode == track.E2 || mode == track.F
                       ? const BoxDecoration(
                           color: Colors.grey,
                           backgroundBlendMode: BlendMode.lighten)
@@ -293,17 +455,16 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                       width: MediaQuery.of(context).size.width / 8,
                       height: MediaQuery.of(context).size.width / 8,
                       child: InkWell(onTap: () async {
-                        disableBtn = true;
                         int result = await player.stop();
                         if (result == 1) {
-                          playCompleted = false;
-                          pause = false;
-                          audiofilepos = 15;
+                          setState(() {
+                            mode = track.E2;
+                            playCompleted = false;
+                            audiofilepos = 0;
+                            pause = false;
+                          });
                           play();
-                          nextflow = true;
                         }
-
-                        setState(() {});
                         //  stopRecord();
                       }),
                     ),
@@ -318,7 +479,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     int result = await player.stop();
     if (result == 1) {
       setState(() {
-        initState();
+        //    initState();
+        pause = true;
       });
     } else {}
     print("Back To old Screen");
@@ -329,12 +491,20 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) {
       //stop your audio player
-      int result = await player.stop();
+      int result = await player.pause();
       if (result == 1) {
         setState(() {
-          initState();
+          // initState();
+          pause = true;
         });
       } else {
+        int result = await player.resume();
+        if (result == 1) {
+          setState(() {
+            // initState();
+            pause = false;
+          });
+        }
         print(state.toString());
       }
     }
@@ -346,12 +516,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
       body: Center(
         child: Stack(children: <Widget>[
           SizedBox(
-              height: MediaQuery.of(context).size.height - 0,
-              child: FittedBox(
-                child: Image.asset(
-                    "assets/images/" + LocaleKeys.lang.tr() + "acubg.png"),
-                fit: BoxFit.fill,
-              )),
+            height: MediaQuery.of(context).size.height - 0,
+
+            child: Image.asset(
+                "assets/images/" + LocaleKeys.lang.tr() + "acubg.png",
+                fit: BoxFit.fill),
+            //  fit: BoxFit.fill,
+          ),
           Positioned(
             left: 0,
             top: (MediaQuery.of(context).size.height - 136),

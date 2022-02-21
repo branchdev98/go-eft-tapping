@@ -105,7 +105,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                 clipBehavior: Clip.hardEdge,
                 color: Colors.transparent,
                 child: Ink.image(
-                  image: (isplaying)
+                  image: (!isplaying)
                       ? const AssetImage("assets/images/btnplay.png")
                       : const AssetImage("assets/images/btnpause.png"),
                   fit: BoxFit.cover,
@@ -114,7 +114,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                   child: InkWell(onTap: () async {
                     int result = 0;
 
-                    if (isplaying == false) {
+                    if (isplaying == true) {
                       result = await player.pause();
                       print("pause");
                     } else {
@@ -150,12 +150,16 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) {
       //stop your audio player
-      int result = await player.stop();
+      int result = await player.pause();
       if (result == 1) {
         setState(() {
-          isplaying = true;
+          isplaying = false;
         });
       } else {
+        int result = await player.resume();
+        if (result == 1) {
+          isplaying = true;
+        }
         print(state.toString());
       }
     }
