@@ -1,5 +1,5 @@
 // @dart=2.9
-// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';

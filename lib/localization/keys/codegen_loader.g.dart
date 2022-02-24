@@ -75,8 +75,8 @@ static const Map<String,dynamic> en_US = {
   "ichoosetofeel": "I choose to feel: \n[preferred emotion]",
   "ihaveaquestion": "[From GO EFT Tapping app] I have a question",
   "hellosara": "Hello Sara!",
-  "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Wrist",
-  "acupoints": "1. Karate chop\n point"
+  "acupoints2": "2. Top of head\n\n3. Eyebrow\n\n4. Side of eye\n\n5. Under eye\n\n6. Under nose\n\n7. Chin\n\n8. Collarbone\n\n9. Under arm\n\n10. Inside Wrist",
+  "acupoints": "1. Side of hand\n (Karate chop\n point)"
 };
 static const Map<String,dynamic> sv_SE = {
   "lang": "swe",
@@ -107,8 +107,8 @@ static const Map<String,dynamic> sv_SE = {
   "ichoosetofeel": "så väljer jag \n(bättre känsla)",
   "ihaveaquestion": "[Från GO EFT Tapping appen] Jag har en fråga/fundering",
   "hellosara": "Hejsan Sara!",
-  "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Wrist",
-  "acupoints": "1. Karate chop\n point"
+  "acupoints2": "2. Huvudet\n\n3. Ögonbrynet\n\n4. Sidan av ögat\n\n5. Under ögat\n\n6. Under näsan\n\n7. Hakan, under läppen\n\n8. Nyckelbenspunkten,\n  eller handflatan \n  på nyckelbenen\n\n9. Under armen\n\n10. Handloven",
+  "acupoints": "1. Sidan av handen\n(karatepunkten)"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar_AE": ar_AE, "en_US": en_US, "sv_SE": sv_SE};
 }

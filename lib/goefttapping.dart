@@ -574,7 +574,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     ),
                     SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
                           LocaleKeys.acupoints2,
@@ -582,7 +582,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                               ? TextAlign.right
                               : TextAlign.left,
                           style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 20,
+                              fontSize: MediaQuery.of(context).size.width / 25,
                               color: Colors.black),
                         ).tr(),
                         Stack(
@@ -597,8 +597,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                               child: Image.asset(
                                 "assets/images/girl.png",
                                 fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                height: MediaQuery.of(context).size.width * 0.9,
+                                width: MediaQuery.of(context).size.width / 1.7,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.75,
                               ),
                             ),
                             Expanded(
@@ -607,7 +608,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                                 children: [
                                   SizedBox(
                                     width:
-                                        MediaQuery.of(context).size.width / 3.5,
+                                        MediaQuery.of(context).size.width / 4,
                                   ),
                                   Text(
                                     LocaleKeys.acupoints,
@@ -615,7 +616,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                                     style: TextStyle(
                                         fontSize:
                                             MediaQuery.of(context).size.width /
-                                                20,
+                                                30,
                                         color: Colors.black),
                                   ).tr(),
                                 ],
