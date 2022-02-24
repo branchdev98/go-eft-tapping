@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'dart:io';
 
 import 'dart:typed_data';
@@ -10,9 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_eft_tapping/goeftbridge.dart';
-
+import 'package:wakelock/wakelock.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+
 //import 'package:assets_audio_player/assets_audio_player.dart';
 import 'localization/keys/locale_keys.g.dart';
 
@@ -26,7 +24,7 @@ class GoEFTTappingPage extends StatefulWidget {
 
 var arrPlayList = [];
 var audiofilepos = 0;
-
+var playerState;
 var arrPlayListF = [
   3,
   0,
@@ -111,8 +109,6 @@ enum track { E1, E2, F }
 
 class _GoEFTTappingState extends State<GoEFTTappingPage>
     with WidgetsBindingObserver {
-  late WebViewController _webViewController;
-
   // String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
@@ -120,69 +116,63 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   String audioasset = "";
   bool playCompleted = false;
 
-  Future play() async {
+  Future loadplayer() async {
     audioasset = await getAssetFile(mode, audiofilepos);
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    //convert ByteData to Uint8List
-    int result = await player.playBytes(audiobytes);
-    if (result == 1) {
-      audiofilepos++;
-
-      setState(() {
-        pause = false;
-        playCompleted = false;
-      });
-    }
-  }
-
-  Future startPlaylist() async {
-    play();
-    //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
-    //final result = await player.play(file.path, isLocal: true);
-    //final result = await player.play(audioasset);
-    //if (result == 1) setState(() => playerState = PlayerState.playing);
+    playCompleted = false;
+    await player.setVolume(0.5);
+    player.onPlayerStateChanged.listen((PlayerState s) => {
+          print('Current player state: $s'),
+          Wakelock.toggle(enable: s == PlayerState.PLAYING),
+          setState(() => playerState = s)
+        });
     player.onPlayerCompletion.listen((event) async {
+      audiofilepos++;
+      print("audiofilepos = $audiofilepos");
+      print("playcompleted = $playCompleted");
       if (audiofilepos == arrPlayList.length) {
         setState(() {
           playCompleted = true;
+          player.onPlayerCompletion.listen(null);
           audiofilepos = 0;
-          pause = true;
         });
       }
 
       if (playCompleted == true) return;
 
       audioasset = await getAssetFile(mode, audiofilepos);
-
+      print("audioasset = $audioasset");
       if (arrPlayList[audiofilepos] >= 1) {
         ByteData bytes =
             await rootBundle.load(audioasset); //load audio from assets
         audiobytes =
             bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
         //convert ByteData to Uint8List
-        int result = await player.playBytes(audiobytes);
-        if (result == 1) {
-          print(audioasset + " PLAYING NOW!!!");
-
-          audiofilepos++;
-        }
+        await player.setVolume(0.5);
+        player.playBytes(audiobytes);
       } else {
         //String playingFile;
         print("ready to play user");
 
+        player.stop();
         if (File(audioasset).existsSync()) {
           print("user problem exist");
-          int result = await player.play(audioasset, isLocal: true);
-          if (result == 1) {
-            print(audioasset + "  PLAYING NOW!!!");
-
-            audiofilepos++;
-          }
+          await player.setVolume(1);
+          player.play(audioasset, isLocal: true);
         }
       }
     });
+    //convert ByteData to Uint8List
+  }
+
+  Future startPlaylist() async {
+    //await player.release();
+
+    await loadplayer();
+
+    player.playBytes(audiobytes);
   }
 
   String getAssetPath(var mode) {
@@ -234,12 +224,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     return audioasset;
   }
 
-  Future<void> whatismode(frombridge) async {
-    // print("what is mode ");
-    // String temp;
-    //temp = await getFilePath("preferred");
-    // print("audioasset = " + audioasset);
-    //if (File(temp).existsSync()) {
+  whatismode(frombridge) {
     if (frombridge == true) {
       mode = track.F;
     } else {
@@ -258,7 +243,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     super.initState();
     print("initstate");
     WidgetsBinding.instance.addObserver(this);
-    pause = false;
+
     whatismode(false);
     //".mp3";
     /*  ByteData bytes =
@@ -284,51 +269,44 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   }
 
   var disableBtn = false;
-  bool pause = false;
+
   bool nextflow = false;
   int filepos = 1;
 
   Widget getFooterSection() {
     return Column(children: [
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        SizedBox(width: 20),
         InkWell(
             child: Image.asset(
               (LocaleKeys.lang == "ara")
                   ? "assets/images/btnarabridge.png"
                   : "assets/images/btnengbridge.png",
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.fill,
               width: MediaQuery.of(context).size.width / 5,
-              height: MediaQuery.of(context).size.height / 10,
+              height: MediaQuery.of(context).size.width / 6,
             ),
             onTap: () async {
-              int result = await player.stop();
+              player.stop();
 
-              if (result == 1) {
-                //pause success
-                //nextflow = false;
-                // audioasset = await getFilePath("preferred");
-                //  if (File(audioasset).existsSync()) {
-                //    File(audioasset).deleteSync();
-                //  }
-                //  Navigator.pop(context);
-                var result = false;
-                result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const GoEFTBridge()),
-                ); /*.then((_) {
-                 
-                });
-               */
-                whatismode(result);
-                pause = false;
-                audiofilepos = 0;
-                setState(() {});
-                play();
+              var result = false;
+              playCompleted = true;
+              result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const GoEFTBridge()),
+              );
 
-                setState(() {
-                  audiofilepos = 0;
-                });
-              }
+              whatismode(result);
+              audiofilepos = 0;
+              //  startPlaylist();
+              audioasset = await getAssetFile(mode, audiofilepos);
+              ByteData bytes =
+                  await rootBundle.load(audioasset); //load audio from assets
+              audiobytes = bytes.buffer
+                  .asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+              playCompleted = false;
+
+              player.playBytes(audiobytes);
             }),
         SizedBox(width: MediaQuery.of(context).size.width / 3 * 2),
       ]),
@@ -380,7 +358,11 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: InkWell(
-                  child: pause
+                  child: ((playCompleted == PlayerState.COMPLETED &&
+                              playCompleted == true) ||
+                          playerState == PlayerState.PAUSED ||
+                          (playerState == PlayerState.STOPPED &&
+                              playCompleted == true))
                       ? Image.asset(
                           "assets/images/btnplay.png",
                           fit: BoxFit.fitHeight,
@@ -395,22 +377,27 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         ),
                   onTap: () async {
                     //disableBtn = true;
-                    int result = 0;
 
-                    if (pause == false) {
-                      result = await player.pause();
+                    if (playerState == PlayerState.PLAYING) {
+                      player.pause();
+                    } else if (playerState == PlayerState.PAUSED) {
+                      player.resume();
                     } else {
                       if (playCompleted) {
                         audiofilepos = 0;
-                        play();
-                      } else {
-                        result = await player.resume();
+
+                        //  startPlaylist();
+                        audioasset = await getAssetFile(mode, audiofilepos);
+                        ByteData bytes = await rootBundle
+                            .load(audioasset); //load audio from assets
+                        audiobytes = bytes.buffer.asUint8List(
+                            bytes.offsetInBytes, bytes.lengthInBytes);
+                        playCompleted = false;
+
+                        player.playBytes(audiobytes);
+                        // startPlaylist();
                       }
                     }
-
-                    setState(() {
-                      if (result == 1) pause = !pause;
-                    });
                   }),
             ),
             const SizedBox(width: 10),
@@ -429,7 +416,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   setState(() {
                     if (result == 1) {
                       playCompleted = true;
-                      pause = true;
+
                       audiofilepos = 0;
                     }
                   });
@@ -439,9 +426,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
             ),
             const SizedBox(width: 10),
             IgnorePointer(
-                ignoring: mode == track.E2 || mode == track.F,
+                ignoring: mode == track.F,
                 child: Container(
-                  foregroundDecoration: mode == track.E2 || mode == track.F
+                  foregroundDecoration: mode == track.F
                       ? const BoxDecoration(
                           color: Colors.grey,
                           backgroundBlendMode: BlendMode.lighten)
@@ -450,7 +437,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     clipBehavior: Clip.hardEdge,
                     color: Colors.transparent,
                     child: Ink.image(
-                      image: const AssetImage("assets/images/btnnext.png"),
+                      image: mode == track.E1
+                          ? const AssetImage("assets/images/btnnext.png")
+                          : const AssetImage("assets/images/btnrepeat.png"),
                       fit: BoxFit.cover,
                       width: MediaQuery.of(context).size.width / 8,
                       height: MediaQuery.of(context).size.width / 8,
@@ -459,11 +448,20 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         if (result == 1) {
                           setState(() {
                             mode = track.E2;
-                            playCompleted = false;
+
                             audiofilepos = 0;
-                            pause = false;
                           });
-                          play();
+                          audioasset = await getAssetFile(mode, audiofilepos);
+
+                          ByteData bytes = await rootBundle
+                              .load(audioasset); //load audio from assets
+                          audiobytes = bytes.buffer.asUint8List(
+                              bytes.offsetInBytes, bytes.lengthInBytes);
+
+                          //convert ByteData to Uint8List
+                          player
+                              .playBytes(audiobytes)
+                              .then((playCompleted) => false);
                         }
                         //  stopRecord();
                       }),
@@ -475,72 +473,72 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   }
 
   @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.inactive) {
+      //stop your audio player
+      player.pause();
+    }
+    if (state == AppLifecycleState.resumed) {
+      //  player.resume();
+    }
+  }
+
+  @override
   Future<void> dispose() async {
-    int result = await player.stop();
-    if (result == 1) {
-      setState(() {
-        //    initState();
-        pause = true;
-      });
-    } else {}
+    player.stop();
+    playCompleted = true;
+    nextflow = false;
     print("Back To old Screen");
     super.dispose();
   }
 
   @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state != AppLifecycleState.resumed) {
-      //stop your audio player
-      int result = await player.pause();
-      if (result == 1) {
-        setState(() {
-          // initState();
-          pause = true;
-        });
-      } else {
-        int result = await player.resume();
-        if (result == 1) {
-          setState(() {
-            // initState();
-            pause = false;
-          });
-        }
-        print(state.toString());
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Stack(children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 0,
-
-            child: Image.asset(
-                "assets/images/" + LocaleKeys.lang.tr() + "acubg.png",
-                fit: BoxFit.fill),
-            //  fit: BoxFit.fill,
-          ),
-          Positioned(
-            left: 0,
-            top: (MediaQuery.of(context).size.height - 136),
-            child: getFooterSection(),
-          ),
-        ]),
-        /*,*/
-      ),
-    );
-  }
-
-  loadAsset() async {
-    // play();
-    String fileHtmlContents = await rootBundle
-        .loadString('assets/html/' + LocaleKeys.lang.tr() + 'intro.html');
-    _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
+    return SafeArea(
+        top: true,
+        bottom: true,
+        child: Scaffold(
+            body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        "assets/images/" + LocaleKeys.lang.tr() + "acubg.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 30),
+                        Material(
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(LocaleKeys.goefttapping,
+                                style: TextStyle(
+                                  fontSize:
+                                      (MediaQuery.of(context).size.width / 10),
+                                  color: Colors.black,
+                                )).tr(),
+                          ),
+                        ),
+                      ],
+                      /* add child content here */
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height - 230),
+                        getFooterSection(),
+                      ],
+                      /* add child content here */
+                    )
+                  ],
+                ))));
   }
 
   State<StatefulWidget> createState() => throw UnimplementedError();

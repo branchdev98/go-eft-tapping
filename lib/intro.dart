@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'localization/keys/locale_keys.g.dart';
@@ -25,148 +26,132 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
   AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
 
-  Future play() async {
+  Future loadplayer() async {
     // final file = new File(audioasset);
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    await player.onPlayerStateChanged.listen((PlayerState s) => {
+          print('Current player state: $s'),
+          Wakelock.toggle(enable: s == PlayerState.PLAYING),
+          setState(() => playerState = s)
+        });
     //convert ByteData to Uint8List
-    await player.playBytes(audiobytes);
+
     //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
     //final result = await player.play(file.path, isLocal: true);
     //final result = await player.play(audioasset);
     //if (result == 1) setState(() => playerState = PlayerState.playing);
   }
 
-  bool isplaying = false;
+  var playerState;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    /*  ByteData bytes =
-        rootBundle.load(audioasset) as ByteData; //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);*/
-    play();
+
+    loadplayer().then((_) => player.playBytes(audiobytes));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-      child: Stack(
-        children: <Widget>[
-          SizedBox(
-              height: MediaQuery.of(context).size.height - 0,
-              child: (LocaleKeys.lang.tr() == "ara")
-                  ? FittedBox(
-                      child: Image.asset("assets/images/araacubg.png"),
-                      fit: BoxFit.fill,
-                    )
-                  : WebView(
-                      key: const Key("webview1"),
-                      debuggingEnabled: true,
-                      javascriptMode: JavascriptMode.unrestricted,
-                      initialUrl: "",
-                      onWebViewCreated: (WebViewController webViewController) {
-                        _webViewController = webViewController;
-                        loadAsset();
-                      },
-                    )),
-          Positioned(
-            left: LocaleKeys.lang.tr() == "ara"
-                ? MediaQuery.of(context).size.width - 60
-                : 20,
-            top: (MediaQuery.of(context).size.height - 70),
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Ink.image(
-                image: const AssetImage("assets/images/btnhome.png"),
-                fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width / 8,
-                height: MediaQuery.of(context).size.width / 8,
-                child: InkWell(onTap: () async {
-                  int result = await player.stop();
-                  if (result == 1) {
-                    Navigator.pop(context);
-                  }
-                }),
-              ),
-            ),
-          ),
-          Positioned(
-              left: LocaleKeys.lang.tr() == "ara"
-                  ? 20
-                  : MediaQuery.of(context).size.width - 60,
-              top: (MediaQuery.of(context).size.height - 70),
-              child: Material(
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Ink.image(
-                  image: (!isplaying)
-                      ? const AssetImage("assets/images/btnplay.png")
-                      : const AssetImage("assets/images/btnpause.png"),
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width / 8,
-                  height: MediaQuery.of(context).size.width / 8,
-                  child: InkWell(onTap: () async {
-                    int result = 0;
-
-                    if (isplaying == true) {
-                      result = await player.pause();
-                      print("pause");
-                    } else {
-                      result = await player.resume();
-                      print("resume");
-                    }
-                    if (result == 1)
-                      setState(() {
-                        isplaying = !isplaying;
-                      });
-                  }),
+    return SafeArea(
+        top: true,
+        bottom: true,
+        child: Scaffold(
+            body: Center(
+          child: Stack(
+            children: <Widget>[
+              SizedBox(
+                  height: MediaQuery.of(context).size.height - 0,
+                  child: (LocaleKeys.lang.tr() == "ara")
+                      ? FittedBox(
+                          child: Image.asset("assets/images/araacubg.png"),
+                          fit: BoxFit.fill,
+                        )
+                      : WebView(
+                          key: const Key("webview1"),
+                          debuggingEnabled: true,
+                          javascriptMode: JavascriptMode.unrestricted,
+                          initialUrl: "",
+                          onWebViewCreated:
+                              (WebViewController webViewController) async {
+                            _webViewController = webViewController;
+                            await loadAsset();
+                          },
+                        )),
+              Positioned(
+                left: LocaleKeys.lang.tr() == "ara"
+                    ? MediaQuery.of(context).size.width - 60
+                    : 20,
+                top: (MediaQuery.of(context).size.height - 70),
+                child: Material(
+                  clipBehavior: Clip.hardEdge,
+                  color: Colors.transparent,
+                  child: Ink.image(
+                    image: const AssetImage("assets/images/btnhome.png"),
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width / 8,
+                    height: MediaQuery.of(context).size.width / 8,
+                    child: InkWell(onTap: () async {
+                      int result = await player.stop();
+                      if (result == 1) {
+                        Navigator.pop(context);
+                      }
+                    }),
+                  ),
                 ),
-              ))
-        ],
-        /*,*/
-      ),
-    ));
+              ),
+              Positioned(
+                  left: LocaleKeys.lang.tr() == "ara"
+                      ? 20
+                      : MediaQuery.of(context).size.width - 60,
+                  top: (MediaQuery.of(context).size.height - 70),
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: playerState == PlayerState.PLAYING
+                          ? const AssetImage("assets/images/btnpause.png")
+                          : const AssetImage("assets/images/btnplay.png"),
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width / 8,
+                      height: MediaQuery.of(context).size.width / 8,
+                      child: InkWell(onTap: () {
+                        if (playerState == PlayerState.PLAYING) {
+                          player.pause();
+                        } else {
+                          player.resume();
+                        }
+                      }),
+                    ),
+                  ))
+            ],
+            /*,*/
+          ),
+        )));
   }
 
   @override
   Future<void> dispose() async {
-    int result = await player.stop();
-    if (result == 1) {
-      setState(() {
-        isplaying = true;
-      });
-    } else {}
+    player.stop();
+
     print("Back To old Screen");
     super.dispose();
   }
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state != AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.paused) {
       //stop your audio player
-      int result = await player.pause();
-      if (result == 1) {
-        setState(() {
-          isplaying = false;
-        });
-      } else {
-        int result = await player.resume();
-        if (result == 1) {
-          isplaying = true;
-        }
-        print(state.toString());
-      }
+      player.pause();
+    }
+    if (state == AppLifecycleState.resumed) {
+      //  player.resume();
     }
   }
 
   loadAsset() async {
-    // play();
     String fileHtmlContents = await rootBundle
         .loadString('assets/html/' + LocaleKeys.lang.tr() + 'intro.html');
     _webViewController.loadUrl(Uri.dataFromString(fileHtmlContents,

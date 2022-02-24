@@ -51,6 +51,7 @@ dependencies:
   record_mp3: ^3.0.0
   path_provider: ^2.0.8
   social_share_plugin: 0.3.1+1
+  wakelock: ^0.6.1+1
   #social_share: ^2.2.1
  # flutter_share_me: 1.2.0
 
@@ -107,6 +108,7 @@ flutter:
     - assets/images/infobutton.png
     - assets/images/btnpause.png
     - assets/images/btnnext.png
+    - assets/images/btnrepeat.png
     - assets/images/btngreen.png
     - assets/images/orangecontactbutton.png
     - assets/images/fbshare.png

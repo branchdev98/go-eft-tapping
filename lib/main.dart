@@ -15,15 +15,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-//import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:social_share_plugin/social_share_plugin.dart';
-//import 'package:social_share/social_share.dart';
-//import 'package:record/record.dart';
-
-//import 'package:share/share.dart';
+import 'package:wakelock/wakelock.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -79,14 +76,13 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-bool isplaying = false;
-bool audioplayed = false;
 AudioPlayer player = AudioPlayer();
 Uint8List audiobytes;
-int currentpos = 0;
+var currentpos = 0;
 String currentpostlabel = "00:00";
 String maxpostlabel = "00:00";
 int maxduration = 40;
+var playerState;
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   String audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
@@ -103,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
     Future.delayed(Duration.zero, () async {
       audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
       ByteData bytes =
@@ -147,6 +144,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           //refresh the UI
         });
       });
+
+      player.onPlayerStateChanged.listen((PlayerState s) => {
+            print('Current player state: $s'),
+            Wakelock.toggle(enable: s == PlayerState.PLAYING),
+            setState(() => playerState = s)
+          });
     });
     //   super.initState();
   }
@@ -160,344 +163,313 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    return Scaffold(
-      body: ListView(
-        children: [
-          getTitleSection(),
-          Stack(alignment: Alignment.bottomCenter, children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.bottom -
-                  75,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage("assets/images/background.png"),
-                ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  (MediaQuery.of(context).size.width / 10) * 3.6,
-              top: 10,
-              child: Material(
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(LocaleKeys.goefttapping,
-                      style: TextStyle(
-                        fontSize: (MediaQuery.of(context).size.width / 10),
-                        color: Colors.black,
-                      )).tr(),
-                ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 +
-                  (MediaQuery.of(context).size.width / 10) * 3.6,
-              top: 5,
-              child: Material(
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(LocaleKeys.copyright,
-                      style: TextStyle(
-                        fontSize: (MediaQuery.of(context).size.width / 15),
-                        color: Colors.black,
-                      )).tr(),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              top: (MediaQuery.of(context).size.width / 10) + 20,
-              width: MediaQuery.of(context).size.width,
-              child: Material(
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(LocaleKeys.thesound,
-                      style: TextStyle(
-                        fontSize: (MediaQuery.of(context).size.width / 32),
-                        color: Colors.black,
-                      )).tr(),
-                ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  MediaQuery.of(context).size.width / 4 * 3 / 2,
-              top: MediaQuery.of(context).size.height / 4 * 0.7,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: InkWell(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.passthrough,
-                    children: [
-                      Ink.image(
-                        image: const AssetImage("assets/images/bluebutton.png"),
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width / 4 * 3,
-                        height: MediaQuery.of(context).size.width / 6,
-                      ),
-                      Text(
-                        LocaleKeys.eftintro,
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width / 15,
-                            color: Colors.white),
-                      ).tr(),
-                    ],
+    return SafeArea(
+        top: true,
+        bottom: true,
+        child: Scaffold(
+          body: ListView(
+            children: [
+              getTitleSection(),
+              Stack(alignment: Alignment.bottomCenter, children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height -
+                      //   MediaQuery.of(context).padding.bottom -
+                      75,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage("assets/images/background.png"),
+                    ),
                   ),
-                  onTap: () async {
-                    int result = await player.pause();
-                    if (result == 1) {
-                      setState(() {
-                        isplaying = false;
-                      });
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EFTIntroPage()),
-                      );
-                    }
-                  },
                 ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  MediaQuery.of(context).size.width / 4 * 3 / 2,
-              top: MediaQuery.of(context).size.height / 4 * 1.2,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: InkWell(
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      (MediaQuery.of(context).size.width / 10) * 3.6,
+                  top: 10,
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(LocaleKeys.goefttapping,
+                          style: TextStyle(
+                            fontSize: (MediaQuery.of(context).size.width / 10),
+                            color: Colors.black,
+                          )).tr(),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 +
+                      (MediaQuery.of(context).size.width / 10) * 3.6,
+                  top: 5,
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(LocaleKeys.copyright,
+                          style: TextStyle(
+                            fontSize: (MediaQuery.of(context).size.width / 15),
+                            color: Colors.black,
+                          )).tr(),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  top: (MediaQuery.of(context).size.width / 10) + 20,
+                  width: MediaQuery.of(context).size.width,
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(LocaleKeys.thesound,
+                          style: TextStyle(
+                            fontSize: (MediaQuery.of(context).size.width / 32),
+                            color: Colors.black,
+                          )).tr(),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 4 * 3 / 2,
+                  top: MediaQuery.of(context).size.height / 4 * 0.7,
+                  child: Material(
+                    elevation: 4.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          fit: StackFit.passthrough,
+                          children: [
+                            Ink.image(
+                              image: const AssetImage(
+                                  "assets/images/bluebutton.png"),
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width / 4 * 3,
+                              height: MediaQuery.of(context).size.width / 6,
+                            ),
+                            Text(
+                              LocaleKeys.eftintro,
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width / 15,
+                                  color: Colors.white),
+                            ).tr(),
+                          ],
+                        ),
+                        onTap: () async {
+                          player.pause();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EFTIntroPage()),
+                          );
+                        }),
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 4 * 3 / 2,
+                  top: MediaQuery.of(context).size.height / 4 * 1.2,
+                  child: Material(
+                    elevation: 4.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          fit: StackFit.passthrough,
+                          children: [
+                            Ink.image(
+                              image: const AssetImage(
+                                  "assets/images/btngreen.png"),
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width / 4 * 3,
+                              height: MediaQuery.of(context).size.width / 6,
+                            ),
+                            Text(LocaleKeys.youreft,
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                15,
+                                        color: Colors.white))
+                                .tr(),
+                          ],
+                        ),
+                        onTap: () {
+                          player.pause();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const YourEFT()),
+                          );
+                        }),
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 4 * 3 / 2,
+                  top: MediaQuery.of(context).size.height / 4 * 1.7,
+                  child: Material(
+                    elevation: 4.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          fit: StackFit.passthrough,
+                          children: [
+                            Ink.image(
+                              image: const AssetImage(
+                                  "assets/images/orangecontactbutton.png"),
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width / 4 * 3,
+                              height: MediaQuery.of(context).size.width / 6,
+                            ),
+                            Text(LocaleKeys.contactme,
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                15,
+                                        color: Colors.white))
+                                .tr(),
+                          ],
+                        ),
+                        onTap: () {
+                          player.pause();
+
+                          _launchURL(
+                              'sara@goldenopportunity.se',
+                              LocaleKeys.ihaveaquestion.tr(),
+                              LocaleKeys.hellosara.tr());
+                        }),
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 4 * 3 / 2,
+                  top: MediaQuery.of(context).size.height / 4 * 2.2,
+                  child: Material(
+                    elevation: 4.0,
+                    clipBehavior: Clip.antiAlias,
+                    color: Colors.transparent,
                     child: Stack(
                       alignment: Alignment.center,
                       fit: StackFit.passthrough,
                       children: [
                         Ink.image(
-                          image: const AssetImage("assets/images/btngreen.png"),
+                          image:
+                              const AssetImage("assets/images/btnenglish.png"),
                           fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width / 4 * 3,
+                          width: MediaQuery.of(context).size.width / 4 * 0.95,
                           height: MediaQuery.of(context).size.width / 6,
+                          child: InkWell(onTap: () {
+                            player.stop();
+
+                            context.setLocale(
+                                LocalizationManager.instance.enUSLocale);
+                            initState();
+                          }
+                              //    AppLocalization.load(Locale('en', ''));
+                              //  context.read<LocaleProvider>().setLocale(localeEN);
+                              ),
                         ),
-                        Text(LocaleKeys.youreft,
-                                style: TextStyle(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width / 15,
-                                    color: Colors.white))
-                            .tr(),
                       ],
                     ),
-                    onTap: () async {
-                      int result = await player.pause();
-                      if (result == 1) {
-                        setState(() {
-                          isplaying = false;
-                        });
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const YourEFT()),
-                        );
-                      }
-                    }),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  MediaQuery.of(context).size.width / 4 * 3 / 2,
-              top: MediaQuery.of(context).size.height / 4 * 1.7,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: InkWell(
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 4 * 3 / 2 +
+                      MediaQuery.of(context).size.width / 4 * 0.98,
+                  top: MediaQuery.of(context).size.height / 4 * 2.2,
+                  child: Material(
+                    elevation: 4.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
                     child: Stack(
                       alignment: Alignment.center,
                       fit: StackFit.passthrough,
                       children: [
                         Ink.image(
-                          image: const AssetImage(
-                              "assets/images/orangecontactbutton.png"),
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width / 4 * 3,
+                          image:
+                              const AssetImage("assets/images/btnswedish.png"),
+                          fit: BoxFit.fitWidth,
+                          width: MediaQuery.of(context).size.width / 4 * 0.95,
                           height: MediaQuery.of(context).size.width / 6,
+                          child: InkWell(onTap: () {
+                            player.stop();
+
+                            context.setLocale(
+                                LocalizationManager.instance.svSELocale);
+                            initState();
+                          }),
                         ),
-                        Text(LocaleKeys.contactme,
-                                style: TextStyle(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width / 15,
-                                    color: Colors.white))
-                            .tr(),
                       ],
                     ),
-                    onTap: () async {
-                      int result = await player.pause();
-                      if (result == 1) {
-                        setState(() {
-                          isplaying = false;
-                        });
+                  ),
+                ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 2 -
+                      MediaQuery.of(context).size.width / 4 * 3 / 2 +
+                      MediaQuery.of(context).size.width / 4 * 2,
+                  top: MediaQuery.of(context).size.height / 4 * 2.2,
+                  child: Material(
+                    elevation: 4.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.passthrough,
+                      children: [
+                        Ink.image(
+                          image:
+                              const AssetImage("assets/images/btnarabic.png"),
+                          fit: BoxFit.fitWidth,
+                          width: MediaQuery.of(context).size.width / 4 * 0.95,
+                          height: MediaQuery.of(context).size.width / 6,
+                          child: InkWell(onTap: () {
+                            player.stop();
 
-                        _launchURL(
-                            'sara@goldenopportunity.se',
-                            LocaleKeys.ihaveaquestion.tr(),
-                            LocaleKeys.hellosara.tr());
-                      }
-                    }),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  MediaQuery.of(context).size.width / 4 * 3 / 2,
-              top: MediaQuery.of(context).size.height / 4 * 2.2,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.antiAlias,
-                color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnenglish.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 4 * 0.95,
-                      height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () async {
-                        int result = await player.stop();
-                        if (result == 1) {
-                          setState(() {
-                            isplaying = false;
-                            audioplayed = false;
-                          });
-                          await context.setLocale(
-                              LocalizationManager.instance.enUSLocale);
-                          initState();
-                        }
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                      }),
+                            context.setLocale(
+                                LocalizationManager.instance.arAELocale);
+                            initState();
+                          }),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  MediaQuery.of(context).size.width / 4 * 3 / 2 +
-                  MediaQuery.of(context).size.width / 4 * 0.98,
-              top: MediaQuery.of(context).size.height / 4 * 2.2,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnswedish.png"),
-                      fit: BoxFit.fitWidth,
-                      width: MediaQuery.of(context).size.width / 4 * 0.95,
-                      height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () async {
-                        int result = await player.stop();
-                        if (result == 1) {
-                          setState(() {
-                            isplaying = false;
-                            audioplayed = false;
-                          });
-                          await context.setLocale(
-                              LocalizationManager.instance.svSELocale);
-                          initState();
-                        }
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2 -
-                  MediaQuery.of(context).size.width / 4 * 3 / 2 +
-                  MediaQuery.of(context).size.width / 4 * 2,
-              top: MediaQuery.of(context).size.height / 4 * 2.2,
-              child: Material(
-                elevation: 4.0,
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnarabic.png"),
-                      fit: BoxFit.fitWidth,
-                      width: MediaQuery.of(context).size.width / 4 * 0.95,
-                      height: MediaQuery.of(context).size.width / 6,
-                      child: InkWell(onTap: () async {
-                        int result = await player.stop();
-                        if (result == 1) {
-                          setState(() {
-                            isplaying = false;
-                            audioplayed = false;
-                          });
-                          await context.setLocale(
-                              LocalizationManager.instance.arAELocale);
-                          initState();
-                        }
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            getFooterSection(context),
-          ])
-        ],
-      ),
-    );
+                getFooterSection(context),
+              ])
+            ],
+          ),
+        ));
   }
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state != AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.paused) {
       //stop your audio player
-      int result = await player.pause();
-      if (result == 1) {
-        setState(() {
-          isplaying = false;
-          //audioplayed = false;
-        });
-      } else {
-        int result = await player.resume();
-        if (result == 1) {
-          isplaying = true;
-        }
-        print(state.toString());
-      }
+      player.pause();
+    }
+    if (state == AppLifecycleState.resumed) {
+      //player.resume();
     }
   }
 
   @override
   Future<void> dispose() async {
-    int result = await player.stop();
-    if (result == 1) {
-      setState(() {
-        isplaying = true;
-      });
-    } else {}
+    player.stop();
+
     print("Back To old Screen");
     super.dispose();
   }
@@ -517,54 +489,23 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 fit: StackFit.passthrough,
                 children: [
                   Ink.image(
-                    image: !audioplayed
-                        ? const AssetImage("assets/images/infobutton.png")
-                        : isplaying
-                            ? const AssetImage("assets/images/btnpause.png")
-                            : const AssetImage("assets/images/btnplay.png"),
+                    image: playerState == PlayerState.PLAYING
+                        ? const AssetImage("assets/images/btnpause.png")
+                        : playerState == PlayerState.PAUSED
+                            ? const AssetImage("assets/images/btnplay.png")
+                            : const AssetImage("assets/images/infobutton.png"),
                     fit: BoxFit.cover,
                     width: 40,
                     height: 40,
                     child: InkWell(
                       onTap: () async {
-                        if (!isplaying && !audioplayed) {
-                          int result = await player.playBytes(audiobytes);
-                          if (result == 1) {
-                            //play success
-                            setState(() {
-                              isplaying = true;
-                              audioplayed = true;
-                            });
-                          } else {
-                            if (kDebugMode) {
-                              print("Error while playing audio.");
-                            }
-                          }
-                        } else if (audioplayed && !isplaying) {
+                        if (playerState == PlayerState.PAUSED) {
                           int result = await player.resume();
-                          if (result == 1) {
-                            //resume success
-                            setState(() {
-                              isplaying = true;
-                              audioplayed = true;
-                            });
-                          } else {
-                            if (kDebugMode) {
-                              print("Error on resume audio.");
-                            }
-                          }
+                          if (result != 1) player.playBytes(audiobytes);
+                        } else if (playerState == PlayerState.PLAYING) {
+                          player.pause();
                         } else {
-                          int result = await player.pause();
-                          if (result == 1) {
-                            //pause success
-                            setState(() {
-                              isplaying = false;
-                            });
-                          } else {
-                            if (kDebugMode) {
-                              print("Error on pause audio.");
-                            }
-                          }
+                          player.playBytes(audiobytes);
                         }
                       },
                     ),
