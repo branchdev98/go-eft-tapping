@@ -15,10 +15,10 @@
     "theintensity": "شدّة الأعر\nاض (10<-0) ...",
     "myfeelingrecorded": "تم تسجيل  شعوري\n أوأعراضي",
     "theintensityrecorded": "تم تسجيل الشّدة",
-    "recordproblem": "اقول مشكلتك",
-    "recordintensity": "قم بتسجيل الشدة",
+    "recordproblem": "سجل مشكلتك",
+    "recordintensity": "سجل درجة قوة المشكلة",
     "recordingproblem" : "...  تسجيل",
-    "recordingintensity" : "تسجيل الشدة ...",
+    "recordingintensity" : "...  تسجيل",
     
     "goeftbridgec" : "EFT انطلق عبر الجسر",
     "recordprefferedemotion" :"قم بالتسجيل",
@@ -26,6 +26,8 @@
     "record" : "قم بالتسجيل",
     "whenihavethis" : "عندما يكون لدي هذا\n (الشعور/الأعراض)",
     "ichoosetofeel" : " فإني اختار الاحساس \n:(الشعور المفضل لدي)",
-    "ihaveaquestion" : "ihaveaquestion",
-    "hellosara": "hellosara"
+    "ihaveaquestion" : "I have a question",
+    "hellosara": "Hello",
+    "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Wrist",
+    "acupoints": "1. Karate chop\n point"
 }

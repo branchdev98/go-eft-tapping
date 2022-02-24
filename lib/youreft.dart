@@ -152,9 +152,9 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
                             (intensityState == record_state.before),
                         child: Image.asset(
                           "assets/images/btnred.png",
-                          fit: BoxFit.fitHeight,
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.width / 9,
+                          fit: BoxFit.fitWidth,
+                          width: MediaQuery.of(context).size.width / 1.8,
+                          height: MediaQuery.of(context).size.width / 8,
                         ),
                       ),
                       Text(

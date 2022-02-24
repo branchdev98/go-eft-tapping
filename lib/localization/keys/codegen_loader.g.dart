@@ -31,18 +31,20 @@ class CodegenLoader extends AssetLoader{
   "theintensity": "شدّة الأعر\nاض (10<-0) ...",
   "myfeelingrecorded": "تم تسجيل  شعوري\n أوأعراضي",
   "theintensityrecorded": "تم تسجيل الشّدة",
-  "recordproblem": "اقول مشكلتك",
-  "recordintensity": "قم بتسجيل الشدة",
+  "recordproblem": "سجل مشكلتك",
+  "recordintensity": "سجل درجة قوة المشكلة",
   "recordingproblem": "...  تسجيل",
-  "recordingintensity": "تسجيل الشدة ...",
+  "recordingintensity": "...  تسجيل",
   "goeftbridgec": "EFT انطلق عبر الجسر",
   "recordprefferedemotion": "قم بالتسجيل",
   "recording": "...  تسجيل",
   "record": "قم بالتسجيل",
   "whenihavethis": "عندما يكون لدي هذا\n (الشعور/الأعراض)",
   "ichoosetofeel": " فإني اختار الاحساس \n:(الشعور المفضل لدي)",
-  "ihaveaquestion": "ihaveaquestion",
-  "hellosara": "hellosara"
+  "ihaveaquestion": "I have a question",
+  "hellosara": "Hello",
+  "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Wrist",
+  "acupoints": "1. Karate chop\n point"
 };
 static const Map<String,dynamic> en_US = {
   "lang": "eng",
@@ -72,7 +74,9 @@ static const Map<String,dynamic> en_US = {
   "whenihavethis": "When I have this: \n[feeling or symptom]",
   "ichoosetofeel": "I choose to feel: \n[preferred emotion]",
   "ihaveaquestion": "[From GO EFT Tapping app] I have a question",
-  "hellosara": "Hello Sara!"
+  "hellosara": "Hello Sara!",
+  "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Wrist",
+  "acupoints": "1. Karate chop\n point"
 };
 static const Map<String,dynamic> sv_SE = {
   "lang": "swe",
@@ -102,7 +106,9 @@ static const Map<String,dynamic> sv_SE = {
   "whenihavethis": "När jag känner av denna... \n(känsla eller symptom) ",
   "ichoosetofeel": "så väljer jag \n(bättre känsla)",
   "ihaveaquestion": "[Från GO EFT Tapping appen] Jag har en fråga/fundering",
-  "hellosara": "Hejsan Sara!"
+  "hellosara": "Hejsan Sara!",
+  "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Wrist",
+  "acupoints": "1. Karate chop\n point"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar_AE": ar_AE, "en_US": en_US, "sv_SE": sv_SE};
 }

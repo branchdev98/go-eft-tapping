@@ -258,129 +258,121 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        top: true,
-        // left: true,
-        bottom: true,
-        minimum: const EdgeInsets.only(bottom: 10),
-        child: Scaffold(
-            //key: YourEFT,
-            body: ListView(children: [
-          Stack(
-            alignment: Alignment.topCenter,
+      top: true,
+      // left: true,
+      bottom: true,
+      child: Scaffold(
+          //key: YourEFT,
+          body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: Column(
+            //alignment: Alignment.topCenter,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            //    mainAxisSize: MainAxisSize.min,
             children: [
-              //background
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 20,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage("assets/images/background.png"),
-                  ),
-                ),
+              SizedBox(
+                height: 1,
               ),
-              Positioned(
-                left: MediaQuery.of(context).size.width / 2 +
-                    (MediaQuery.of(context).size.width / 10) * 3.2,
-                top: 25,
-                child: Material(
-                  clipBehavior: Clip.hardEdge,
-                  color: Colors.transparent,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(LocaleKeys.copyright,
-                        style: TextStyle(
-                          fontSize: (MediaQuery.of(context).size.width / 25),
-                          color: Colors.black,
-                        )).tr(),
-                  ),
-                ),
-              ),
-
-              Column(
-
-                  //Title
-
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 30,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(LocaleKeys.goeftbridgec,
+                          style: TextStyle(
+                            fontSize: (MediaQuery.of(context).size.width / 10),
+                            color: Colors.black,
+                          )).tr(),
                     ),
-                    Material(
-                      clipBehavior: Clip.hardEdge,
-                      color: Colors.transparent,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(LocaleKeys.goeftbridgec,
-                            style: TextStyle(
-                              fontSize:
-                                  (MediaQuery.of(context).size.width / 10),
-                              color: Colors.black,
-                            )).tr(),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Material(
+                        clipBehavior: Clip.hardEdge,
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(LocaleKeys.copyright,
+                              style: TextStyle(
+                                fontSize:
+                                    (MediaQuery.of(context).size.width / 25),
+                                color: Colors.black,
+                              )).tr(),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    LocaleKeys.whenihavethis,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ).tr(),
+                  const SizedBox(width: 30),
+                  Material(
+                    //elevation: 0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(
+                          (LocaleKeys.lang.tr() == "ara") ? math.pi : 0),
+                      child: Image.asset(
+                        "assets/images/arrow.png",
+                        fit: BoxFit.fitWidth,
+                        width: MediaQuery.of(context).size.width / 5,
+                        height: MediaQuery.of(context).size.width / 5,
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          LocaleKeys.whenihavethis,
-                          style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ).tr(),
-                        const SizedBox(width: 30),
-                        Material(
-                          //elevation: 0,
-                          clipBehavior: Clip.hardEdge,
-                          color: Colors.transparent,
-                          child: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationY(
-                                (LocaleKeys.lang.tr() == "ara") ? math.pi : 0),
-                            child: Image.asset(
-                              "assets/images/arrow.png",
-                              fit: BoxFit.fitWidth,
-                              width: MediaQuery.of(context).size.width / 5,
-                              height: MediaQuery.of(context).size.width / 5,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 30),
-                        Text(
-                          LocaleKeys.ichoosetofeel,
-                          style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ).tr(),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Image.asset(
-                      "assets/images/bridge.png",
-                    ),
-                    SizedBox(
-                      height: (MediaQuery.of(context).size.height - 470),
-                    ),
-                    getFooterSection(),
-                  ]),
-
-              //Disclaimer Button
-
-              //feeling button
-
-              //    Positioned(child: child)
-              //go eft tapping button
-            ],
-          ),
-        ])));
+                  ),
+                  const SizedBox(width: 30),
+                  Text(
+                    LocaleKeys.ichoosetofeel,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ).tr(),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Image.asset(
+                "assets/images/bridge.png",
+              ),
+              SizedBox(
+                height: 100,
+              ),
+              getFooterSection(),
+              SizedBox(
+                height: 2,
+              )
+            ]),
+      )),
+    );
   }
 
   Future<bool> checkPermission() async {

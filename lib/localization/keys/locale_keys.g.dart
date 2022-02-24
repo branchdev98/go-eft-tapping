@@ -29,5 +29,7 @@ abstract class  LocaleKeys {
   static const ichoosetofeel = 'ichoosetofeel';
   static const ihaveaquestion = 'ihaveaquestion';
   static const hellosara = 'hellosara';
+  static const acupoints2 = 'acupoints2';
+  static const acupoints = 'acupoints';
 
 }
