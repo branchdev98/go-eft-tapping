@@ -582,7 +582,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                               ? TextAlign.right
                               : TextAlign.left,
                           style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 25,
+                              fontSize: MediaQuery.of(context).size.width / 24,
+                              fontWeight: FontWeight.bold,
                               color: Colors.black),
                         ).tr(),
                         Stack(
@@ -597,7 +598,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                               child: Image.asset(
                                 "assets/images/girl.png",
                                 fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width / 1.7,
+                                width: MediaQuery.of(context).size.width / 1.8,
                                 height:
                                     MediaQuery.of(context).size.width * 0.75,
                               ),
@@ -617,6 +618,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                                         fontSize:
                                             MediaQuery.of(context).size.width /
                                                 30,
+                                        fontWeight: FontWeight.bold,
                                         color: Colors.black),
                                   ).tr(),
                                 ],
