@@ -603,26 +603,23 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                                     MediaQuery.of(context).size.width * 0.75,
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 4,
-                                  ),
-                                  Text(
-                                    LocaleKeys.acupoints,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.width /
-                                                30,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ).tr(),
-                                ],
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 4,
+                                ),
+                                Text(
+                                  LocaleKeys.acupoints,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width /
+                                              30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ).tr(),
+                              ],
                             ),
                           ],
                         )

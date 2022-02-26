@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -164,295 +165,304 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     // than having to individually change instances of widgets.
 
     return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
-          body: ListView(
-            children: [
-              getTitleSection(),
-              Stack(alignment: Alignment.bottomCenter, children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height -
-                      //   MediaQuery.of(context).padding.bottom -
-                      75,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage("assets/images/background.png"),
-                    ),
-                  ),
+      top: true,
+      bottom: true,
+      child: Scaffold(
+          body: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("assets/images/background.png"),
                 ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      (MediaQuery.of(context).size.width / 10) * 3.6,
-                  top: 10,
-                  child: Material(
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(LocaleKeys.goefttapping,
-                          style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 10),
-                            color: Colors.black,
-                          )).tr(),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 +
-                      (MediaQuery.of(context).size.width / 10) * 3.6,
-                  top: 5,
-                  child: Material(
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(LocaleKeys.copyright,
-                          style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 15),
-                            color: Colors.black,
-                          )).tr(),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  top: (MediaQuery.of(context).size.width / 10) + 20,
-                  width: MediaQuery.of(context).size.width,
-                  child: Material(
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(LocaleKeys.thesound,
-                          style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 32),
-                            color: Colors.black,
-                          )).tr(),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 4 * 3 / 2,
-                  top: MediaQuery.of(context).size.height / 4 * 0.7,
-                  child: Material(
-                    elevation: 4.0,
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: InkWell(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          fit: StackFit.passthrough,
-                          children: [
-                            Ink.image(
-                              image: const AssetImage(
-                                  "assets/images/bluebutton.png"),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width / 4 * 3,
-                              height: MediaQuery.of(context).size.width / 6,
-                            ),
-                            Text(
-                              LocaleKeys.eftintro,
-                              style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.width / 15,
-                                  color: Colors.white),
-                            ).tr(),
-                          ],
-                        ),
-                        onTap: () async {
-                          player.pause();
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EFTIntroPage()),
-                          );
-                        }),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 4 * 3 / 2,
-                  top: MediaQuery.of(context).size.height / 4 * 1.2,
-                  child: Material(
-                    elevation: 4.0,
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: InkWell(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          fit: StackFit.passthrough,
-                          children: [
-                            Ink.image(
-                              image: const AssetImage(
-                                  "assets/images/btngreen.png"),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width / 4 * 3,
-                              height: MediaQuery.of(context).size.width / 6,
-                            ),
-                            Text(LocaleKeys.youreft,
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.width /
-                                                15,
-                                        color: Colors.white))
-                                .tr(),
-                          ],
-                        ),
-                        onTap: () {
-                          player.pause();
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const YourEFT()),
-                          );
-                        }),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 4 * 3 / 2,
-                  top: MediaQuery.of(context).size.height / 4 * 1.7,
-                  child: Material(
-                    elevation: 4.0,
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: InkWell(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          fit: StackFit.passthrough,
-                          children: [
-                            Ink.image(
-                              image: const AssetImage(
-                                  "assets/images/orangecontactbutton.png"),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width / 4 * 3,
-                              height: MediaQuery.of(context).size.width / 6,
-                            ),
-                            Text(LocaleKeys.contactme,
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.width /
-                                                15,
-                                        color: Colors.white))
-                                .tr(),
-                          ],
-                        ),
-                        onTap: () {
-                          player.pause();
-
-                          _launchURL(
-                              'sara@goldenopportunity.se',
-                              LocaleKeys.ihaveaquestion.tr(),
-                              LocaleKeys.hellosara.tr());
-                        }),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 4 * 3 / 2,
-                  top: MediaQuery.of(context).size.height / 4 * 2.2,
-                  child: Material(
-                    elevation: 4.0,
-                    clipBehavior: Clip.antiAlias,
-                    color: Colors.transparent,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
+              ),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       children: [
-                        Ink.image(
-                          image:
-                              const AssetImage("assets/images/btnenglish.png"),
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width / 4 * 0.95,
-                          height: MediaQuery.of(context).size.width / 6,
-                          child: InkWell(onTap: () {
-                            player.stop();
-
-                            context.setLocale(
-                                LocalizationManager.instance.enUSLocale);
-                            initState();
-                          }
-                              //    AppLocalization.load(Locale('en', ''));
-                              //  context.read<LocaleProvider>().setLocale(localeEN);
+                        getTitleSection(),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Material(
+                              clipBehavior: Clip.hardEdge,
+                              color: Colors.transparent,
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(LocaleKeys.goefttapping,
+                                    style: TextStyle(
+                                      fontSize:
+                                          (MediaQuery.of(context).size.width /
+                                              10),
+                                      color: Colors.black,
+                                    )).tr(),
                               ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Material(
+                                  clipBehavior: Clip.hardEdge,
+                                  color: Colors.transparent,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(LocaleKeys.copyright,
+                                        style: TextStyle(
+                                          fontSize: (MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              25),
+                                          color: Colors.black,
+                                        )).tr(),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Material(
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(LocaleKeys.thesound,
+                                style: TextStyle(
+                                  fontSize:
+                                      (MediaQuery.of(context).size.width / 32),
+                                  color: Colors.black,
+                                )).tr(),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 4 * 3 / 2 +
-                      MediaQuery.of(context).size.width / 4 * 0.98,
-                  top: MediaQuery.of(context).size.height / 4 * 2.2,
-                  child: Material(
-                    elevation: 4.0,
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Ink.image(
-                          image:
-                              const AssetImage("assets/images/btnswedish.png"),
-                          fit: BoxFit.fitWidth,
-                          width: MediaQuery.of(context).size.width / 4 * 0.95,
-                          height: MediaQuery.of(context).size.width / 6,
-                          child: InkWell(onTap: () {
-                            player.stop();
+                        Material(
+                          elevation: 4.0,
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: InkWell(
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/bluebutton.png"),
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width /
+                                        4 *
+                                        3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                  ),
+                                  Text(
+                                    LocaleKeys.eftintro,
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                15,
+                                        color: Colors.white),
+                                  ).tr(),
+                                ],
+                              ),
+                              onTap: () async {
+                                player.pause();
 
-                            context.setLocale(
-                                LocalizationManager.instance.svSELocale);
-                            initState();
-                          }),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EFTIntroPage()),
+                                );
+                              }),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 20,
+                        ),
+                        Material(
+                          elevation: 4.0,
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: InkWell(
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/btngreen.png"),
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width /
+                                        4 *
+                                        3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                  ),
+                                  Text(LocaleKeys.youreft,
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  15,
+                                              color: Colors.white))
+                                      .tr(),
+                                ],
+                              ),
+                              onTap: () {
+                                player.pause();
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const YourEFT()),
+                                );
+                              }),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 20,
+                        ),
+                        Material(
+                          elevation: 4.0,
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: InkWell(
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/orangecontactbutton.png"),
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width /
+                                        4 *
+                                        3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                  ),
+                                  Text(LocaleKeys.contactme,
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  15,
+                                              color: Colors.white))
+                                      .tr(),
+                                ],
+                              ),
+                              onTap: () {
+                                player.pause();
+
+                                _launchURL(
+                                    'sara@goldenopportunity.se',
+                                    LocaleKeys.ihaveaquestion.tr(),
+                                    LocaleKeys.hellosara.tr());
+                              }),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Material(
+                              elevation: 4.0,
+                              clipBehavior: Clip.antiAlias,
+                              color: Colors.transparent,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/btnenglish.png"),
+                                    fit: BoxFit.cover,
+                                    width:
+                                        MediaQuery.of(context).size.width / 4,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                    child: InkWell(onTap: () {
+                                      player.stop();
+
+                                      context.setLocale(LocalizationManager
+                                          .instance.enUSLocale);
+                                      initState();
+                                    }
+                                        //    AppLocalization.load(Locale('en', ''));
+                                        //  context.read<LocaleProvider>().setLocale(localeEN);
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Material(
+                              elevation: 4.0,
+                              clipBehavior: Clip.hardEdge,
+                              color: Colors.transparent,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/btnswedish.png"),
+                                    fit: BoxFit.fitWidth,
+                                    width:
+                                        MediaQuery.of(context).size.width / 4,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                    child: InkWell(onTap: () {
+                                      player.stop();
+
+                                      context.setLocale(LocalizationManager
+                                          .instance.svSELocale);
+                                      initState();
+                                    }),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Material(
+                              elevation: 4.0,
+                              clipBehavior: Clip.hardEdge,
+                              color: Colors.transparent,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/btnarabic.png"),
+                                    fit: BoxFit.fitWidth,
+                                    width:
+                                        MediaQuery.of(context).size.width / 4,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                    child: InkWell(onTap: () {
+                                      player.stop();
+
+                                      context.setLocale(LocalizationManager
+                                          .instance.arAELocale);
+                                      initState();
+                                    }),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 2 -
-                      MediaQuery.of(context).size.width / 4 * 3 / 2 +
-                      MediaQuery.of(context).size.width / 4 * 2,
-                  top: MediaQuery.of(context).size.height / 4 * 2.2,
-                  child: Material(
-                    elevation: 4.0,
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
-                      children: [
-                        Ink.image(
-                          image:
-                              const AssetImage("assets/images/btnarabic.png"),
-                          fit: BoxFit.fitWidth,
-                          width: MediaQuery.of(context).size.width / 4 * 0.95,
-                          height: MediaQuery.of(context).size.width / 6,
-                          child: InkWell(onTap: () {
-                            player.stop();
-
-                            context.setLocale(
-                                LocalizationManager.instance.arAELocale);
-                            initState();
-                          }),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                getFooterSection(context),
-              ])
-            ],
-          ),
-        ));
+                    getFooterSection(context),
+                  ]))),
+    );
   }
 
   @override

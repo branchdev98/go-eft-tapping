@@ -59,77 +59,75 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
         top: true,
         bottom: true,
         child: Scaffold(
-            body: Center(
-          child: Stack(
-            children: <Widget>[
-              SizedBox(
-                  height: MediaQuery.of(context).size.height - 0,
-                  child: (LocaleKeys.lang.tr() == "ara")
-                      ? FittedBox(
-                          child: Image.asset("assets/images/araacubg.png"),
-                          fit: BoxFit.fill,
-                        )
-                      : WebView(
-                          key: const Key("webview1"),
-                          debuggingEnabled: true,
-                          javascriptMode: JavascriptMode.unrestricted,
-                          initialUrl: "",
-                          onWebViewCreated:
-                              (WebViewController webViewController) async {
-                            _webViewController = webViewController;
-                            await loadAsset();
-                          },
-                        )),
-              Positioned(
-                left: LocaleKeys.lang.tr() == "ara"
-                    ? MediaQuery.of(context).size.width - 60
-                    : 20,
-                top: (MediaQuery.of(context).size.height - 70),
-                child: Material(
-                  clipBehavior: Clip.hardEdge,
-                  color: Colors.transparent,
-                  child: Ink.image(
-                    image: const AssetImage("assets/images/btnhome.png"),
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width / 8,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: InkWell(onTap: () async {
-                      int result = await player.stop();
-                      if (result == 1) {
-                        Navigator.pop(context);
-                      }
-                    }),
-                  ),
-                ),
-              ),
-              Positioned(
-                  left: LocaleKeys.lang.tr() == "ara"
-                      ? 20
-                      : MediaQuery.of(context).size.width - 60,
-                  top: (MediaQuery.of(context).size.height - 70),
-                  child: Material(
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Ink.image(
-                      image: playerState == PlayerState.PLAYING
-                          ? const AssetImage("assets/images/btnpause.png")
-                          : const AssetImage("assets/images/btnplay.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 8,
-                      height: MediaQuery.of(context).size.width / 8,
-                      child: InkWell(onTap: () {
-                        if (playerState == PlayerState.PLAYING) {
-                          player.pause();
-                        } else {
-                          player.resume();
-                        }
-                      }),
+          body: Container(
+            child: Stack(
+              fit: StackFit.loose, // Just Changed this line
+              alignment: Alignment.bottomCenter,
+              children: [
+                SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: (LocaleKeys.lang.tr() == "ara")
+                        ? FittedBox(
+                            child: Image.asset("assets/images/araacubg.png"),
+                            fit: BoxFit.fill,
+                          )
+                        : WebView(
+                            key: const Key("webview1"),
+                            debuggingEnabled: true,
+                            javascriptMode: JavascriptMode.unrestricted,
+                            initialUrl: "",
+                            onWebViewCreated:
+                                (WebViewController webViewController) async {
+                              _webViewController = webViewController;
+                              await loadAsset();
+                            },
+                          )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Material(
+                      clipBehavior: Clip.hardEdge,
+                      color: Colors.transparent,
+                      child: Ink.image(
+                        image: const AssetImage("assets/images/btnhome.png"),
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width / 8,
+                        height: MediaQuery.of(context).size.width / 8,
+                        child: InkWell(onTap: () async {
+                          int result = await player.stop();
+                          if (result == 1) {
+                            Navigator.pop(context);
+                          }
+                        }),
+                      ),
                     ),
-                  ))
-            ],
+                    Material(
+                      clipBehavior: Clip.hardEdge,
+                      color: Colors.transparent,
+                      child: Ink.image(
+                        image: playerState == PlayerState.PLAYING
+                            ? const AssetImage("assets/images/btnpause.png")
+                            : const AssetImage("assets/images/btnplay.png"),
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width / 8,
+                        height: MediaQuery.of(context).size.width / 8,
+                        child: InkWell(onTap: () {
+                          if (playerState == PlayerState.PLAYING) {
+                            player.pause();
+                          } else {
+                            player.resume();
+                          }
+                        }),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+
             /*,*/
           ),
-        )));
+        ));
   }
 
   @override
