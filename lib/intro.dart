@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -48,7 +48,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
 
     loadplayer().then((_) => player.playBytes(audiobytes));
   }
@@ -67,10 +67,231 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                 SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: (LocaleKeys.lang.tr() == "ara")
-                        ? FittedBox(
+                        ? /*FittedBox(
                             child: Image.asset("assets/images/araacubg.png"),
                             fit: BoxFit.fill,
-                          )
+                          )*/
+                        SafeArea(
+                            top: true,
+                            bottom: true,
+                            child: Scaffold(
+                                body: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/background.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Material(
+                                            clipBehavior: Clip.hardEdge,
+                                            color: Colors.transparent,
+                                            child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: Text(
+                                                  LocaleKeys.goefttapping,
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        (MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            10),
+                                                    color: Colors.black,
+                                                  )).tr(),
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Material(
+                                                clipBehavior: Clip.hardEdge,
+                                                color: Colors.transparent,
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child:
+                                                      Text(LocaleKeys.copyright,
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                (MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    25),
+                                                            color: Colors.black,
+                                                          )).tr(),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Material(
+                                        clipBehavior: Clip.hardEdge,
+                                        color: Colors.transparent,
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Text(LocaleKeys.thesound,
+                                              style: TextStyle(
+                                                fontSize:
+                                                    (MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        32),
+                                                color: Colors.black,
+                                              )).tr(),
+                                        ),
+                                      ),
+                                    ],
+                                    /* add child content here */
+                                  ),
+                                  Stack(
+                                    alignment: (LocaleKeys.lang.tr() == "ara")
+                                        ? Alignment.bottomLeft
+                                        : Alignment.bottomRight,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                          ),
+
+                                          //   alignment: Alignment.bottomRight,
+
+                                          Image.asset(
+                                            (LocaleKeys.lang.tr() == "ara")
+                                                ? "assets/images/aragirl.png"
+                                                : "assets/images/girl.png",
+                                            fit: BoxFit.cover,
+                                            width: math.min(
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .height,
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                1.4,
+                                            height: math.min(
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .height,
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                1.1,
+                                          ),
+                                          SizedBox(
+                                            height: 100,
+                                          ),
+                                        ],
+                                      ),
+                                      Positioned(
+                                        top: 30,
+                                        left: (LocaleKeys.lang.tr() == "ara")
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                math.min(
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height) /
+                                                    2.7
+                                            : 20,
+                                        child: Text(
+                                          LocaleKeys.acupoints2,
+                                          style: TextStyle(
+                                              height: (LocaleKeys.lang.tr() ==
+                                                      "ara")
+                                                  ? 1.1
+                                                  : 1.5,
+                                              fontSize: math.min(
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .width,
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .height) /
+                                                  (LocaleKeys.lang.tr() == "ara"
+                                                      ? 20
+                                                      : 25),
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ).tr(),
+                                      ),
+                                      Positioned(
+                                        top: math.min(
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .height,
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .width) /
+                                                1.1 +
+                                            ((LocaleKeys.lang.tr() == "ara")
+                                                ? 5
+                                                : 5),
+                                        left: (LocaleKeys.lang.tr() == "ara")
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                math.min(
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                    1.5 -
+                                                10
+                                            : math.min(
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width) /
+                                                    1.5 -
+                                                20,
+                                        child: Text(
+                                          LocaleKeys.acupoints,
+                                          style: TextStyle(
+                                              height: 1.0,
+                                              fontSize: math.min(
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .width,
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .height) /
+                                                  26,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ).tr(),
+                                      ),
+                                    ],
+                                  ),
+
+                                  /* add child content here */
+                                ],
+                              ),
+                            )))
                         : WebView(
                             key: const Key("webview1"),
                             debuggingEnabled: true,

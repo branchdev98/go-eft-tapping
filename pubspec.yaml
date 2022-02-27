@@ -89,6 +89,7 @@ flutter:
     - assets/images/bridge.png
     - assets/images/acubg.png
     - assets/images/girl.png
+    - assets/images/aragirl.png
     - assets/images/arrow.png
     - assets/images/btnplay.png
     - assets/images/btnarabridge.png
@@ -106,7 +107,6 @@ flutter:
     - assets/images/btnstop.png
     - assets/html/engintro.html
     - assets/html/sweintro.html
-    - assets/html/araintro.html
     - assets/images/infobutton.png
     - assets/images/btnpause.png
     - assets/images/btnnext.png

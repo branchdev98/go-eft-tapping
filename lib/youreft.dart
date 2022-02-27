@@ -62,7 +62,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
     /*  ByteData bytes =
         rootBundle.load(audioasset) as ByteData; //load audio from assets
     audiobytes =

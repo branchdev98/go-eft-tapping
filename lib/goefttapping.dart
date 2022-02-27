@@ -242,7 +242,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   void initState() {
     super.initState();
     print("initstate");
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
 
     whatismode(false);
     //".mp3";
@@ -310,7 +310,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
             }),
         SizedBox(width: MediaQuery.of(context).size.width / 3 * 2),
       ]),
-      SizedBox(height: 20),
+      SizedBox(height: 10),
       Container(
           width: MediaQuery.of(context).size.width,
           child:
@@ -499,147 +499,157 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
         bottom: true,
         child: Scaffold(
             body: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/background.png"),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Material(
-                              clipBehavior: Clip.hardEdge,
-                              color: Colors.transparent,
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Text(LocaleKeys.goefttapping,
-                                    style: TextStyle(
-                                      fontSize:
-                                          (MediaQuery.of(context).size.width /
-                                              10),
-                                      color: Colors.black,
-                                    )).tr(),
-                              ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Material(
-                                  clipBehavior: Clip.hardEdge,
-                                  color: Colors.transparent,
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Text(LocaleKeys.copyright,
-                                        style: TextStyle(
-                                          fontSize: (MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              25),
-                                          color: Colors.black,
-                                        )).tr(),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            )
-                          ],
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Material(
+                        clipBehavior: Clip.hardEdge,
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(LocaleKeys.goefttapping,
+                              style: TextStyle(
+                                fontSize:
+                                    (MediaQuery.of(context).size.width / 10),
+                                color: Colors.black,
+                              )).tr(),
                         ),
-                        Material(
-                          clipBehavior: Clip.hardEdge,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(LocaleKeys.thesound,
-                                style: TextStyle(
-                                  fontSize:
-                                      (MediaQuery.of(context).size.width / 32),
-                                  color: Colors.black,
-                                )).tr(),
-                          ),
-                        ),
-                      ],
-                      /* add child content here */
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          LocaleKeys.acupoints2,
-                          textAlign: (LocaleKeys.lang.tr() == "ara")
-                              ? TextAlign.right
-                              : TextAlign.left,
-                          style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ).tr(),
-                        Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Transform(
-                              alignment: Alignment.center,
-                              transform: Matrix4.rotationY(
-                                  (LocaleKeys.lang.tr() == "ara")
-                                      ? math.pi
-                                      : 0),
-                              child: Image.asset(
-                                "assets/images/girl.png",
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width / 1.8,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.75,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width / 4,
-                                ),
-                                Text(
-                                  LocaleKeys.acupoints,
-                                  textAlign: TextAlign.left,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Material(
+                            clipBehavior: Clip.hardEdge,
+                            color: Colors.transparent,
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(LocaleKeys.copyright,
                                   style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              30,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                ).tr(),
-                              ],
+                                    fontSize:
+                                        (MediaQuery.of(context).size.width /
+                                            25),
+                                    color: Colors.black,
+                                  )).tr(),
                             ),
-                          ],
-                        )
-                      ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(LocaleKeys.thesound,
+                          style: TextStyle(
+                            fontSize: (MediaQuery.of(context).size.width / 32),
+                            color: Colors.black,
+                          )).tr(),
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        getFooterSection(),
-                      ],
-                      /* add child content here */
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                  ],
-                ))));
+                  ),
+                ],
+                /* add child content here */
+              ),
+              Stack(
+                alignment: (LocaleKeys.lang.tr() == "ara")
+                    ? Alignment.bottomLeft
+                    : Alignment.bottomRight,
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 40,
+                      ),
+
+                      //   alignment: Alignment.bottomRight,
+
+                      Image.asset(
+                        (LocaleKeys.lang.tr() == "ara")
+                            ? "assets/images/aragirl.png"
+                            : "assets/images/girl.png",
+                        fit: BoxFit.cover,
+                        width: math.min(MediaQuery.of(context).size.height,
+                                MediaQuery.of(context).size.width) /
+                            1.4,
+                        height: math.min(MediaQuery.of(context).size.height,
+                                MediaQuery.of(context).size.width) /
+                            1.1,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 30,
+                    left: (LocaleKeys.lang.tr() == "ara")
+                        ? MediaQuery.of(context).size.width -
+                            math.min(MediaQuery.of(context).size.width,
+                                    MediaQuery.of(context).size.height) /
+                                2.7
+                        : 20,
+                    child: Text(
+                      LocaleKeys.acupoints2,
+                      style: TextStyle(
+                          height: (LocaleKeys.lang.tr() == "ara") ? 1.1 : 1.5,
+                          fontSize: math.min(MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height) /
+                              (LocaleKeys.lang.tr() == "ara" ? 20 : 25),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ).tr(),
+                  ),
+                  Positioned(
+                    top: math.min(MediaQuery.of(context).size.height,
+                                MediaQuery.of(context).size.width) /
+                            1.1 +
+                        ((LocaleKeys.lang.tr() == "ara") ? 5 : 5),
+                    left: (LocaleKeys.lang.tr() == "ara")
+                        ? MediaQuery.of(context).size.width -
+                            math.min(MediaQuery.of(context).size.height,
+                                    MediaQuery.of(context).size.width) /
+                                1.5 -
+                            10
+                        : math.min(MediaQuery.of(context).size.height,
+                                    MediaQuery.of(context).size.width) /
+                                1.5 -
+                            20,
+                    child: Text(
+                      LocaleKeys.acupoints,
+                      style: TextStyle(
+                          height: 1.0,
+                          fontSize: math.min(MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height) /
+                              26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ).tr(),
+                  ),
+                ],
+              ),
+              getFooterSection(),
+
+              /* add child content here */
+            ],
+          ),
+        )));
   }
 
   State<StatefulWidget> createState() => throw UnimplementedError();

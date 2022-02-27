@@ -131,9 +131,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     });
   }
 
+  @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
 
     disableBtn = false; //no disable btn
     userrecorded = false; //
@@ -205,7 +206,8 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                             : "",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width / 25,
+                        fontSize: MediaQuery.of(context).size.width /
+                            ((LocaleKeys.lang.tr() == "ara") ? 15 : 30),
                         color: (state == RecordState.recording)
                             ? Colors.red
                             : Colors.white),
@@ -321,16 +323,18 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 height: 20,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    LocaleKeys.whenihavethis,
-                    style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width / 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ).tr(),
-                  const SizedBox(width: 30),
+                  Expanded(
+                    child: Text(
+                      LocaleKeys.whenihavethis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ).tr(),
+                  ),
                   Material(
                     //elevation: 0,
                     clipBehavior: Clip.hardEdge,
@@ -347,14 +351,16 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 30),
-                  Text(
-                    LocaleKeys.ichoosetofeel,
-                    style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width / 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ).tr(),
+                  Expanded(
+                    child: Text(
+                      LocaleKeys.ichoosetofeel,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ).tr(),
+                  )
                 ],
               ),
               SizedBox(
