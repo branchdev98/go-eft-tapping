@@ -77,6 +77,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+//AudioCache player = AudioCache();
+//AudioCache audioCache = AudioCache();
 AudioPlayer player = AudioPlayer();
 Uint8List audiobytes;
 var currentpos = 0;
@@ -100,7 +102,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
+    if (Platform.isIOS) {
+      player.notificationService?.startHeadlessService();
+    }
+    //  player = AudioCache(prefix: 'assets/audio/');
     Future.delayed(Duration.zero, () async {
       audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
       ByteData bytes =
@@ -108,8 +113,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       audiobytes =
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
       //convert ByteData to Uint8List
+      //  AudioPlayer player1;
 
       player.onDurationChanged.listen((Duration d) {
+        print("durationchanged");
         //get the duration of audio
         maxduration = d.inMilliseconds;
         int sseconds = Duration(milliseconds: maxduration).inSeconds;
@@ -275,6 +282,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               ),
                               onTap: () async {
                                 player.pause();
+                                //player.pause();
 
                                 Navigator.push(
                                   context,
@@ -515,6 +523,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         } else if (playerState == PlayerState.PLAYING) {
                           player.pause();
                         } else {
+                          // player.play('engaudiob.mp3');
                           player.playBytes(audiobytes);
                         }
                       },
