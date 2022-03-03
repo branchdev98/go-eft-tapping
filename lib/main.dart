@@ -102,6 +102,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (kIsWeb) {
+      //Calls to Platform.isIOS fails on web
+      return;
+    }
     if (Platform.isIOS) {
       player.notificationService?.startHeadlessService();
     }

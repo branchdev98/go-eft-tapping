@@ -520,36 +520,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         color: Colors.transparent,
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: Text(LocaleKeys.goefttapping,
+                          child: Text(LocaleKeys.pageetitle,
                               style: TextStyle(
                                 fontSize:
-                                    (MediaQuery.of(context).size.width / 10),
+                                    (MediaQuery.of(context).size.width / 11),
                                 color: Colors.black,
                               )).tr(),
                         ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Material(
-                            clipBehavior: Clip.hardEdge,
-                            color: Colors.transparent,
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(LocaleKeys.copyright,
-                                  style: TextStyle(
-                                    fontSize:
-                                        (MediaQuery.of(context).size.width /
-                                            25),
-                                    color: Colors.black,
-                                  )).tr(),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      )
                     ],
                   ),
                   Material(

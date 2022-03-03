@@ -297,48 +297,19 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
                       children: [
                         Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Material(
-                                  clipBehavior: Clip.hardEdge,
-                                  color: Colors.transparent,
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Text(LocaleKeys.goefttapping,
-                                        style: TextStyle(
-                                          fontSize: (MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10),
-                                          color: Colors.black,
-                                        )).tr(),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Material(
-                                      clipBehavior: Clip.hardEdge,
-                                      color: Colors.transparent,
-                                      child: Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Text(LocaleKeys.copyright,
-                                            style: TextStyle(
-                                              fontSize: (MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  25),
-                                              color: Colors.black,
-                                            )).tr(),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
-                                )
-                              ],
+                            Material(
+                              clipBehavior: Clip.hardEdge,
+                              color: Colors.transparent,
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(LocaleKeys.pagedtitle,
+                                    style: TextStyle(
+                                      fontSize:
+                                          (MediaQuery.of(context).size.width /
+                                              11),
+                                      color: Colors.black,
+                                    )).tr(),
+                              ),
                             ),
                             Material(
                               clipBehavior: Clip.hardEdge,

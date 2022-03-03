@@ -44,7 +44,9 @@ class CodegenLoader extends AssetLoader{
   "ihaveaquestion": "I have a question",
   "hellosara": "Hello",
   "acupoints2": "2. أعلى الرأس\n3. حاجب العين\n4. جانب العين\n5. تحت العين\n6. تحت الأنف\n7. الذقن\n8. الترقوة\n'عقدة ربطة العنق'\n9. تحت الإبط\n10.  داخل الكم\n(معصم اليد)",
-  "acupoints": "1. منطقة ضربة \n الكاراتيه"
+  "acupoints": "1. منطقة ضربة \n الكاراتيه",
+  "pagedtitle": "سجل مشكلتك",
+  "pageetitle": "انطلق بالنقرEFT "
 };
 static const Map<String,dynamic> en_US = {
   "lang": "eng",
@@ -76,7 +78,9 @@ static const Map<String,dynamic> en_US = {
   "ihaveaquestion": "[From GO EFT Tapping app] I have a question",
   "hellosara": "Hello Sara!",
   "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Inside Wrist",
-  "acupoints": "1. Side of hand\n (Karate chop point)"
+  "acupoints": "1. Side of hand\n (Karate chop point)",
+  "pagedtitle": "Record your problem",
+  "pageetitle": "We tap together"
 };
 static const Map<String,dynamic> sv_SE = {
   "lang": "swe",
@@ -108,7 +112,9 @@ static const Map<String,dynamic> sv_SE = {
   "ihaveaquestion": "[Från GO EFT Tapping appen] Jag har en fråga/fundering",
   "hellosara": "Hejsan Sara!",
   "acupoints2": "2. Huvudet\n3. Ögonbrynet\n4. Sidan av ögat\n5. Under ögat\n6. Under näsan\n7. Hakan, under läppen\n8. Nyckelbenspunkten,\n  eller handflatan \n  på nyckelbenen\n9. Under armen\n10. Handloven",
-  "acupoints": "1. Sidan av handen\n(karatepunkten)"
+  "acupoints": "1. Sidan av handen\n(karatepunkten)",
+  "pagedtitle": "Spela in ditt problem",
+  "pageetitle": "Vi knackar tillsammans"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar_AE": ar_AE, "en_US": en_US, "sv_SE": sv_SE};
 }

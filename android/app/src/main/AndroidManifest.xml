@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.go_eft_tapping">
+    package="com.sarabern.go_eft_tapping">
 
     
    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -8,7 +8,7 @@ xmlns:tools="http://schemas.android.com/tools"
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
    <application
-        android:label="go_eft_tapping"
+        android:label="EFT Tapping"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
