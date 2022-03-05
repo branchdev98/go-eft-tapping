@@ -257,7 +257,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
 
   Future play(String what) async {
     // final file = new File(audioasset);
-  if (kIsWeb) {
+    if (kIsWeb) {
       //Calls to Platform.isIOS fails on web
       return;
     }
@@ -265,12 +265,11 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
       player.notificationService.startHeadlessService();
     }
     AudioCache audioCache = AudioCache();
-      audioCache = AudioCache(prefix: 'assets/audio/');
-   
-    String audioasset =
-        LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
-         player = await audioCache.play(audioasset);
-        await player.stop();
+    audioCache = AudioCache(prefix: 'assets/audio/');
+
+    String audioasset = LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
+    player = await audioCache.play(audioasset);
+    await player.stop();
 /*
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
@@ -666,6 +665,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
   void startRecord(String what) async {
     await player.stop();
     bool hasPermission = await checkPermission();
+    print("permission check");
     if (hasPermission) {
       statusText = "正在录音中...";
       print(statusText);

@@ -111,16 +111,25 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     with WidgetsBindingObserver {
   // String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
   AudioPlayer player = AudioPlayer();
-  late Uint8List audiobytes;
+  AudioCache audioCache = AudioCache();
 
   String audioasset = "";
   bool playCompleted = false;
 
   Future loadplayer() async {
     audioasset = await getAssetFile(mode, audiofilepos);
-    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    if (kIsWeb) {
+      //Calls to Platform.isIOS fails on web
+      return;
+    }
+    if (Platform.isIOS) {
+      player.notificationService.startHeadlessService();
+    }
+    audioCache = AudioCache(prefix: 'assets/audio/');
+
+    player = await audioCache.play(audioasset);
+    await player.stop();
+
     playCompleted = false;
     await player.setVolume(0.5);
     player.onPlayerStateChanged.listen((PlayerState s) => {
@@ -145,13 +154,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
       audioasset = await getAssetFile(mode, audiofilepos);
       print("audioasset = $audioasset");
       if (arrPlayList[audiofilepos] >= 1) {
-        ByteData bytes =
-            await rootBundle.load(audioasset); //load audio from assets
-        audiobytes =
-            bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+        //    ByteData bytes =
+        //        await rootBundle.load(audioasset); //load audio from assets
+        //   audiobytes =
+        //       bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
         //convert ByteData to Uint8List
         await player.setVolume(0.5);
-        player.playBytes(audiobytes);
+        //player.playBytes(audiobytes);
+        player.resume();
       } else {
         //String playingFile;
         print("ready to play user");
@@ -160,7 +170,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
         if (File(audioasset).existsSync()) {
           print("user problem exist");
           await player.setVolume(1);
-          player.play(audioasset, isLocal: true);
+          player.play("assets/audio/" + audioasset, isLocal: true);
         }
       }
     });
@@ -171,23 +181,23 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     //await player.release();
 
     await loadplayer();
-
-    player.playBytes(audiobytes);
+    player.resume();
+    //  player.playBytes(audiobytes);
   }
 
   String getAssetPath(var mode) {
     String audiopath = "";
     switch (mode) {
       case track.F:
-        audiopath = "assets/audio/" + LocaleKeys.lang.tr() + "audiof";
+        audiopath = LocaleKeys.lang.tr() + "audiof";
 
         break;
       case track.E1:
-        audiopath = "assets/audio/" + LocaleKeys.lang.tr() + "audioe";
+        audiopath = LocaleKeys.lang.tr() + "audioe";
 
         break;
       case track.E2:
-        audiopath = "assets/audio/" + LocaleKeys.lang.tr() + "audioe";
+        audiopath = LocaleKeys.lang.tr() + "audioe";
 
         break;
     }
@@ -300,13 +310,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               audiofilepos = 0;
               //  startPlaylist();
               audioasset = await getAssetFile(mode, audiofilepos);
-              ByteData bytes =
-                  await rootBundle.load(audioasset); //load audio from assets
-              audiobytes = bytes.buffer
-                  .asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+              player = await audioCache.play(audioasset);
+              // ByteData bytes =
+              //     await rootBundle.load(audioasset); //load audio from assets
+              // audiobytes = bytes.buffer
+              //     .asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
               playCompleted = false;
 
-              player.playBytes(audiobytes);
+              //player.playBytes(audiobytes);
             }),
         SizedBox(width: MediaQuery.of(context).size.width / 3 * 2),
       ]),
@@ -388,13 +399,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
                         //  startPlaylist();
                         audioasset = await getAssetFile(mode, audiofilepos);
-                        ByteData bytes = await rootBundle
-                            .load(audioasset); //load audio from assets
-                        audiobytes = bytes.buffer.asUint8List(
-                            bytes.offsetInBytes, bytes.lengthInBytes);
+                        //   ByteData bytes = await rootBundle
+                        //       .load(audioasset); //load audio from assets
+                        //   audiobytes = bytes.buffer.asUint8List(
+                        //       bytes.offsetInBytes, bytes.lengthInBytes);
                         playCompleted = false;
-
-                        player.playBytes(audiobytes);
+                        player = await audioCache.play(audioasset);
+                        //player.playBytes(audiobytes);
                         // startPlaylist();
                       }
                     }
@@ -453,15 +464,17 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           });
                           audioasset = await getAssetFile(mode, audiofilepos);
 
-                          ByteData bytes = await rootBundle
-                              .load(audioasset); //load audio from assets
-                          audiobytes = bytes.buffer.asUint8List(
-                              bytes.offsetInBytes, bytes.lengthInBytes);
+                          //  ByteData bytes = await rootBundle
+                          //      .load(audioasset); //load audio from assets
+                          //  audiobytes = bytes.buffer.asUint8List(
+                          //     bytes.offsetInBytes, bytes.lengthInBytes);
 
                           //convert ByteData to Uint8List
-                          player
-                              .playBytes(audiobytes)
-                              .then((playCompleted) => false);
+                          player = await audioCache.play(audioasset);
+                          playCompleted = false;
+                          //  player
+                          //     .playBytes(audiobytes)
+                          //     .then((playCompleted) => false);
                         }
                         //  stopRecord();
                       }),
