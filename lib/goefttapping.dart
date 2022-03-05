@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_eft_tapping/goeftbridge.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,7 +22,7 @@ class GoEFTTappingPage extends StatefulWidget {
 
 var arrPlayList = [];
 var audiofilepos = 0;
-var playerState;
+
 var arrPlayListF = [
   3,
   0,
@@ -115,6 +113,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
   String audioasset = "";
   bool playCompleted = false;
+  bool playPaused = false;
 
   Future loadplayer() async {
     audioasset = await getAssetFile(mode, audiofilepos);
@@ -126,16 +125,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
       player.notificationService.startHeadlessService();
     }
     audioCache = AudioCache(prefix: 'assets/audio/');
-    await player.setVolume(0.5);
     player = await audioCache.play(audioasset);
     //  await player.stop();
-
+    await player.setVolume(0.5);
     playCompleted = false;
 
     player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
-          Wakelock.toggle(enable: s == PlayerState.PLAYING),
-          setState(() => playerState = s)
+          Wakelock.toggle(enable: !playPaused && !playCompleted),
         });
     player.onPlayerCompletion.listen((event) async {
       audiofilepos++;
@@ -310,7 +307,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
               whatismode(result);
               audiofilepos = 0;
-              //  startPlaylist();
+
               audioasset = await getAssetFile(mode, audiofilepos);
               player = await audioCache.play(audioasset);
               // ByteData bytes =
@@ -371,11 +368,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               clipBehavior: Clip.hardEdge,
               color: Colors.transparent,
               child: InkWell(
-                  child: ((playCompleted == PlayerState.COMPLETED &&
-                              playCompleted == true) ||
-                          playerState == PlayerState.PAUSED ||
-                          (playerState == PlayerState.STOPPED &&
-                              playCompleted == true))
+                  child: (playPaused == true || playCompleted == true)
                       ? Image.asset(
                           "assets/images/btnplay.png",
                           fit: BoxFit.fitHeight,
@@ -391,28 +384,26 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   onTap: () async {
                     //disableBtn = true;
 
-                    if (playerState == PlayerState.PLAYING) {
+                    if (playPaused == false) {
                       player.pause();
-                    } else if (playerState == PlayerState.PAUSED) {
+                      setState(() {
+                        playPaused = true;
+                      });
+                    } else if (playPaused == true) {
                       player.resume();
-                    } else {
-                      if (playCompleted) {
-                        audiofilepos = 0;
-                        setState(() {
-                          playerState = PlayerState.PLAYING;
-                        });
-                        loadplayer();
-                        //  startPlaylist();
-                        //audioasset = await getAssetFile(mode, audiofilepos);
-                        //   ByteData bytes = await rootBundle
-                        //       .load(audioasset); //load audio from assets
-                        //   audiobytes = bytes.buffer.asUint8List(
-                        //       bytes.offsetInBytes, bytes.lengthInBytes);
+                      setState(() {
+                        playPaused = false;
+                      });
+                    }
 
-                        // player = await audioCache.play(audioasset);
-                        //player.playBytes(audiobytes);
-                        // startPlaylist();
-                      }
+                    if (playCompleted) {
+                      audiofilepos = 0;
+                      setState(() {
+                        playPaused = false;
+                        playCompleted = false;
+                      });
+
+                      loadplayer();
                     }
                   }),
             ),

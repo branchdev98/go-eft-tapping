@@ -277,7 +277,6 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
           Wakelock.toggle(enable: s == PlayerState.PLAYING),
-          setState(() => playerState = s)
         });
     //convert ByteData to Uint8List
     if (kDebugMode) {
