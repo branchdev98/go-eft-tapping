@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock/wakelock.dart';
@@ -22,15 +24,31 @@ class EFTIntroPage extends StatefulWidget {
 class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
   late WebViewController _webViewController;
 
-  String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioc.mp3';
+  String audioasset =  LocaleKeys.lang.tr() + 'audioc.mp3';
   AudioPlayer player = AudioPlayer();
+  AudioCache audioCache = AudioCache();
   late Uint8List audiobytes;
 
   Future loadplayer() async {
     // final file = new File(audioasset);
-    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    if (kIsWeb) {
+      //Calls to Platform.isIOS fails on web
+      return;
+    }
+    if (Platform.isIOS) {
+      player.notificationService.startHeadlessService();
+    }
+      audioCache = AudioCache(prefix: 'assets/audio/');
+   
+     
+     // ByteData bytes =
+     //     await rootBundle.load(audioasset); //load audio from assets
+    //  audiobytes =
+     //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+       //    AudioCache audioPlayer = AudioCache();
+       
+        player = await audioCache.play(audioasset);
+        await player.stop();
     await player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
           Wakelock.toggle(enable: s == PlayerState.PLAYING),
@@ -50,7 +68,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
 
-    loadplayer().then((_) => player.playBytes(audiobytes));
+    loadplayer().then((_) => player.resume());
   }
 
   @override

@@ -257,13 +257,24 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
 
   Future play(String what) async {
     // final file = new File(audioasset);
-
+  if (kIsWeb) {
+      //Calls to Platform.isIOS fails on web
+      return;
+    }
+    if (Platform.isIOS) {
+      player.notificationService.startHeadlessService();
+    }
+    AudioCache audioCache = AudioCache();
+      audioCache = AudioCache(prefix: 'assets/audio/');
+   
     String audioasset =
-        'assets/audio/' + LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
-
+        LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
+         player = await audioCache.play(audioasset);
+        await player.stop();
+/*
     ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);*/
     player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
           Wakelock.toggle(enable: s == PlayerState.PLAYING),
@@ -273,7 +284,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     if (kDebugMode) {
       print(audioasset);
     }
-    await player.playBytes(audiobytes);
+    await player.resume();
   }
 
   @override

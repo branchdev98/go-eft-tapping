@@ -78,7 +78,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 //AudioCache player = AudioCache();
-//AudioCache audioCache = AudioCache();
+AudioCache audioCache = AudioCache();
 AudioPlayer player = AudioPlayer();
 Uint8List audiobytes;
 var currentpos = 0;
@@ -109,13 +109,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (Platform.isIOS) {
       player.notificationService?.startHeadlessService();
     }
-    //  player = AudioCache(prefix: 'assets/audio/');
+      audioCache = AudioCache(prefix: 'assets/audio/');
     Future.delayed(Duration.zero, () async {
-      audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
-      ByteData bytes =
-          await rootBundle.load(audioasset); //load audio from assets
-      audiobytes =
-          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      audioasset =  LocaleKeys.lang.tr() + "audiob.mp3";
+     // ByteData bytes =
+     //     await rootBundle.load(audioasset); //load audio from assets
+    //  audiobytes =
+     //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+       //    AudioCache audioPlayer = AudioCache();
+       
+        player = await audioCache.play(audioasset);
+        
+        //await player.pause();
       //convert ByteData to Uint8List
       //  AudioPlayer player1;
 
@@ -131,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         if (kDebugMode) {
           print(_printDuration(total));
         }
-
+        player.stop();
         setState(() {});
       });
 
@@ -523,12 +528,31 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       onTap: () async {
                         if (playerState == PlayerState.PAUSED) {
                           int result = await player.resume();
-                          if (result != 1) player.playBytes(audiobytes);
+                        //  if (result != 1) player.playBytes(audiobytes);
                         } else if (playerState == PlayerState.PLAYING) {
                           player.pause();
                         } else {
+                       /*   AudioCache audioPlayer = AudioCache();
+                          player = await audioPlayer.play('audio/engaudiob.mp3');
+                           player.onDurationChanged.listen((Duration d) {
+                              print("durationchanged");
+                              //get the duration of audio
+                              maxduration = d.inMilliseconds;
+                              int sseconds = Duration(milliseconds: maxduration).inSeconds;
+
+                              final total = Duration(seconds: sseconds);
+
+                              maxpostlabel = _printDuration(total);
+                              if (kDebugMode) {
+                                print(_printDuration(total));
+                              }
+
+                              setState(() {});
+                            });
+                            */
+                            player.resume();
                           // player.play('engaudiob.mp3');
-                          player.playBytes(audiobytes);
+                          //player.playBytes(audiobytes);
                         }
                       },
                     ),
