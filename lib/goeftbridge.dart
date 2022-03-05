@@ -6,11 +6,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:wakelock/wakelock.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+
 import 'localization/keys/locale_keys.g.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -32,12 +31,10 @@ class GoEFTBridge extends StatefulWidget {
 var state = RecordState.before;
 
 class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
-  //const YourEFTPage({Key? key}) : super(key: key);
-  String checkedImagePath = "assets/images/unchecked.png";
-
   // ignore: non_constant_identifier_names
 
   AudioPlayer player = AudioPlayer();
+  AudioCache audioCache = AudioCache();
   late Uint8List audiobytes;
   var audiofilepos = 0;
   var checkeddisclaimer = false;
@@ -47,6 +44,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   var playCompleted = false;
   var userrecorded = false;
 
+  var playPaused = false;
   var arrPlayList = [1, 0, 2];
 
   Future<String> getAssetFile(var audiofilepos) async {
@@ -60,8 +58,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     } else if (arrPlayList[audiofilepos] == -1) {
       audioasset = await getFilePath("intensity");
     } else {
-      audioasset = "assets/audio/" +
-          LocaleKeys.lang.tr() +
+      audioasset = LocaleKeys.lang.tr() +
           "audiof" +
           arrPlayList[audiofilepos].toString() +
           ".mp3";
@@ -74,9 +71,12 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       //stop your audio player
       player.pause();
+      setState(() {
+        playPaused = true;
+      });
     }
     if (state == AppLifecycleState.resumed) {
-      //   player.resume();
+      //  player.resume();
     }
   }
 
@@ -89,21 +89,35 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   }
 
   Future<void> loadplayer() async {
-    audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiof1.mp3";
-    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    playCompleted = false;
+    audioasset = await getAssetFile(audiofilepos);
+    if (kIsWeb) {
+      //Calls to Platform.isIOS fails on web
+      return;
+    }
+    if (Platform.isIOS) {
+      player.notificationService.startHeadlessService();
+    }
+    audioCache = AudioCache(prefix: 'assets/audio/');
+    player = await audioCache.play(audioasset);
+    // ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
+    //  audiobytes =
+    //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    //playCompleted = false;
+    // playPaused = false;
     player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
-          Wakelock.toggle(enable: s == PlayerState.PLAYING),
-          setState(() => playerState = s)
+          Wakelock.toggle(enable: !playPaused && !playCompleted),
+          // setState(() => playerState = s)
         });
     player.onPlayerCompletion.listen((event) async {
       audiofilepos++;
+      print("audiofilepos = $audiofilepos");
+      print("playcompleted = $playCompleted");
       if (audiofilepos == arrPlayList.length) {
         setState(() {
           playCompleted = true;
+          playPaused = false;
+          player.onPlayerCompletion.listen(null);
           audiofilepos = 0;
         });
       }
@@ -111,16 +125,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
       if (playCompleted == true) return;
 
       audioasset = await getAssetFile(audiofilepos);
-
+      print("audioasset = $audioasset");
       if (arrPlayList[audiofilepos] >= 1) {
-        ByteData bytes =
-            await rootBundle.load(audioasset); //load audio from assets
-        audiobytes =
-            bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-        //convert ByteData to Uint8List
-        player.playBytes(audiobytes);
+        loadplayer();
       } else {
-        //String playingFile;
         print("ready to play user");
 
         if (File(audioasset).existsSync()) {
@@ -140,8 +148,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     userrecorded = false; //
     state = RecordState.before;
 
-    //loadplayer().then((playCompleted) => false);
-    loadplayer().then((_) => player.playBytes(audiobytes));
+    loadplayer();
   }
 
   Widget getFooterSection() {
@@ -234,7 +241,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
               Ink.image(
                 image: (state == RecordState.recording)
                     ? const AssetImage("assets/images/btnstop.png")
-                    : playerState == PlayerState.PLAYING
+                    : !playPaused && !playCompleted
                         ? const AssetImage("assets/images/btnpause.png")
                         : const AssetImage("assets/images/btnplay.png"),
                 fit: BoxFit.cover,
@@ -244,10 +251,24 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                   if (state == RecordState.recording) {
                     stopRecord();
                   } else if (state == RecordState.before) {
-                    if (playerState == PlayerState.PLAYING) {
+                    if (!playPaused && !playCompleted) {
                       player.pause();
-                    } else {
+                      setState(() {
+                        playPaused = true;
+                      });
+                    } else if (playPaused) {
                       player.resume();
+                      setState(() {
+                        playPaused = false;
+                        playCompleted = false;
+                      });
+                    } else {
+                      audiofilepos = 0;
+                      loadplayer();
+                      setState(() {
+                        playPaused = false;
+                        playCompleted = false;
+                      });
                     }
                   }
                 }),

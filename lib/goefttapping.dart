@@ -104,6 +104,7 @@ var arrPlayListE2 = [
 ];
 var mode;
 enum track { E1, E2, F }
+var mode_result = false;
 
 class _GoEFTTappingState extends State<GoEFTTappingPage>
     with WidgetsBindingObserver {
@@ -141,6 +142,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
       if (audiofilepos == arrPlayList.length) {
         setState(() {
           playCompleted = true;
+          playPaused = true;
           player.onPlayerCompletion.listen(null);
           audiofilepos = 0;
         });
@@ -165,7 +167,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
         //String playingFile;
         print("ready to play user");
 
-        player.stop();
+        //  player.stop();
         if (File(audioasset).existsSync()) {
           print("user problem exist");
           await player.setVolume(1);
@@ -298,18 +300,16 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
             onTap: () async {
               player.stop();
 
-              var result = false;
               playCompleted = true;
-              result = await Navigator.push(
+              mode_result = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const GoEFTBridge()),
               );
 
-              whatismode(result);
+              whatismode(mode_result);
+              setState(() {});
               audiofilepos = 0;
-
-              audioasset = await getAssetFile(mode, audiofilepos);
-              player = await audioCache.play(audioasset);
+              loadplayer();
               // ByteData bytes =
               //     await rootBundle.load(audioasset); //load audio from assets
               // audiobytes = bytes.buffer
@@ -384,26 +384,26 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   onTap: () async {
                     //disableBtn = true;
 
-                    if (playPaused == false) {
-                      player.pause();
-                      setState(() {
-                        playPaused = true;
-                      });
-                    } else if (playPaused == true) {
-                      player.resume();
-                      setState(() {
-                        playPaused = false;
-                      });
-                    }
-
                     if (playCompleted) {
                       audiofilepos = 0;
                       setState(() {
                         playPaused = false;
                         playCompleted = false;
                       });
-
+                      whatismode(mode_result);
                       loadplayer();
+                    } else {
+                      if (playPaused == false) {
+                        player.pause();
+                        setState(() {
+                          playPaused = true;
+                        });
+                      } else if (playPaused == true) {
+                        player.resume();
+                        setState(() {
+                          playPaused = false;
+                        });
+                      }
                     }
                   }),
             ),
@@ -488,9 +488,12 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     if (state == AppLifecycleState.inactive) {
       //stop your audio player
       player.pause();
+      setState(() {
+        playPaused = true;
+      });
     }
     if (state == AppLifecycleState.resumed) {
-      //  player.resume();
+      // player.resume();
     }
   }
 
