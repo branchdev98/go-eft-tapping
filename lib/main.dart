@@ -98,29 +98,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    if (kIsWeb) {
-      //Calls to Platform.isIOS fails on web
-      return;
-    }
-    if (Platform.isIOS) {
-      player.notificationService?.startHeadlessService();
-    }
-      audioCache = AudioCache(prefix: 'assets/audio/');
+  void loadplayer() {
     Future.delayed(Duration.zero, () async {
-      audioasset =  LocaleKeys.lang.tr() + "audiob.mp3";
-     // ByteData bytes =
-     //     await rootBundle.load(audioasset); //load audio from assets
-    //  audiobytes =
-     //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-       //    AudioCache audioPlayer = AudioCache();
-       
-        player = await audioCache.play(audioasset);
-        
-        //await player.pause();
+      audioasset = LocaleKeys.lang.tr() + "audiob.mp3";
+      print("audioasset: $audioasset ");
+      // ByteData bytes =
+      //     await rootBundle.load(audioasset); //load audio from assets
+      //  audiobytes =
+      //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+      //    AudioCache audioPlayer = AudioCache();
+
+      player = await audioCache.play(audioasset);
+
+      //await player.pause();
       //convert ByteData to Uint8List
       //  AudioPlayer player1;
 
@@ -168,7 +158,23 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             setState(() => playerState = s)
           });
     });
-    //   super.initState();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    if (kIsWeb) {
+      //Calls to Platform.isIOS fails on web
+      return;
+    }
+    if (Platform.isIOS) {
+      player.notificationService?.startHeadlessService();
+    }
+    audioCache = AudioCache(prefix: 'assets/audio/');
+
+    loadplayer();
   }
 
   @override
@@ -408,9 +414,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                     child: InkWell(onTap: () {
                                       player.stop();
 
-                                      context.setLocale(LocalizationManager
-                                          .instance.enUSLocale);
-                                      initState();
+                                      context
+                                          .setLocale(LocalizationManager
+                                              .instance.enUSLocale)
+                                          .then((_) => loadplayer());
                                     }
                                         //    AppLocalization.load(Locale('en', ''));
                                         //  context.read<LocaleProvider>().setLocale(localeEN);
@@ -438,9 +445,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                     child: InkWell(onTap: () {
                                       player.stop();
 
-                                      context.setLocale(LocalizationManager
-                                          .instance.svSELocale);
-                                      initState();
+                                      context
+                                          .setLocale(LocalizationManager
+                                              .instance.svSELocale)
+                                          .then((_) => loadplayer());
                                     }),
                                   ),
                                 ],
@@ -465,9 +473,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                     child: InkWell(onTap: () {
                                       player.stop();
 
-                                      context.setLocale(LocalizationManager
-                                          .instance.arAELocale);
-                                      initState();
+                                      context
+                                          .setLocale(LocalizationManager
+                                              .instance.arAELocale)
+                                          .then((_) => loadplayer());
                                     }),
                                   ),
                                 ],
@@ -528,11 +537,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       onTap: () async {
                         if (playerState == PlayerState.PAUSED) {
                           int result = await player.resume();
-                        //  if (result != 1) player.playBytes(audiobytes);
+                          //  if (result != 1) player.playBytes(audiobytes);
                         } else if (playerState == PlayerState.PLAYING) {
                           player.pause();
                         } else {
-                       /*   AudioCache audioPlayer = AudioCache();
+                          /*   AudioCache audioPlayer = AudioCache();
                           player = await audioPlayer.play('audio/engaudiob.mp3');
                            player.onDurationChanged.listen((Duration d) {
                               print("durationchanged");
@@ -550,7 +559,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               setState(() {});
                             });
                             */
-                            player.resume();
+                          player.resume();
                           // player.play('engaudiob.mp3');
                           //player.playBytes(audiobytes);
                         }
