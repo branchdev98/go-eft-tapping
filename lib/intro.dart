@@ -31,36 +31,14 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
 
   Future loadplayer() async {
     // final file = new File(audioasset);
-    if (kIsWeb) {
-      //Calls to Platform.isIOS fails on web
-      return;
-    }
-    if (Platform.isIOS) {
-      player.notificationService.startHeadlessService();
-    }
-    audioCache = AudioCache(prefix: 'assets/audio/');
+    player = new AudioPlayer();
+    audioCache = new AudioCache(fixedPlayer: player, prefix: 'assets/audio/');
 
-    // ByteData bytes =
-    //     await rootBundle.load(audioasset); //load audio from assets
-    //  audiobytes =
-    //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    //    AudioCache audioPlayer = AudioCache();
-
-    await player.stop();
-    await player.release();
-    player = await audioCache.play(audioasset);
-    await player.stop();
     await player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
           Wakelock.toggle(enable: s == PlayerState.PLAYING),
           setState(() => playerState = s)
         });
-    //convert ByteData to Uint8List
-
-    //await file.writeAsBytes((await loadAsset()).buffer.asUint8List());
-    //final result = await player.play(file.path, isLocal: true);
-    //final result = await player.play(audioasset);
-    //if (result == 1) setState(() => playerState = PlayerState.playing);
   }
 
   var playerState;
@@ -69,7 +47,8 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
 
-    loadplayer().then((_) => player.resume());
+    loadplayer();
+    audioCache.play(audioasset);
   }
 
   @override
@@ -372,7 +351,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
 
   @override
   Future<void> dispose() async {
-    player.stop();
+    await player.stop();
 
     print("Back To old Screen");
     super.dispose();

@@ -89,23 +89,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   }
 
   Future<void> loadplayer() async {
-    audioasset = await getAssetFile(audiofilepos);
-    if (kIsWeb) {
-      //Calls to Platform.isIOS fails on web
-      return;
-    }
-    if (Platform.isIOS) {
-      player.notificationService.startHeadlessService();
-    }
-    audioCache = AudioCache(prefix: 'assets/audio/');
-    await player.stop();
-    await player.release();
-    player = await audioCache.play(audioasset);
-    // ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    //  audiobytes =
-    //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    //playCompleted = false;
-    // playPaused = false;
+    player = new AudioPlayer();
+    audioCache = new AudioCache(fixedPlayer: player, prefix: 'assets/audio/');
+
     player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
           Wakelock.toggle(enable: !playPaused && !playCompleted),
@@ -129,7 +115,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
       audioasset = await getAssetFile(audiofilepos);
       print("audioasset = $audioasset");
       if (arrPlayList[audiofilepos] >= 1) {
-        loadplayer();
+        audioCache.play(audioasset);
       } else {
         print("ready to play user");
 
@@ -150,7 +136,15 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
     userrecorded = false; //
     state = RecordState.before;
 
-    loadplayer();
+    startPlaylist();
+  }
+
+  Future startPlaylist() async {
+    await loadplayer();
+
+    audiofilepos = 0;
+    audioasset = await getAssetFile(audiofilepos);
+    audioCache.play(audioasset);
   }
 
   Widget getFooterSection() {
@@ -266,7 +260,8 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                       });
                     } else {
                       audiofilepos = 0;
-                      loadplayer();
+                      audioasset = await getAssetFile(audiofilepos);
+                      audioCache.play(audioasset);
                       setState(() {
                         playPaused = false;
                         playCompleted = false;

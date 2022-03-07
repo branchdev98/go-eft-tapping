@@ -68,6 +68,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
     player.playBytes(audiobytes);*/
     isDisclaimercheck().then((checkeddisclaimer) => true);
+    loadplayer();
   }
 
   @override
@@ -87,6 +88,19 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       //player.resume();
     }
+  }
+
+  void loadplayer() {
+    Future.delayed(Duration.zero, () async {
+      player = new AudioPlayer();
+      audioCache = new AudioCache(fixedPlayer: player, prefix: 'assets/audio/');
+
+      player.onPlayerStateChanged.listen((PlayerState s) => {
+            print('Current player state: $s'),
+            Wakelock.toggle(enable: s == PlayerState.PLAYING),
+            //setState(() => playerState = s)
+          });
+    });
   }
 
   Widget getFooterSection() {
@@ -272,25 +286,13 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
       player.notificationService.startHeadlessService();
     }
 
-    audioCache = AudioCache(prefix: 'assets/audio/');
-
     String audioasset = LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
 
-    player = await audioCache.play(audioasset);
-    await player.stop();
-/*
-    ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);*/
-    player.onPlayerStateChanged.listen((PlayerState s) => {
-          print('Current player state: $s'),
-          Wakelock.toggle(enable: s == PlayerState.PLAYING),
-        });
-    //convert ByteData to Uint8List
+    audioCache.play(audioasset);
+
     if (kDebugMode) {
       print(audioasset);
     }
-    await player.resume();
   }
 
   @override

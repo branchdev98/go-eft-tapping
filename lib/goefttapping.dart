@@ -105,38 +105,27 @@ var arrPlayListE2 = [
 var mode;
 enum track { E1, E2, F }
 var mode_result = false;
+AudioPlayer player = AudioPlayer();
+AudioCache audioCache = AudioCache();
 
 class _GoEFTTappingState extends State<GoEFTTappingPage>
     with WidgetsBindingObserver {
   // String audioasset = 'assets/audio/' + LocaleKeys.lang.tr() + 'audioe1.mp3';
-  AudioPlayer player = AudioPlayer();
-  AudioCache audioCache = AudioCache();
 
   String audioasset = "";
   bool playCompleted = false;
   bool playPaused = false;
 
   Future loadplayer() async {
-    audioasset = await getAssetFile(mode, audiofilepos);
-    if (kIsWeb) {
-      //Calls to Platform.isIOS fails on web
-      return;
-    }
-    if (Platform.isIOS) {
-      player.notificationService.startHeadlessService();
-    }
-    await player.stop();
-    await player.release();
-    audioCache = AudioCache(prefix: 'assets/audio/');
-    player = await audioCache.play(audioasset);
-    //  await player.stop();
-
-    playCompleted = false;
+    player = new AudioPlayer();
+    audioCache = new AudioCache(fixedPlayer: player, prefix: 'assets/audio/');
 
     player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
-          Wakelock.toggle(enable: !playPaused && !playCompleted),
+          Wakelock.toggle(enable: s == PlayerState.PLAYING),
+          //setState(() => playerState = s)
         });
+
     player.onPlayerCompletion.listen((event) async {
       audiofilepos++;
       print("audiofilepos = $audiofilepos");
@@ -155,39 +144,26 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
       audioasset = await getAssetFile(mode, audiofilepos);
       print("audioasset = $audioasset");
       if (arrPlayList[audiofilepos] >= 1) {
-        //    ByteData bytes =
-        //        await rootBundle.load(audioasset); //load audio from assets
-        //   audiobytes =
-        //       bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-        //convert ByteData to Uint8List
-        await player.setVolume(0.5);
-        //player.playBytes(audiobytes);
-        loadplayer();
-        //  player = await audioCache.play(audioasset);
-        //  player.resume();
+        audioCache.play(audioasset);
       } else {
-        //String playingFile;
-        print("ready to play user");
-
-        //  player.stop();
         if (File(audioasset).existsSync()) {
           print("user problem exist");
-          player.stop();
-          player.release();
-
           player.play(audioasset, isLocal: true);
         }
       }
     });
+
+    playCompleted = false;
+
     //convert ByteData to Uint8List
   }
 
   Future startPlaylist() async {
-    //await player.release();
-
     await loadplayer();
-    //player.resume();
-    //  player.playBytes(audiobytes);
+    mode = track.E1;
+    audiofilepos = 0;
+    audioasset = await getAssetFile(mode, audiofilepos);
+    audioCache.play(audioasset);
   }
 
   String getAssetPath(var mode) {
@@ -260,13 +236,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     WidgetsBinding.instance?.addObserver(this);
 
     whatismode(false);
-    //".mp3";
-    /*  ByteData bytes =
-        rootBundle.load(audioasset) as ByteData; //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);*/
-    //loadAssetsPlay();
+
     startPlaylist();
   }
 
@@ -313,14 +283,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               whatismode(mode_result);
               setState(() {});
               audiofilepos = 0;
-              loadplayer();
-              // ByteData bytes =
-              //     await rootBundle.load(audioasset); //load audio from assets
-              // audiobytes = bytes.buffer
-              //     .asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+              audioasset = await getAssetFile(mode, audiofilepos);
+              audioCache.play(audioasset);
               playCompleted = false;
-
-              //player.playBytes(audiobytes);
             }),
         SizedBox(width: MediaQuery.of(context).size.width / 3 * 2),
       ]),
@@ -395,7 +360,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         playCompleted = false;
                       });
                       whatismode(mode_result);
-                      loadplayer();
+                      audioasset = await getAssetFile(mode, audiofilepos);
+                      audioCache.play(audioasset);
+                      //loadplayer();
                     } else {
                       if (playPaused == false) {
                         player.pause();
@@ -463,18 +430,10 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
                             audiofilepos = 0;
                           });
-                          // audioasset = await getAssetFile(mode, audiofilepos);
 
-                          //  ByteData bytes = await rootBundle
-                          //      .load(audioasset); //load audio from assets
-                          //  audiobytes = bytes.buffer.asUint8List(
-                          //     bytes.offsetInBytes, bytes.lengthInBytes);
-
-                          //convert ByteData to Uint8List
-                          //  await player.setVolume(0.5);
-                          // player = await audioCache.play(audioasset);
                           playCompleted = false;
-                          loadplayer();
+                          audioasset = await getAssetFile(mode, audiofilepos);
+                          audioCache.play(audioasset);
                           //  player
                           //     .playBytes(audiobytes)
                           //     .then((playCompleted) => false);

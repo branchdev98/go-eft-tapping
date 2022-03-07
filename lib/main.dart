@@ -85,10 +85,9 @@ String currentpostlabel = "00:00";
 String maxpostlabel = "00:00";
 int maxduration = 40;
 var playerState;
+String audioasset;
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-  String audioasset = "assets/audio/" + LocaleKeys.lang.tr() + "audiob.mp3";
-
   String _printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -100,16 +99,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void loadplayer() {
     Future.delayed(Duration.zero, () async {
       audioasset = LocaleKeys.lang.tr() + "audiob.mp3";
-      print("audioasset: $audioasset ");
+
       // ByteData bytes =
       //     await rootBundle.load(audioasset); //load audio from assets
       //  audiobytes =
       //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
       //    AudioCache audioPlayer = AudioCache();
 
-      await player.stop();
-      await player.release();
-      player = await audioCache.play(audioasset);
+      //player = await audioCache.play(audioasset);
+      player = new AudioPlayer();
+      audioCache = new AudioCache(fixedPlayer: player, prefix: 'assets/audio/');
 
       //await player.pause();
       //convert ByteData to Uint8List
@@ -126,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         if (kDebugMode) {
           print(_printDuration(total));
         }
-        player.stop();
+        //  player.stop();
         setState(() {
           maxpostlabel = _printDuration(total);
         });
@@ -147,10 +146,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
         final now = Duration(seconds: sseconds);
 
-        currentpostlabel = _printDuration(now);
-
         setState(() {
-          //refresh the UI
+          currentpostlabel = _printDuration(now);
         });
       });
 
@@ -174,7 +171,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (Platform.isIOS) {
       player.notificationService?.startHeadlessService();
     }
-    audioCache = AudioCache(prefix: 'assets/audio/');
 
     loadplayer();
   }
@@ -259,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 style: TextStyle(
                                   fontSize:
                                       (MediaQuery.of(context).size.width / 32),
-                                  color: Colors.black,
+                                  color: Color.fromARGB(255, 95, 69, 69),
                                 )).tr(),
                           ),
                         ),
@@ -413,13 +409,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         MediaQuery.of(context).size.width / 4,
                                     height:
                                         MediaQuery.of(context).size.width / 6,
-                                    child: InkWell(onTap: () {
-                                      player.stop();
-
-                                      context
-                                          .setLocale(LocalizationManager
-                                              .instance.enUSLocale)
-                                          .then((_) => loadplayer());
+                                    child: InkWell(onTap: () async {
+                                      await player.stop();
+                                      await player.release();
+                                      context.setLocale(LocalizationManager
+                                          .instance.enUSLocale);
+                                      audioasset = "engaudiob.mp3";
+                                      audioCache.load(audioasset);
                                     }
                                         //    AppLocalization.load(Locale('en', ''));
                                         //  context.read<LocaleProvider>().setLocale(localeEN);
@@ -444,13 +440,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         MediaQuery.of(context).size.width / 4,
                                     height:
                                         MediaQuery.of(context).size.width / 6,
-                                    child: InkWell(onTap: () {
-                                      player.stop();
-
-                                      context
-                                          .setLocale(LocalizationManager
-                                              .instance.svSELocale)
-                                          .then((_) => loadplayer());
+                                    child: InkWell(onTap: () async {
+                                      await player.stop();
+                                      await player.release();
+                                      context.setLocale(LocalizationManager
+                                          .instance.svSELocale);
+                                      audioasset = "sweaudiob.mp3";
+                                      audioCache.load(audioasset);
                                     }),
                                   ),
                                 ],
@@ -472,13 +468,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         MediaQuery.of(context).size.width / 4,
                                     height:
                                         MediaQuery.of(context).size.width / 6,
-                                    child: InkWell(onTap: () {
-                                      player.stop();
+                                    child: InkWell(onTap: () async {
+                                      await player.stop();
+                                      await player.release();
 
-                                      context
-                                          .setLocale(LocalizationManager
-                                              .instance.arAELocale)
-                                          .then((_) => loadplayer());
+                                      context.setLocale(LocalizationManager
+                                          .instance.arAELocale);
+                                      audioasset = "araaudiob.mp3";
+                                      audioCache.load(audioasset);
                                     }),
                                   ),
                                 ],
@@ -561,7 +558,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               setState(() {});
                             });
                             */
-                          player.resume();
+
+                          audioCache.play(audioasset);
+
                           // player.play('engaudiob.mp3');
                           //player.playBytes(audiobytes);
                         }
