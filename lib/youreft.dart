@@ -279,13 +279,6 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     // final file = new File(audioasset);
     await player.stop();
     await player.release();
-    if (kIsWeb) {
-      //Calls to Platform.isIOS fails on web
-      return;
-    }
-    if (Platform.isIOS) {
-      player.notificationService.startHeadlessService();
-    }
 
     String audioasset = LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
 
