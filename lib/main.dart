@@ -1,7 +1,6 @@
 // @dart=2.9
 
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -124,12 +123,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
         final total = Duration(seconds: sseconds);
 
-        maxpostlabel = _printDuration(total);
         if (kDebugMode) {
           print(_printDuration(total));
         }
         player.stop();
-        setState(() {});
+        setState(() {
+          maxpostlabel = _printDuration(total);
+        });
       });
 
       player.onAudioPositionChanged.listen((Duration p) {
@@ -538,7 +538,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     child: InkWell(
                       onTap: () async {
                         if (playerState == PlayerState.PAUSED) {
-                          int result = await player.resume();
+                          await player.resume();
                           //  if (result != 1) player.playBytes(audiobytes);
                         } else if (playerState == PlayerState.PLAYING) {
                           player.pause();
@@ -670,7 +670,7 @@ Widget getFooterSection(context) {
                     child: InkWell(onTap: () async {
                       //    url: "https://sarabern.com", msg: "share");
                       await SocialSharePlugin.shareToFeedFacebookLink(
-                              quote: 'check out GO EFT TAPPING app!',
+                              quote: LocaleKeys.checkout.tr(),
                               url:
                                   'https://apps.apple.com/us/app/go-eft-tapping/id582597439')
                           .catchError((e) =>
@@ -698,8 +698,10 @@ Widget getFooterSection(context) {
                     height: 30,
                     child: InkWell(onTap: () {
                       //  shareFile();
-                      Share.share('check out my website https://sarabern.com',
-                          subject: 'Look what I made!');
+                      Share.share(
+                          LocaleKeys.checkout.tr() +
+                              'https://apps.apple.com/us/app/go-eft-tapping/id582597439',
+                          subject: LocaleKeys.takealook.tr());
                     }),
                   ),
                 ]),

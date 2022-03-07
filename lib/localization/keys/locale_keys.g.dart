@@ -33,5 +33,7 @@ abstract class  LocaleKeys {
   static const acupoints = 'acupoints';
   static const pagedtitle = 'pagedtitle';
   static const pageetitle = 'pageetitle';
+  static const checkout = 'checkout';
+  static const takealook = 'takealook';
 
 }
