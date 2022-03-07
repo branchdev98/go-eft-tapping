@@ -24,7 +24,7 @@ class EFTIntroPage extends StatefulWidget {
 class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
   late WebViewController _webViewController;
 
-  String audioasset =  LocaleKeys.lang.tr() + 'audioc.mp3';
+  String audioasset = LocaleKeys.lang.tr() + 'audioc.mp3';
   AudioPlayer player = AudioPlayer();
   AudioCache audioCache = AudioCache();
   late Uint8List audiobytes;
@@ -38,17 +38,18 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
     if (Platform.isIOS) {
       player.notificationService.startHeadlessService();
     }
-      audioCache = AudioCache(prefix: 'assets/audio/');
-   
-     
-     // ByteData bytes =
-     //     await rootBundle.load(audioasset); //load audio from assets
+    audioCache = AudioCache(prefix: 'assets/audio/');
+
+    // ByteData bytes =
+    //     await rootBundle.load(audioasset); //load audio from assets
     //  audiobytes =
-     //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-       //    AudioCache audioPlayer = AudioCache();
-       
-        player = await audioCache.play(audioasset);
-        await player.stop();
+    //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    //    AudioCache audioPlayer = AudioCache();
+
+    await player.stop();
+    await player.release();
+    player = await audioCache.play(audioasset);
+    await player.stop();
     await player.onPlayerStateChanged.listen((PlayerState s) => {
           print('Current player state: $s'),
           Wakelock.toggle(enable: s == PlayerState.PLAYING),

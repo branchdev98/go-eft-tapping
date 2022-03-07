@@ -108,6 +108,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
       //    AudioCache audioPlayer = AudioCache();
 
+      await player.stop();
+      await player.release();
       player = await audioCache.play(audioasset);
 
       //await player.pause();

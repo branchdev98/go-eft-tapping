@@ -137,62 +137,67 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
               ),
             ),
           ),
-          Material(
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: InkWell(
-                child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.passthrough,
-                    children: [
-                      Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: (problemState == record_state.before) ||
-                            (intensityState == record_state.before),
-                        child: Image.asset(
-                          "assets/images/btnred.png",
-                          fit: BoxFit.fitWidth,
-                          width: MediaQuery.of(context).size.width / 1.8,
-                          height: MediaQuery.of(context).size.width / 8,
+          IgnorePointer(
+            ignoring: (problemState != record_state.before) &&
+                (intensityState != record_state.before),
+            child: Material(
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent,
+              child: InkWell(
+                  child: Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.passthrough,
+                      children: [
+                        Visibility(
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: (problemState == record_state.before) ||
+                              (intensityState == record_state.before),
+                          child: Image.asset(
+                            "assets/images/btnred.png",
+                            fit: BoxFit.fitWidth,
+                            width: MediaQuery.of(context).size.width / 1.8,
+                            height: MediaQuery.of(context).size.width / 8,
+                          ),
                         ),
-                      ),
-                      Text(
-                        (problemState == record_state.before)
-                            ? LocaleKeys.recordproblem
-                            : (intensityState == record_state.before)
-                                ? LocaleKeys.recordintensity
-                                : (problemState == record_state.recording)
-                                    ? LocaleKeys.recordingproblem
-                                    : (intensityState == record_state.recording)
-                                        ? LocaleKeys.recordingintensity
-                                        : "",
-                        style: TextStyle(
-                            fontSize: (LocaleKeys.lang.tr() == "ara")
-                                ? MediaQuery.of(context).size.width / 20
-                                : MediaQuery.of(context).size.width / 30,
-                            fontWeight: (LocaleKeys.lang.tr() == "ara")
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: (problemState == record_state.recording ||
-                                    intensityState == record_state.recording)
-                                ? Colors.red
-                                : Colors.white),
-                      ).tr(),
-                    ]),
-                onTap: () async {
-                  if (problemState == record_state.before) {
-                    startRecord("problem");
-                    //   problemState = record_state.recording;
-                  }
-                  if (intensityState == record_state.before) {
-                    startRecord("intensity");
-                    //   intensityState = record_state.recording;
-                  }
-                  disableBtn = true;
-                  setState(() {});
-                }),
+                        Text(
+                          (problemState == record_state.before)
+                              ? LocaleKeys.recordproblem
+                              : (intensityState == record_state.before)
+                                  ? LocaleKeys.recordintensity
+                                  : (problemState == record_state.recording)
+                                      ? LocaleKeys.recordingproblem
+                                      : (intensityState ==
+                                              record_state.recording)
+                                          ? LocaleKeys.recordingintensity
+                                          : "",
+                          style: TextStyle(
+                              fontSize: (LocaleKeys.lang.tr() == "ara")
+                                  ? MediaQuery.of(context).size.width / 20
+                                  : MediaQuery.of(context).size.width / 30,
+                              fontWeight: (LocaleKeys.lang.tr() == "ara")
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: (problemState == record_state.recording ||
+                                      intensityState == record_state.recording)
+                                  ? Colors.red
+                                  : Colors.white),
+                        ).tr(),
+                      ]),
+                  onTap: () async {
+                    if (problemState == record_state.before) {
+                      startRecord("problem");
+                      //   problemState = record_state.recording;
+                    }
+                    if (intensityState == record_state.before) {
+                      startRecord("intensity");
+                      //   intensityState = record_state.recording;
+                    }
+                    disableBtn = true;
+                    setState(() {});
+                  }),
+            ),
           ),
           Visibility(
             maintainSize: true,
@@ -255,8 +260,11 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     return true;
   }
 
+  AudioCache audioCache = AudioCache();
   Future play(String what) async {
     // final file = new File(audioasset);
+    await player.stop();
+    await player.release();
     if (kIsWeb) {
       //Calls to Platform.isIOS fails on web
       return;
@@ -264,7 +272,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     if (Platform.isIOS) {
       player.notificationService.startHeadlessService();
     }
-    AudioCache audioCache = AudioCache();
+
     audioCache = AudioCache(prefix: 'assets/audio/');
 
     String audioasset = LocaleKeys.lang.tr() + 'audio' + what + '.mp3';

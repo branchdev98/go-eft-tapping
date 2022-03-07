@@ -125,10 +125,12 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     if (Platform.isIOS) {
       player.notificationService.startHeadlessService();
     }
+    await player.stop();
+    await player.release();
     audioCache = AudioCache(prefix: 'assets/audio/');
     player = await audioCache.play(audioasset);
     //  await player.stop();
-    await player.setVolume(0.5);
+
     playCompleted = false;
 
     player.onPlayerStateChanged.listen((PlayerState s) => {
@@ -170,7 +172,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
         //  player.stop();
         if (File(audioasset).existsSync()) {
           print("user problem exist");
-          await player.setVolume(1);
+          player.stop();
+          player.release();
+
           player.play(audioasset, isLocal: true);
         }
       }
@@ -452,6 +456,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                       height: MediaQuery.of(context).size.width / 8,
                       child: InkWell(onTap: () async {
                         int result = await player.stop();
+
                         if (result == 1) {
                           setState(() {
                             mode = track.E2;

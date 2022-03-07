@@ -98,6 +98,8 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
       player.notificationService.startHeadlessService();
     }
     audioCache = AudioCache(prefix: 'assets/audio/');
+    await player.stop();
+    await player.release();
     player = await audioCache.play(audioasset);
     // ByteData bytes = await rootBundle.load(audioasset); //load audio from assets
     //  audiobytes =
