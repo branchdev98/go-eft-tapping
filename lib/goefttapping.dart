@@ -501,7 +501,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           child: Text(LocaleKeys.pageetitle,
                               style: TextStyle(
                                 fontSize:
-                                    (MediaQuery.of(context).size.width / 11),
+                                    (MediaQuery.of(context).size.width / 13),
                                 color: Colors.black,
                               )).tr(),
                         ),

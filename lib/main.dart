@@ -288,7 +288,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                     style: TextStyle(
                                         fontSize:
                                             MediaQuery.of(context).size.width /
-                                                15,
+                                                16,
                                         color: Colors.white),
                                   ).tr(),
                                 ],
@@ -331,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  15,
+                                                  16,
                                               color: Colors.white))
                                       .tr(),
                                 ],
@@ -373,7 +373,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  15,
+                                                  16,
                                               color: Colors.white))
                                       .tr(),
                                 ],

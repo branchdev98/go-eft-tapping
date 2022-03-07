@@ -343,16 +343,17 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Text(
-                      LocaleKeys.whenihavethis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width / 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ).tr(),
-                  ),
+                  // Expanded(
+                  //    child:
+                  Text(
+                    LocaleKeys.whenihavethis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ).tr(),
+                  // ),
                   Material(
                     //elevation: 0,
                     clipBehavior: Clip.hardEdge,
@@ -369,16 +370,17 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Text(
-                      LocaleKeys.ichoosetofeel,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width / 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ).tr(),
-                  )
+                  // Expanded(
+                  //   child:
+                  Text(
+                    LocaleKeys.ichoosetofeel,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width / 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ).tr(),
+                  // )
                 ],
               ),
               SizedBox(

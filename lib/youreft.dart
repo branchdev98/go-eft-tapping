@@ -45,6 +45,8 @@ class YourEFT extends StatefulWidget {
   State<YourEFT> createState() => _YourEFTState();
 }
 
+AudioPlayer player = AudioPlayer();
+
 class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
   //const YourEFTPage({Key? key}) : super(key: key);
   String checkedImagePath = "assets/images/unchecked.png";
@@ -53,7 +55,6 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
   // ignore: non_constant_identifier_names
   var intensityState = record_state.none;
 
-  AudioPlayer player = AudioPlayer();
   late Uint8List audiobytes;
 
   var checkeddisclaimer = false;
