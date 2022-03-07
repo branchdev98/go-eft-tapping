@@ -537,17 +537,12 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                       //   alignment: Alignment.bottomRight,
 
                       Image.asset(
-                        (LocaleKeys.lang.tr() == "ara")
-                            ? "assets/images/aragirl.png"
-                            : "assets/images/girl.png",
-                        fit: BoxFit.cover,
-                        width: math.min(MediaQuery.of(context).size.height,
-                                MediaQuery.of(context).size.width) /
-                            1.4,
-                        height: math.min(MediaQuery.of(context).size.height,
-                                MediaQuery.of(context).size.width) /
-                            1.1,
-                      ),
+                          (LocaleKeys.lang.tr() == "ara")
+                              ? "assets/images/aragirl.png"
+                              : "assets/images/girl.png",
+                          fit: BoxFit.fill,
+                          width: MediaQuery.of(context).size.width / 1.4,
+                          height: MediaQuery.of(context).size.height / 1.7),
                       SizedBox(
                         height: 10,
                       ),
@@ -559,7 +554,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         ? MediaQuery.of(context).size.width -
                             math.min(MediaQuery.of(context).size.width,
                                     MediaQuery.of(context).size.height) /
-                                2.7
+                                2.65
                         : 20,
                     child: Text(
                       LocaleKeys.acupoints2,
@@ -573,9 +568,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     ).tr(),
                   ),
                   Positioned(
-                    top: math.min(MediaQuery.of(context).size.height,
-                                MediaQuery.of(context).size.width) /
-                            1.1 +
+                    top: MediaQuery.of(context).size.height / 1.75 +
                         ((LocaleKeys.lang.tr() == "ara") ? 5 : 5),
                     left: (LocaleKeys.lang.tr() == "ara")
                         ? MediaQuery.of(context).size.width -

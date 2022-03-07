@@ -613,20 +613,20 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
                                             record_state.recording) return;
 
                                     if (checkeddisclaimer) {
-                                      if (problemState ==
-                                          record_state.recorded) {
-                                        if (intensityState ==
-                                            record_state.recorded) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const GoEFTTappingPage()),
-                                          );
-                                          return;
-                                        }
-                                      }
+                                      // if (problemState ==
+                                      //      record_state.recorded) {
+                                      //   if (intensityState ==
+                                      //       record_state.recorded) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const GoEFTTappingPage()),
+                                      );
+                                      return;
                                     }
+                                    // }
+                                    // }
                                     if (problemState != record_state.recorded) {
                                       problemState = record_state.none;
                                     }
