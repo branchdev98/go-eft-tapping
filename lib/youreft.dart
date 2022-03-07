@@ -276,6 +276,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
     audioCache = AudioCache(prefix: 'assets/audio/');
 
     String audioasset = LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
+
     player = await audioCache.play(audioasset);
     await player.stop();
 /*
@@ -671,13 +672,14 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
 
   void startRecord(String what) async {
     await player.stop();
+    await player.release();
     bool hasPermission = await checkPermission();
     print("permission check");
     if (hasPermission) {
       statusText = "正在录音中...";
       print(statusText);
       recordFilePath = await getFilePath(what);
-
+      File(recordFilePath).delete();
       RecordMp3.instance.start(recordFilePath, (type) {
         statusText = "录音失败--->$type";
         setState(() {});

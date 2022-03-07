@@ -634,7 +634,8 @@ Future<String> getFilePath() async {
 }
 
 _launchURL(String toMailId, String subject, String body) async {
-  var url = 'mailto:$toMailId?subject=$subject&body=$body';
+  var url =
+      'mailto:$toMailId?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}';
   if (await canLaunch(url)) {
     await launch(url);
   } else {

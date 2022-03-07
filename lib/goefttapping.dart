@@ -186,7 +186,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     //await player.release();
 
     await loadplayer();
-    player.resume();
+    //player.resume();
     //  player.playBytes(audiobytes);
   }
 

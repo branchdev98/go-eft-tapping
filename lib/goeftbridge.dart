@@ -437,7 +437,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
       statusText = "正在录音中...";
       print(statusText);
       recordFilePath = await getFilePath(what);
-
+      File(recordFilePath).delete();
       RecordMp3.instance.start(recordFilePath, (type) {
         statusText = "录音失败--->$type";
         setState(() {});
