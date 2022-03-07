@@ -52,8 +52,7 @@ dependencies:
   path_provider: ^2.0.8
   social_share_plugin: 0.3.1+1
   wakelock: ^0.6.1+1
-  #social_share: ^2.2.1
- # flutter_share_me: 1.2.0
+
 
 
 dev_dependencies:
