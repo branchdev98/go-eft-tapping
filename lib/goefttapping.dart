@@ -359,7 +359,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         playPaused = false;
                         playCompleted = false;
                       });
-                      whatismode(mode_result);
+                      //  whatismode(mode_result);
                       audioasset = await getAssetFile(mode, audiofilepos);
                       audioCache.play(audioasset);
                       //loadplayer();
