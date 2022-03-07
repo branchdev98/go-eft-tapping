@@ -281,11 +281,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               );
 
               whatismode(mode_result);
-              setState(() {});
+              setState(() {
+                playCompleted = false;
+                playPaused = false;
+              });
               audiofilepos = 0;
               audioasset = await getAssetFile(mode, audiofilepos);
               audioCache.play(audioasset);
-              playCompleted = false;
             }),
         SizedBox(width: MediaQuery.of(context).size.width / 3 * 2),
       ]),
