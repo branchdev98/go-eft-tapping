@@ -540,7 +540,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
                       Image.asset("assets/images/girl.png",
                           fit: BoxFit.fill,
-                          width: MediaQuery.of(context).size.width / 1.5,
+                          width: MediaQuery.of(context).size.width / 1.6,
                           height: MediaQuery.of(context).size.height / 2.2),
                       SizedBox(
                         height: 30,
