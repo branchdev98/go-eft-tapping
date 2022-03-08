@@ -389,10 +389,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width / 8,
                 height: MediaQuery.of(context).size.width / 8,
-                child: InkWell(onTap: () {
+                child: InkWell(onTap: () async {
                   disableBtn = false;
-                  player.stop();
-
+                  int result = 0;
+                  while (result == 0) {
+                    result = await player.stop();
+                  }
+                  player.release();
                   setState(() {
                     playCompleted = true;
 
