@@ -539,7 +539,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           width: MediaQuery.of(context).size.width / 1.6,
                           height: MediaQuery.of(context).size.width / 1.3),
                       SizedBox(
-                        height: 30,
+                        height: 60,
                       ),
                     ],
                   ),
@@ -549,7 +549,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                         ? MediaQuery.of(context).size.width -
                             (MediaQuery.of(context).size.width +
                                     MediaQuery.of(context).size.height) /
-                                8
+                                8 -
+                            20
                         : 20,
                     child: Text(
                       LocaleKeys.acupoints2,
@@ -563,14 +564,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     ).tr(),
                   ),
                   Positioned(
-                    top: MediaQuery.of(context).size.width / 1.3 + 30,
+                    top: MediaQuery.of(context).size.width / 1.3 + 40,
                     left: (LocaleKeys.lang.tr() == "ara")
                         ? MediaQuery.of(context).size.width -
                             math.min(MediaQuery.of(context).size.height,
                                     MediaQuery.of(context).size.width) /
                                 1.5 -
                             10
-                        : MediaQuery.of(context).size.width / 3 * 1.9,
+                        : MediaQuery.of(context).size.width / 3 * 1.9 - 20,
                     child: Text(
                       LocaleKeys.acupoints,
                       style: TextStyle(
@@ -581,9 +582,6 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ).tr(),
-                  ),
-                  SizedBox(
-                    height: 10,
                   ),
                 ],
               ),
