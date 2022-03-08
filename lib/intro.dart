@@ -217,32 +217,27 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                                                       "ara")
                                                   ? 1.1
                                                   : 1.5,
-                                              fontSize: math.min(
+                                              fontSize: (MediaQuery.of(context)
+                                                          .size
+                                                          .height +
                                                       MediaQuery.of(context)
                                                           .size
-                                                          .width,
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .height) /
+                                                          .width) /
                                                   (LocaleKeys.lang.tr() == "ara"
-                                                      ? 20
-                                                      : 25),
+                                                      ? 60
+                                                      : 80),
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black),
                                         ).tr(),
                                       ),
                                       Positioned(
-                                        top: math.min(
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .height,
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .width) /
-                                                1.1 +
-                                            ((LocaleKeys.lang.tr() == "ara")
-                                                ? 5
-                                                : 5),
+                                        top: (MediaQuery.of(context)
+                                                    .size
+                                                    .height +
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width) /
+                                            3,
                                         left: (LocaleKeys.lang.tr() == "ara")
                                             ? MediaQuery.of(context)
                                                     .size
@@ -269,14 +264,15 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                                           LocaleKeys.acupoints,
                                           style: TextStyle(
                                               height: 1.0,
-                                              fontSize: math.min(
+                                              fontSize: (MediaQuery.of(context)
+                                                          .size
+                                                          .height +
                                                       MediaQuery.of(context)
                                                           .size
-                                                          .width,
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .height) /
-                                                  26,
+                                                          .width) /
+                                                  (LocaleKeys.lang.tr() == "ara"
+                                                      ? 60
+                                                      : 80),
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black),
                                         ).tr(),

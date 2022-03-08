@@ -552,9 +552,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     top: 30,
                     left: (LocaleKeys.lang.tr() == "ara")
                         ? MediaQuery.of(context).size.width -
-                            math.min(MediaQuery.of(context).size.width,
+                            (MediaQuery.of(context).size.width +
                                     MediaQuery.of(context).size.height) /
-                                2.65
+                                8
                         : 20,
                     child: Text(
                       LocaleKeys.acupoints2,
@@ -568,7 +568,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     ).tr(),
                   ),
                   Positioned(
-                    top: MediaQuery.of(context).size.height / 2.4,
+                    top: MediaQuery.of(context).size.width / 1.3 + 30,
                     left: (LocaleKeys.lang.tr() == "ara")
                         ? MediaQuery.of(context).size.width -
                             math.min(MediaQuery.of(context).size.height,
@@ -586,6 +586,9 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ).tr(),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                 ],
               ),
