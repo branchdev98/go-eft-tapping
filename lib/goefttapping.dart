@@ -542,7 +542,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                       Image.asset("assets/images/girl.png",
                           fit: BoxFit.fill,
                           width: MediaQuery.of(context).size.width / 1.6,
-                          height: MediaQuery.of(context).size.height / 2.2),
+                          height: MediaQuery.of(context).size.width / 1.3),
                       SizedBox(
                         height: 30,
                       ),
@@ -560,15 +560,15 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                       LocaleKeys.acupoints2,
                       style: TextStyle(
                           height: (LocaleKeys.lang.tr() == "ara") ? 1.1 : 1.5,
-                          fontSize: math.min(MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height) /
-                              (LocaleKeys.lang.tr() == "ara" ? 20 : 30),
+                          fontSize: (MediaQuery.of(context).size.height +
+                                  MediaQuery.of(context).size.width) /
+                              (LocaleKeys.lang.tr() == "ara" ? 60 : 80),
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ).tr(),
                   ),
                   Positioned(
-                    top: MediaQuery.of(context).size.height / 2.1,
+                    top: MediaQuery.of(context).size.height / 2.4,
                     left: (LocaleKeys.lang.tr() == "ara")
                         ? MediaQuery.of(context).size.width -
                             math.min(MediaQuery.of(context).size.height,
@@ -582,7 +582,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           height: 1.0,
                           fontSize: (MediaQuery.of(context).size.height +
                                   MediaQuery.of(context).size.width) /
-                              80,
+                              (LocaleKeys.lang.tr() == "ara" ? 60 : 80),
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ).tr(),
