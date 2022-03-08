@@ -668,8 +668,12 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
   }
 
   void startRecord(String what) async {
-    await player.stop();
-    await player.release();
+    int result = 0;
+    while (result == 0) {
+      result = await player.stop();
+    }
+    player.release();
+
     bool hasPermission = await checkPermission();
     print("permission check");
     if (hasPermission) {

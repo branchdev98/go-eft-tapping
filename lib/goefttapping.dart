@@ -389,16 +389,14 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width / 8,
                 height: MediaQuery.of(context).size.width / 8,
-                child: InkWell(onTap: () async {
+                child: InkWell(onTap: () {
                   disableBtn = false;
-                  int result = await player.stop();
+                  player.stop();
 
                   setState(() {
-                    if (result == 1) {
-                      playCompleted = true;
+                    playCompleted = true;
 
-                      audiofilepos = 0;
-                    }
+                    audiofilepos = 0;
                   });
                   //  stopRecord();
                 }),
