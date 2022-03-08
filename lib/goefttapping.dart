@@ -562,7 +562,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           height: (LocaleKeys.lang.tr() == "ara") ? 1.1 : 1.5,
                           fontSize: math.min(MediaQuery.of(context).size.width,
                                   MediaQuery.of(context).size.height) /
-                              (LocaleKeys.lang.tr() == "ara" ? 20 : 25),
+                              (LocaleKeys.lang.tr() == "ara" ? 20 : 30),
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ).tr(),
