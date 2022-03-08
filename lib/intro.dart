@@ -171,9 +171,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                                           //   alignment: Alignment.bottomRight,
 
                                           Image.asset(
-                                            (LocaleKeys.lang.tr() == "ara")
-                                                ? "assets/images/aragirl.png"
-                                                : "assets/images/girl.png",
+                                            "assets/images/girl.png",
                                             fit: BoxFit.cover,
                                             width: math.min(
                                                     MediaQuery.of(context)
