@@ -87,10 +87,8 @@ flutter:
   assets:
     - assets/images/bridge.png
     - assets/images/girl.png
-    - assets/images/aragirl.png
     - assets/images/arrow.png
     - assets/images/btnplay.png
-    - assets/images/btnarabridge.png
     - assets/images/btnarabridge.png
     - assets/images/btnengbridge.png
     - assets/images/btnwhite.png

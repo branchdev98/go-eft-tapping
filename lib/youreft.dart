@@ -607,6 +607,8 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
                                             record_state.recording) return;
 
                                     if (checkeddisclaimer) {
+                                      //  problemState = intensityState =
+                                      //     record_state.recorded;
                                       if (problemState ==
                                           record_state.recorded) {
                                         if (intensityState ==

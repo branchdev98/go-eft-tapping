@@ -486,7 +486,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Column(
@@ -538,15 +538,12 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
                       //   alignment: Alignment.bottomRight,
 
-                      Image.asset(
-                          (LocaleKeys.lang.tr() == "ara")
-                              ? "assets/images/aragirl.png"
-                              : "assets/images/girl.png",
+                      Image.asset("assets/images/girl.png",
                           fit: BoxFit.fill,
-                          width: MediaQuery.of(context).size.width / 1.4,
-                          height: MediaQuery.of(context).size.height / 1.7),
+                          width: MediaQuery.of(context).size.width / 1.5,
+                          height: MediaQuery.of(context).size.height / 2.2),
                       SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
                     ],
                   ),
@@ -570,25 +567,21 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     ).tr(),
                   ),
                   Positioned(
-                    top: MediaQuery.of(context).size.height / 1.75 +
-                        ((LocaleKeys.lang.tr() == "ara") ? 5 : 5),
+                    top: MediaQuery.of(context).size.height / 2.1,
                     left: (LocaleKeys.lang.tr() == "ara")
                         ? MediaQuery.of(context).size.width -
                             math.min(MediaQuery.of(context).size.height,
                                     MediaQuery.of(context).size.width) /
                                 1.5 -
                             10
-                        : math.min(MediaQuery.of(context).size.height,
-                                    MediaQuery.of(context).size.width) /
-                                1.5 -
-                            20,
+                        : MediaQuery.of(context).size.width / 3 * 1.9,
                     child: Text(
                       LocaleKeys.acupoints,
                       style: TextStyle(
                           height: 1.0,
-                          fontSize: math.min(MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height) /
-                              26,
+                          fontSize: (MediaQuery.of(context).size.height +
+                                  MediaQuery.of(context).size.width) /
+                              80,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ).tr(),
