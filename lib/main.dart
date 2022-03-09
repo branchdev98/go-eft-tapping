@@ -87,6 +87,8 @@ int maxduration = 40;
 var playerState;
 String audioasset;
 
+var appUrl = "";
+
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   String _printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -170,6 +172,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
     if (Platform.isIOS) {
       player.notificationService?.startHeadlessService();
+    }
+
+    if (Platform.isIOS) {
+      appUrl = 'https://apps.apple.com/us/app/go-eft-tapping/id582597439';
+    } else {
+      appUrl =
+          'https://play.google.com/store/apps/details?id=com.sarabern.go_eft_tapping';
     }
 
     loadplayer();
@@ -669,9 +678,7 @@ Widget getFooterSection(context) {
                     child: InkWell(onTap: () async {
                       //    url: "https://sarabern.com", msg: "share");
                       await SocialSharePlugin.shareToFeedFacebookLink(
-                              quote: LocaleKeys.checkout.tr(),
-                              url:
-                                  'https://apps.apple.com/us/app/go-eft-tapping/id582597439')
+                              quote: LocaleKeys.checkout.tr(), url: appUrl)
                           .catchError((e) =>
                               print("[facebook error]: " + e.toString()));
                       //   } else {
@@ -697,9 +704,7 @@ Widget getFooterSection(context) {
                     height: 30,
                     child: InkWell(onTap: () {
                       //  shareFile();
-                      Share.share(
-                          LocaleKeys.checkout.tr() +
-                              'https://apps.apple.com/us/app/go-eft-tapping/id582597439',
+                      Share.share(LocaleKeys.checkout.tr() + "\n" + appUrl,
                           subject: LocaleKeys.takealook.tr());
                     }),
                   ),
