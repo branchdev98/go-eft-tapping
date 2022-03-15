@@ -103,7 +103,7 @@ flutter:
     - assets/images/btnnext.png
     - assets/images/btnrepeat.png
     - assets/images/btngreen.png
-    - assets/images/orangecontactbutton.png
+    - assets/images/btnorange.png
     - assets/images/fbshare.png
     - assets/images/shareall.png
     - assets/images/background.png
@@ -113,6 +113,9 @@ flutter:
     - assets/images/btnarabic.png
     - assets/images/btnhome.png
     - assets/images/bluebutton.png
+    - assets/images/btnlanguage.png
+    - assets/images/btncontactus.png
+    - assets/images/btnrecording.png
     - assets/audio/
 
   #   - images/a_dot_ham.jpeg
