@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'GO EFT Tapping'),
+      home: const MyHomePage(),
     );
   }
 

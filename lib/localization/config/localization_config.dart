@@ -13,9 +13,11 @@ class LocalizationConfig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EasyLocalization(
+      useOnlyLangCode: true,
       path: LocalizationManager.instance.localePath!,
       supportedLocales: LocalizationManager.instance.supportedLocales,
-      // startLocale: LocalizationEnum.english.translate,
+      //  startLocale: LocalizationEnum.english.translate!,
+      fallbackLocale: LocalizationEnum.english.translate!,
       assetLoader: const CodegenLoader(),
       child: const MyApp(),
     );
