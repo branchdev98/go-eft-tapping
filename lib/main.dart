@@ -30,49 +30,44 @@ enum record_state {
   recorded
 }
 String recordFilePath;
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(
+    /*EasyLocalization(
+          useOnlyLangCode: true,
+          supportedLocales: [Locale('en'), Locale('sv'), Locale('ar')],
+          path: 'assets/translations',
+          fallbackLocale: Locale('en'),
+          child: MyApp())*/
     const ProviderList(),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      debugShowCheckedModeBanner: true,
-      home: const MyHomePage(title: 'GO EFT Tapping'),
-    );
-  }
+  _MyAppState createState() => _MyAppState();
+
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key, this.title}) : super(key: key);
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  //const _MyAppState({Key key, this.title}) : super(key: key);
 
+  Locale _locale;
+
+  void setLocale(Locale value) {
+    setState(() {
+      _locale = value;
+    });
+  }
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -82,41 +77,10 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-//AudioCache player = AudioCache();
-AudioCache audioCache = AudioCache();
-AudioPlayer player = AudioPlayer();
-Uint8List audiobytes;
-var currentpos = 0;
-
-var playerState;
-String audioasset;
-var disableBtn = false;
-var appUrl = "";
-
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void loadplayer() {
     Future.delayed(Duration.zero, () async {
-      audioasset = LocaleKeys.lang.tr() + "audiob.mp3";
-
-      // ByteData bytes =
-      //     await rootBundle.load(audioasset); //load audio from assets
-      //  audiobytes =
-      //     bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-      //    AudioCache audioPlayer = AudioCache();
-
-      //player = await audioCache.play(audioasset);
       player = new AudioPlayer();
       audioCache = new AudioCache(fixedPlayer: player, prefix: 'assets/audio/');
-
-      //await player.pause();
-      //convert ByteData to Uint8List
-      //  AudioPlayer player1;
 
       player.onPlayerStateChanged.listen((PlayerState s) => {
             print('Current player state: $s'),
@@ -167,6 +131,56 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     print("Back To old Screen");
     super.dispose();
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
+        primarySwatch: Colors.blue,
+      ),
+      debugShowCheckedModeBanner: true,
+      home: MyHomePage(),
+    );
+  }
+
+  //@override
+  // State<MyHomePage> createState() => _MyHomePageState();
+}
+
+//AudioCache player = AudioCache();
+AudioCache audioCache = AudioCache();
+AudioPlayer player = AudioPlayer();
+Uint8List audiobytes;
+var currentpos = 0;
+
+var playerState;
+String audioasset;
+var disableBtn = false;
+var appUrl = "";
+var feelingrecorded = false;
+var intensityrecorded = false;
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  //final String title;
+// This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
@@ -317,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                                 6,
                                       ),
                                       Text(
-                                              (state == record_state.recorded)
+                                              (feelingrecorded == true)
                                                   ? LocaleKeys.myfeelingrecorded
                                                   : LocaleKeys.myfeeling,
                                               textAlign: TextAlign.center,
@@ -333,7 +347,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   ),
                                   onTap: () {
                                     play("d2");
-                                    setState(() {});
                                   }),
                             ),
                           ),
@@ -371,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                                 6,
                                       ),
                                       Text(
-                                              (state == record_state.recorded2)
+                                              (intensityrecorded == true)
                                                   ? LocaleKeys
                                                       .theintensityrecorded
                                                   : LocaleKeys.theintensity,
@@ -388,196 +401,235 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   ),
                                   onTap: () {
                                     play("d3");
-                                    setState(() {});
                                   }),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    getBottomSection(),
+                    getBottomSection(context),
                     getFooterSection(context),
                   ]))),
     );
   }
 
   var state = record_state.none;
-  Widget getBottomSection() {
+  Widget getBottomSection(context) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IgnorePointer(
-            ignoring: false,
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: InkWell(
-                  child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
-                      children: [
-                        Visibility(
-                          maintainSize: true,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          visible: record_state.recording1 != state,
-                          child: Image.asset(
-                            "assets/images/btnrecording.png",
-                            fit: BoxFit.fill,
-                            width: (state == record_state.recording1)
-                                ? MediaQuery.of(context).size.width / 4
-                                : MediaQuery.of(context).size.width / 2.7,
+      margin: (LocaleKeys.lang.tr() == "ara")
+          ? const EdgeInsets.fromLTRB(0, 0, 20, 0)
+          : const EdgeInsets.fromLTRB(20, 0, 0, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IgnorePointer(
+                  ignoring: record_state.recording1 == state,
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Stack(
+                            alignment: Alignment.center,
+                            fit: StackFit.passthrough,
+                            children: [
+                              Visibility(
+                                maintainSize: true,
+                                maintainAnimation: true,
+                                maintainState: true,
+                                visible: record_state.recording1 != state,
+                                child: Image.asset(
+                                  "assets/images/btnrecording.png",
+                                  fit: BoxFit.fill,
+                                  width: (state == record_state.recording1)
+                                      ? MediaQuery.of(context).size.width / 3.5
+                                      : MediaQuery.of(context).size.width / 2.7,
+                                  height:
+                                      MediaQuery.of(context).size.width / 9.5,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    (state == record_state.recording1) ? 0 : 20,
+                                    0,
+                                    0,
+                                    0),
+                                child: Text(
+                                  (state == record_state.recording1)
+                                      ? LocaleKeys.recording
+                                      : LocaleKeys.recordproblem,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: (LocaleKeys.lang.tr() == "ara")
+                                          ? MediaQuery.of(context).size.width /
+                                              20
+                                          : MediaQuery.of(context).size.width /
+                                              30,
+                                      fontWeight:
+                                          (LocaleKeys.lang.tr() == "ara")
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                      color: (state == record_state.recording1)
+                                          ? Colors.red
+                                          : Colors.white),
+                                ).tr(),
+                              ),
+                            ]),
+                        onTap: () async {
+                          startRecord("problem");
+                          state = record_state.recording1;
+
+                          disableBtn = true;
+                        }),
+                  ),
+                ),
+                Visibility(
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: record_state.recording1 == state,
+                  child: Material(
+                    //  elevation: 8.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.passthrough,
+                        children: [
+                          Ink.image(
+                            image:
+                                const AssetImage("assets/images/btnstop.png"),
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width / 10,
                             height: MediaQuery.of(context).size.width / 10,
+                            child: InkWell(onTap: () {
+                              disableBtn = false;
+
+                              //    AppLocalization.load(Locale('en', ''));
+                              //  context.read<LocaleProvider>().setLocale(localeEN);
+
+                              setState(() {
+                                feelingrecorded = true;
+                                state = record_state.recorded1;
+                              });
+
+                              stopRecord();
+                            }),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                          child: Text(
-                            (state == record_state.recording1)
-                                ? LocaleKeys.recording
-                                : LocaleKeys.recordproblem,
-                            style: TextStyle(
-                                fontSize: (LocaleKeys.lang.tr() == "ara")
-                                    ? MediaQuery.of(context).size.width / 20
-                                    : MediaQuery.of(context).size.width / 30,
-                                fontWeight: (LocaleKeys.lang.tr() == "ara")
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: (state == record_state.recording1)
-                                    ? Colors.red
-                                    : Colors.white),
-                          ).tr(),
-                        ),
-                      ]),
-                  onTap: () async {
-                    startRecord("problem");
-                    state = record_state.recording1;
-
-                    disableBtn = true;
-                    setState(() {});
-                  }),
+                        ]),
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(
-            width: 1,
-          ),
-          Visibility(
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            visible: record_state.recording1 == state,
-            child: Material(
-              //  elevation: 8.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnstop.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 10,
-                      height: MediaQuery.of(context).size.width / 10,
-                      child: InkWell(onTap: () {
-                        disableBtn = false;
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IgnorePointer(
+                  ignoring: record_state.recording2 == state,
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Stack(
+                            alignment: Alignment.center,
+                            fit: StackFit.passthrough,
+                            children: [
+                              Visibility(
+                                maintainSize: true,
+                                maintainAnimation: true,
+                                maintainState: true,
+                                visible: record_state.recording2 != state,
+                                child: Image.asset(
+                                  "assets/images/btnrecording.png",
+                                  fit: BoxFit.fill,
+                                  width: (state == record_state.recording2)
+                                      ? MediaQuery.of(context).size.width / 3.5
+                                      : MediaQuery.of(context).size.width / 2.7,
+                                  height:
+                                      MediaQuery.of(context).size.width / 9.5,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    (state == record_state.recording2) ? 0 : 20,
+                                    0,
+                                    0,
+                                    0),
+                                child: Text(
+                                  (state == record_state.recording2)
+                                      ? LocaleKeys.recording
+                                      : LocaleKeys.recordintensity,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      height: 1,
+                                      fontSize: (LocaleKeys.lang.tr() == "ara")
+                                          ? MediaQuery.of(context).size.width /
+                                              25
+                                          : MediaQuery.of(context).size.width /
+                                              30,
+                                      fontWeight:
+                                          (LocaleKeys.lang.tr() == "ara")
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                      color: (state == record_state.recording2)
+                                          ? Colors.red
+                                          : Colors.white),
+                                ).tr(),
+                              ),
+                            ]),
+                        onTap: () async {
+                          startRecord("intensity");
+                          state = record_state.recording2;
 
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                        setState(() {
-                          state = record_state.recorded;
-                        });
-                        stopRecord();
-                      }),
-                    ),
-                  ]),
-            ),
-          ),
-          IgnorePointer(
-            ignoring: false,
-            child: Material(
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: InkWell(
-                  child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.passthrough,
-                      children: [
-                        Visibility(
-                          maintainSize: true,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          visible: record_state.recording2 != state,
-                          child: Image.asset(
-                            "assets/images/btnrecording.png",
-                            fit: BoxFit.fill,
-                            width: (state == record_state.recording2)
-                                ? MediaQuery.of(context).size.width / 4
-                                : MediaQuery.of(context).size.width / 2.7,
+                          disableBtn = true;
+                        }),
+                  ),
+                ),
+                Visibility(
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: record_state.recording2 == state,
+                  child: Material(
+                    //  elevation: 8.0,
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.passthrough,
+                        children: [
+                          Ink.image(
+                            image:
+                                const AssetImage("assets/images/btnstop.png"),
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width / 10,
                             height: MediaQuery.of(context).size.width / 10,
+                            child: InkWell(onTap: () {
+                              disableBtn = false;
+
+                              //    AppLocalization.load(Locale('en', ''));
+                              //  context.read<LocaleProvider>().setLocale(localeEN);
+                              setState(() {
+                                state = record_state.recorded2;
+                                intensityrecorded = true;
+                              });
+                              stopRecord();
+                            }),
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                          child: Text(
-                            (state == record_state.recording2)
-                                ? LocaleKeys.recording
-                                : LocaleKeys.recordproblem,
-                            style: TextStyle(
-                                fontSize: (LocaleKeys.lang.tr() == "ara")
-                                    ? MediaQuery.of(context).size.width / 20
-                                    : MediaQuery.of(context).size.width / 30,
-                                fontWeight: (LocaleKeys.lang.tr() == "ara")
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: (state == record_state.recording2)
-                                    ? Colors.red
-                                    : Colors.white),
-                          ).tr(),
-                        ),
-                      ]),
-                  onTap: () async {
-                    startRecord("intensity");
-                    state = record_state.recording2;
-
-                    disableBtn = true;
-                    setState(() {});
-                  }),
+                        ]),
+                  ),
+                ),
+              ],
             ),
           ),
-          Visibility(
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            visible: record_state.recording2 == state,
-            child: Material(
-              //  elevation: 8.0,
-              clipBehavior: Clip.hardEdge,
-              color: Colors.transparent,
-              child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.passthrough,
-                  children: [
-                    Ink.image(
-                      image: const AssetImage("assets/images/btnstop.png"),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width / 10,
-                      height: MediaQuery.of(context).size.width / 10,
-                      child: InkWell(onTap: () {
-                        disableBtn = false;
-
-                        //    AppLocalization.load(Locale('en', ''));
-                        //  context.read<LocaleProvider>().setLocale(localeEN);
-                        setState(() {
-                          state = record_state.recorded2;
-                        });
-                        stopRecord();
-                      }),
-                    ),
-                  ]),
-            ),
-          ),
-        ]));
+        ],
+      ),
+    );
   }
 
   Future<bool> checkPermission() async {
@@ -602,15 +654,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       File(recordFilePath).delete();
       RecordMp3.instance.start(recordFilePath, (type) {
         //  statusText = "录音失败--->$type";
-        setState(() {});
       });
       //   } else {
       //    statusText = "没有录音权限";
       //  }
-      setState(() {
-        // if (what == "problem") problemState = record_state.recording;
-        //  if (what == "intensity") intensityState = record_state.recording;
-      });
+
     }
 
     /* void resumeRecord() {
@@ -668,6 +716,12 @@ Future play(String what) async {
   }
 }
 
+final List locale = [
+  {'name': 'ENGLISH ', 'locale': Locale('en')},
+  {'name': 'SWEDISH SVENSKA', 'locale': Locale('sv')},
+  {'name': 'ARABIC عربي', 'locale': Locale('ar')},
+];
+
 Widget getFooterSection(context) {
   return Container(
     padding: const EdgeInsets.all(10),
@@ -685,13 +739,40 @@ Widget getFooterSection(context) {
           width: 30,
           height: 30,
           child: InkWell(onTap: () async {
-            //    url: "https://sarabern.com", msg: "share");
-            await SocialSharePlugin.shareToFeedFacebookLink(
-                    quote: LocaleKeys.checkout.tr(), url: appUrl)
-                .catchError((e) => print("[facebook error]: " + e.toString()));
-            //   } else {
-            //     Fluttertoast.showToast(msg: "permission is denied");
-            //   }
+            showDialog(
+                context: context,
+                builder: (builder) {
+                  return AlertDialog(
+                    title: Text('Choose Your Language'),
+                    content: Container(
+                      width: double.maxFinite,
+                      child: ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                child:
+                                    (context.locale == locale[index]['locale'])
+                                        ? Text(locale[index]['name'] + "   ✔️")
+                                        : Text(locale[index]['name']),
+                                onTap: () {
+                                  print(locale[index]['locale']);
+                                  context.setLocale(locale[index]['locale']);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              color: Colors.blue,
+                            );
+                          },
+                          itemCount: locale.length),
+                    ),
+                  );
+                });
           }),
         ),
       ),

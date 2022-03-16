@@ -117,6 +117,12 @@ flutter:
     - assets/images/btncontactus.png
     - assets/images/btnrecording.png
     - assets/audio/
+    - assets/translations/sv-SE.json
+    - assets/translations/en-US.json
+    - assets/translations/ar-AE.json
+    - assets/translations/ar.json
+    - assets/translations/en.json
+    - assets/translations/sv.json
 
   #   - images/a_dot_ham.jpeg
 
