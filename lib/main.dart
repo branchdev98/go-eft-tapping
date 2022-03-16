@@ -7,10 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
+import 'package:go_eft_tapping/goefttapping.dart';
 
 import 'package:go_eft_tapping/intro.dart';
 import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
-import 'package:go_eft_tapping/manager/localization_manager.dart';
+//import 'package:go_eft_tapping/manager/localization_manager.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:record_mp3/record_mp3.dart';
@@ -20,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 enum record_state {
   none,
@@ -48,26 +50,9 @@ void main() async {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
 
-  @override
-  _MyAppState createState() => _MyAppState();
-
-  static _MyAppState of(BuildContext context) =>
-      context.findAncestorStateOfType<_MyAppState>();
-}
-
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  //const _MyAppState({Key key, this.title}) : super(key: key);
-
-  Locale _locale;
-
-  void setLocale(Locale value) {
-    setState(() {
-      _locale = value;
-    });
-  }
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -76,6 +61,69 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
+        primarySwatch: Colors.blue,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: const MyHomePage(title: 'GO EFT Tapping'),
+    );
+  }
+
+  //@override
+  // State<MyHomePage> createState() => _MyHomePageState();
+}
+
+//AudioCache player = AudioCache();
+AudioCache audioCache = AudioCache();
+AudioPlayer player = AudioPlayer();
+Uint8List audiobytes;
+var currentpos = 0;
+
+var playerState;
+String audioasset;
+var disableBtn = false;
+var appUrl = "";
+var feelingrecorded = false;
+var intensityrecorded = false;
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key key, this.title}) : super(key: key);
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+  //final String title;
+// This widget is the root of your application.
 
   void loadplayer() {
     Future.delayed(Duration.zero, () async {
@@ -121,6 +169,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
     if (state == AppLifecycleState.resumed) {
       //player.resume();
+
+      final InAppReview inAppReview = InAppReview.instance;
+
+      if (await inAppReview.isAvailable()) {
+        inAppReview.requestReview();
+      }
     }
   }
 
@@ -131,56 +185,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     print("Back To old Screen");
     super.dispose();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      debugShowCheckedModeBanner: true,
-      home: MyHomePage(),
-    );
-  }
-
-  //@override
-  // State<MyHomePage> createState() => _MyHomePageState();
-}
-
-//AudioCache player = AudioCache();
-AudioCache audioCache = AudioCache();
-AudioPlayer player = AudioPlayer();
-Uint8List audiobytes;
-var currentpos = 0;
-
-var playerState;
-String audioasset;
-var disableBtn = false;
-var appUrl = "";
-var feelingrecorded = false;
-var intensityrecorded = false;
-
-class MyHomePage extends StatefulWidget {
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  //final String title;
-// This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
@@ -614,6 +618,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
                               //    AppLocalization.load(Locale('en', ''));
                               //  context.read<LocaleProvider>().setLocale(localeEN);
+                              if (feelingrecorded == true) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => GoEFTTappingPage()),
+                                );
+                              }
                               setState(() {
                                 state = record_state.recorded2;
                                 intensityrecorded = true;

@@ -314,25 +314,6 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                         }),
                       ),
                     ),
-                    Material(
-                      clipBehavior: Clip.hardEdge,
-                      color: Colors.transparent,
-                      child: Ink.image(
-                        image: playerState == PlayerState.PLAYING
-                            ? const AssetImage("assets/images/btnpause.png")
-                            : const AssetImage("assets/images/btnplay.png"),
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width / 8,
-                        height: MediaQuery.of(context).size.width / 8,
-                        child: InkWell(onTap: () {
-                          if (playerState == PlayerState.PLAYING) {
-                            player.pause();
-                          } else {
-                            player.resume();
-                          }
-                        }),
-                      ),
-                    ),
                   ],
                 )
               ],

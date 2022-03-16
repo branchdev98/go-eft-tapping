@@ -52,7 +52,7 @@ dependencies:
   path_provider: ^2.0.8
   social_share_plugin: 0.3.1+1
   wakelock: ^0.6.1+1
-
+  in_app_review: ^2.0.4
 
 
 dev_dependencies:
