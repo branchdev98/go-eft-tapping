@@ -6,6 +6,7 @@ enum LocalizationEnum {
   svenska,
   english,
   arabic,
+  ukrainian,
 }
 
 extension LocalizationExtension on LocalizationEnum {
@@ -17,6 +18,8 @@ extension LocalizationExtension on LocalizationEnum {
         return LocalizationManager.instance.arAELocale;
       case LocalizationEnum.english:
         return LocalizationManager.instance.enUSLocale;
+      case LocalizationEnum.ukrainian:
+        return LocalizationManager.instance.ukLocale;
       default:
         return LocalizationManager.instance.enUSLocale;
     }
@@ -38,9 +41,11 @@ class LocalizationManager implements ILocalizationManager {
   final enUSLocale = const Locale('en');
   final svSELocale = const Locale('sv');
   final arAELocale = const Locale('ar');
+  final ukLocale = const Locale('uk');
 
   @override
-  List<Locale> get supportedLocales => [enUSLocale, svSELocale, arAELocale];
+  List<Locale> get supportedLocales =>
+      [enUSLocale, svSELocale, arAELocale, ukLocale];
 
   @override
   LocalizationEnum currentLocale = LocalizationEnum.english;

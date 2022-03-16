@@ -728,9 +728,10 @@ Future play(String what) async {
 }
 
 final List locale = [
-  {'name': 'ENGLISH ', 'locale': Locale('en')},
-  {'name': 'SWEDISH SVENSKA', 'locale': Locale('sv')},
-  {'name': 'ARABIC عربي', 'locale': Locale('ar')},
+  {'name': 'English ', 'locale': Locale('en')},
+  {'name': 'Swedish (Svenska)', 'locale': Locale('sv')},
+  {'name': 'Arabic (اَلْعَرَبِيَّةُ)', 'locale': Locale('ar')},
+  {'name': 'Ukrainian (украї́нська мо́ва)', 'locale': Locale('uk')},
 ];
 
 Widget getFooterSection(context) {
