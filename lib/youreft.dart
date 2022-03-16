@@ -21,23 +21,6 @@ enum record_state { none, before, recording, recorded }
 var statusText;
 late String recordFilePath;
 
-/*void pauseRecord() {
-      if (RecordMp3.instance.status == RecordStatus.PAUSE) {
-        bool s = RecordMp3.instance.resume();
-        if (s) {
-          statusText = "正在录音中...";
-          setState(() {});
-        }
-      } else {
-        bool s = RecordMp3.instance.pause();
-        if (s) {
-          statusText = "录音暂停中...";
-          setState(() {});
-        }
-      }
-    }
-*/
-
 class YourEFT extends StatefulWidget {
   const YourEFT({Key? key}) : super(key: key);
 
@@ -63,11 +46,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    /*  ByteData bytes =
-        rootBundle.load(audioasset) as ByteData; //load audio from assets
-    audiobytes =
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-    player.playBytes(audiobytes);*/
+
     isDisclaimercheck().then((checkeddisclaimer) => true);
     loadplayer();
   }
@@ -415,7 +394,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
                                         ),
                                         const SizedBox(width: 10),
                                         Text(
-                                          LocaleKeys.ihaveheard,
+                                          LocaleKeys.disclaimer,
                                           style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size

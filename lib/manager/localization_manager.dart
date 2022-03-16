@@ -35,9 +35,9 @@ class LocalizationManager implements ILocalizationManager {
   @override
   String? localePath = 'assets/translations';
 
-  final enUSLocale = const Locale('en', 'US');
-  final svSELocale = const Locale('sv', 'SE');
-  final arAELocale = const Locale('ar', 'AE');
+  final enUSLocale = const Locale('en');
+  final svSELocale = const Locale('sv');
+  final arAELocale = const Locale('ar');
 
   @override
   List<Locale> get supportedLocales => [enUSLocale, svSELocale, arAELocale];

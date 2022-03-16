@@ -12,7 +12,7 @@ abstract class  LocaleKeys {
   static const youreft = 'youreft';
   static const contactme = 'contactme';
   static const sharingiscaring = 'sharingiscaring';
-  static const ihaveheard = 'ihaveheard';
+  static const disclaimer = 'disclaimer';
   static const myfeeling = 'myfeeling';
   static const theintensity = 'theintensity';
   static const myfeelingrecorded = 'myfeelingrecorded';
