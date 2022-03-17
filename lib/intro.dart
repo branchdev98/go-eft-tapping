@@ -58,11 +58,14 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
         bottom: true,
         child: Scaffold(
           body: Container(
+            padding: const EdgeInsets.fromLTRB(25, 10, 10, 25),
             child: Stack(
-              fit: StackFit.loose, // Just Changed this line
-              alignment: Alignment.bottomCenter,
+              fit: StackFit.passthrough, // Just Changed this line
+              alignment: Alignment.centerRight,
+
               children: [
                 SizedBox(
+                    width: MediaQuery.of(context).size.width - 50,
                     height: MediaQuery.of(context).size.height,
                     child: (LocaleKeys.lang.tr() == "ara")
                         ? /*FittedBox(
@@ -295,26 +298,26 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                               await loadAsset();
                             },
                           )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Material(
-                      clipBehavior: Clip.hardEdge,
-                      color: Colors.transparent,
-                      child: Ink.image(
-                        image: const AssetImage("assets/images/btnhome.png"),
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width / 8,
-                        height: MediaQuery.of(context).size.width / 8,
-                        child: InkWell(onTap: () async {
-                          int result = await player.stop();
-                          if (result == 1) {
-                            Navigator.pop(context);
-                          }
-                        }),
-                      ),
+                Positioned(
+                  left: 10,
+                  top: MediaQuery.of(context).size.height - 130,
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: const AssetImage("assets/images/btnhome.png"),
+                      fit: BoxFit.cover,
+                      //  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
+                      width: MediaQuery.of(context).size.width / 8,
+                      height: MediaQuery.of(context).size.width / 8,
+                      child: InkWell(onTap: () {
+                        //int result = await player.stop();
+                        //  if (result == 1) {
+                        Navigator.pop(context);
+                        // }
+                      }),
                     ),
-                  ],
+                  ),
                 )
               ],
             ),

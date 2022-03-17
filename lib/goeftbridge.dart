@@ -148,7 +148,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   }
 
   Widget getFooterSection() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      SizedBox(
+        width: 1,
+      ),
       Material(
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
@@ -160,8 +163,8 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                   Ink.image(
                     image: const AssetImage("assets/images/btnhome.png"),
                     fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width / 10,
-                    height: MediaQuery.of(context).size.width / 10,
+                    width: MediaQuery.of(context).size.width / 8,
+                    height: MediaQuery.of(context).size.width / 8,
                   ),
                 ]),
             onTap: () async {
@@ -178,6 +181,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 }
               }
             }),
+      ),
+      SizedBox(
+        width: 1,
       ),
       Material(
         clipBehavior: Clip.hardEdge,
@@ -227,6 +233,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
               setState(() {});
             }),
       ),
+      SizedBox(
+        width: 1,
+      ),
       Material(
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
@@ -241,8 +250,8 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                         ? const AssetImage("assets/images/btnpause.png")
                         : const AssetImage("assets/images/btnplay.png"),
                 fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width / 10,
-                height: MediaQuery.of(context).size.width / 10,
+                width: MediaQuery.of(context).size.width / 8,
+                height: MediaQuery.of(context).size.width / 8,
                 child: InkWell(onTap: () async {
                   if (state == RecordState.recording) {
                     stopRecord();
@@ -271,7 +280,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 }),
               ),
             ]),
-      )
+      ),
+      SizedBox(
+        width: 1,
+      ),
     ]);
   }
 
@@ -314,34 +326,13 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                           )).tr(),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Material(
-                        clipBehavior: Clip.hardEdge,
-                        color: Colors.transparent,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(LocaleKeys.copyright,
-                              style: TextStyle(
-                                fontSize:
-                                    (MediaQuery.of(context).size.width / 25),
-                                color: Colors.black,
-                              )).tr(),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  )
                 ],
               ),
               SizedBox(
                 height: 20,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Expanded(
                   //    child:
@@ -386,15 +377,16 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
               SizedBox(
                 height: 10,
               ),
-              Image.asset(
-                "assets/images/bridge.png",
-              ),
+              Image.asset("assets/images/bridge.png",
+                  fit: BoxFit.contain,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width / 2),
               SizedBox(
                 height: 100,
               ),
               getFooterSection(),
               SizedBox(
-                height: 2,
+                height: 3,
               )
             ]),
       )),

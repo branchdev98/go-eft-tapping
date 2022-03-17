@@ -170,11 +170,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       //player.resume();
 
-      final InAppReview inAppReview = InAppReview.instance;
-
-      if (await inAppReview.isAvailable()) {
-        inAppReview.requestReview();
-      }
     }
   }
 
@@ -420,15 +415,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   var state = record_state.none;
   Widget getBottomSection(context) {
     return Container(
-      margin: (LocaleKeys.lang.tr() == "ara")
-          ? const EdgeInsets.fromLTRB(0, 0, 20, 0)
-          : const EdgeInsets.fromLTRB(20, 0, 0, 0),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IgnorePointer(
                   ignoring: record_state.recording1 == state,
@@ -491,7 +484,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   ),
                 ),
                 Visibility(
-                  maintainSize: true,
+                  maintainSize: false,
                   maintainAnimation: true,
                   maintainState: true,
                   visible: record_state.recording1 == state,
@@ -507,9 +500,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             image:
                                 const AssetImage("assets/images/btnstop.png"),
                             fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 10,
+                            width: record_state.recording1 == state
+                                ? MediaQuery.of(context).size.width / 10
+                                : 1,
                             height: MediaQuery.of(context).size.width / 10,
-                            child: InkWell(onTap: () {
+                            child: InkWell(onTap: () async {
                               disableBtn = false;
 
                               //    AppLocalization.load(Locale('en', ''));
@@ -520,7 +515,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 state = record_state.recorded1;
                               });
 
-                              stopRecord();
+                              var result = await stopRecord();
+                              if (result == 1 &&
+                                  intensityrecorded &&
+                                  feelingrecorded) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => GoEFTTappingPage()),
+                                );
+                              }
                             }),
                           ),
                         ]),
@@ -531,7 +535,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           ),
           Expanded(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IgnorePointer(
                   ignoring: record_state.recording2 == state,
@@ -595,7 +599,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   ),
                 ),
                 Visibility(
-                  maintainSize: true,
+                  maintainSize: false,
                   maintainAnimation: true,
                   maintainState: true,
                   visible: record_state.recording2 == state,
@@ -611,25 +615,31 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             image:
                                 const AssetImage("assets/images/btnstop.png"),
                             fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width / 10,
+                            width: record_state.recording2 == state
+                                ? MediaQuery.of(context).size.width / 10
+                                : 1,
                             height: MediaQuery.of(context).size.width / 10,
-                            child: InkWell(onTap: () {
+                            child: InkWell(onTap: () async {
                               disableBtn = false;
 
                               //    AppLocalization.load(Locale('en', ''));
                               //  context.read<LocaleProvider>().setLocale(localeEN);
-                              if (feelingrecorded == true) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GoEFTTappingPage()),
-                                );
-                              }
+
                               setState(() {
                                 state = record_state.recorded2;
                                 intensityrecorded = true;
                               });
-                              stopRecord();
+                              var result = await stopRecord();
+                              if (result == true) {
+                                if (feelingrecorded == true) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            GoEFTTappingPage()),
+                                  );
+                                }
+                              }
                             }),
                           ),
                         ]),
@@ -684,9 +694,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 }
 
-void stopRecord() {
-  bool s = RecordMp3.instance.stop();
+Future<bool> stopRecord() async {
+  bool s = await RecordMp3.instance.stop();
   if (s) {
+    return s;
     // statusText = "录音已完成";
 
     //   setState(() {});
@@ -719,7 +730,7 @@ Future play(String what) async {
   await player.release();
 
   String audioasset = LocaleKeys.lang.tr() + 'audio' + what + '.mp3';
-
+  print(audioasset);
   audioCache.play(audioasset);
 
   if (kDebugMode) {
@@ -748,8 +759,8 @@ Widget getFooterSection(context) {
         child: Ink.image(
           image: const AssetImage("assets/images/btnlanguage.png"),
           fit: BoxFit.cover,
-          width: 30,
-          height: 30,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.width / 15,
           child: InkWell(onTap: () async {
             showDialog(
                 context: context,
@@ -796,8 +807,8 @@ Widget getFooterSection(context) {
         child: Ink.image(
           image: const AssetImage("assets/images/fbshare.png"),
           fit: BoxFit.cover,
-          width: 30,
-          height: 30,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.width / 15,
           child: InkWell(onTap: () async {
             //    url: "https://sarabern.com", msg: "share");
             await SocialSharePlugin.shareToFeedFacebookLink(
@@ -817,8 +828,8 @@ Widget getFooterSection(context) {
         child: Ink.image(
           image: const AssetImage("assets/images/shareall.png"),
           fit: BoxFit.cover,
-          width: 30,
-          height: 30,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.width / 15,
           child: InkWell(onTap: () {
             //  shareFile();
             Share.share(LocaleKeys.checkout.tr() + "\n" + appUrl,
@@ -834,11 +845,15 @@ Widget getFooterSection(context) {
         child: Ink.image(
           image: const AssetImage("assets/images/btncontactus.png"),
           fit: BoxFit.cover,
-          width: 30,
-          height: 30,
-          child: InkWell(onTap: () {
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.width / 15,
+          child: InkWell(onTap: () async {
             player.pause();
+            final InAppReview inAppReview = InAppReview.instance;
 
+            if (await inAppReview.isAvailable()) {
+              inAppReview.requestReview();
+            }
             _launchURL('sara@goldenopportunity.se',
                 LocaleKeys.ihaveaquestion.tr(), LocaleKeys.hellosara.tr());
           }),
