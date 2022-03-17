@@ -90,9 +90,7 @@ flutter:
     - assets/images/girl.png
     - assets/images/arrow.png
     - assets/images/btnplay.png
-    - assets/images/btnwhite.png
-    - assets/images/checked.png
-    - assets/images/unchecked.png
+
     - assets/images/btnred.png
     - assets/images/btnblue.png
     - assets/images/btnstop.png
