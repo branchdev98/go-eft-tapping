@@ -114,6 +114,7 @@ flutter:
     - assets/images/btnlanguage.png
     - assets/images/btncontactus.png
     - assets/images/btnrecording.png
+    - assets/images/btnrate.png
     - assets/audio/
     #- assets/translations/sv-SE.json
     - assets/translations/uk.json

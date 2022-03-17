@@ -94,7 +94,6 @@ class MyApp extends StatelessWidget {
 AudioCache audioCache = AudioCache();
 AudioPlayer player = AudioPlayer();
 Uint8List audiobytes;
-var currentpos = 0;
 
 var playerState;
 String audioasset;
@@ -102,6 +101,7 @@ var disableBtn = false;
 var appUrl = "";
 var feelingrecorded = false;
 var intensityrecorded = false;
+var state = record_state.none;
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key, this.title}) : super(key: key);
@@ -218,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             child: Text(LocaleKeys.pagedtitle,
                                 style: TextStyle(
                                   fontSize:
-                                      (MediaQuery.of(context).size.width / 11),
+                                      (MediaQuery.of(context).size.width / 12),
                                   color: Colors.black,
                                 )).tr(),
                           ),
@@ -268,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 children: [
                                   Ink.image(
                                     image: const AssetImage(
-                                        "assets/images/btnorange.png"),
+                                        "assets/images/btngreen.png"),
                                     fit: BoxFit.cover,
                                     width: MediaQuery.of(context).size.width /
                                         4 *
@@ -287,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 ],
                               ),
                               onTap: () async {
-                                player.pause();
+                                //  player.pause();
                                 //player.pause();
 
                                 Navigator.push(
@@ -412,7 +412,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  var state = record_state.none;
   Widget getBottomSection(context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -516,7 +515,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               });
 
                               var result = await stopRecord();
-                              if (result == 1 &&
+                              if (result == true &&
                                   intensityrecorded &&
                                   feelingrecorded) {
                                 Navigator.push(
@@ -524,6 +523,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   MaterialPageRoute(
                                       builder: (context) => GoEFTTappingPage()),
                                 );
+                                setState(() {
+                                  state = record_state.none;
+                                  feelingrecorded = false;
+                                  intensityrecorded = false;
+                                  disableBtn = false;
+                                });
                               }
                             }),
                           ),
@@ -702,6 +707,7 @@ Future<bool> stopRecord() async {
 
     //   setState(() {});
   }
+  return false;
 }
 
 Future<String> getFilePath(String what) async {
@@ -766,7 +772,7 @@ Widget getFooterSection(context) {
                 context: context,
                 builder: (builder) {
                   return AlertDialog(
-                    title: Text('Choose Your Language'),
+                    title: Text(LocaleKeys.chooselanguage.tr()),
                     content: Container(
                       width: double.maxFinite,
                       child: ListView.separated(
@@ -781,6 +787,13 @@ Widget getFooterSection(context) {
                                         : Text(locale[index]['name']),
                                 onTap: () {
                                   print(locale[index]['locale']);
+                                  if (context.locale !=
+                                      locale[index]['locale']) {
+                                    feelingrecorded = false;
+                                    intensityrecorded = false;
+                                    disableBtn = false;
+                                    state = record_state.none;
+                                  }
                                   context.setLocale(locale[index]['locale']);
                                   Navigator.pop(context);
                                 },
@@ -796,6 +809,26 @@ Widget getFooterSection(context) {
                     ),
                   );
                 });
+          }),
+        ),
+      ),
+      const SizedBox(width: 10),
+      Material(
+        elevation: 0.0,
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: Ink.image(
+          image: const AssetImage("assets/images/btnrate.png"),
+          fit: BoxFit.cover,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.width / 15,
+          child: InkWell(onTap: () async {
+            player.pause();
+            final InAppReview inAppReview = InAppReview.instance;
+
+            if (await inAppReview.isAvailable()) {
+              inAppReview.requestReview();
+            }
           }),
         ),
       ),
@@ -849,11 +882,7 @@ Widget getFooterSection(context) {
           height: MediaQuery.of(context).size.width / 15,
           child: InkWell(onTap: () async {
             player.pause();
-            final InAppReview inAppReview = InAppReview.instance;
 
-            if (await inAppReview.isAvailable()) {
-              inAppReview.requestReview();
-            }
             _launchURL('sara@goldenopportunity.se',
                 LocaleKeys.ihaveaquestion.tr(), LocaleKeys.hellosara.tr());
           }),

@@ -135,6 +135,13 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
           playCompleted = true;
           playPaused = true;
           player.onPlayerCompletion.listen(null);
+          if (mode == track.F) {
+            if (kDebugMode) {
+              print("tapped home");
+            }
+
+            Navigator.pop(context);
+          }
           audiofilepos = 0;
         });
       }
@@ -261,7 +268,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   Widget getFooterSection() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        height: 80,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Material(
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
@@ -288,7 +296,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                     //nextflow = false;
 
                     setState(() {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.pop(context);
 
                       audiofilepos = 0;
                     });
@@ -299,7 +307,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   }
                 }),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 1),
           Material(
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
@@ -330,7 +338,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   audioCache.play(audioasset);
                 }),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 1),
           Material(
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
@@ -376,7 +384,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   }
                 }),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 1),
           Material(
             clipBehavior: Clip.hardEdge,
             color: Colors.transparent,
@@ -401,7 +409,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               }),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 1),
           IgnorePointer(
               ignoring: mode == track.F,
               child: Container(
@@ -482,12 +490,15 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -499,7 +510,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                           child: Text(LocaleKeys.pageetitle,
                               style: TextStyle(
                                 fontSize:
-                                    (MediaQuery.of(context).size.width / 13),
+                                    (MediaQuery.of(context).size.width / 12),
                                 color: Colors.black,
                               )).tr(),
                         ),
@@ -513,7 +524,8 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                       alignment: Alignment.topCenter,
                       child: Text(LocaleKeys.thesound,
                           style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 32),
+                            fontSize: (MediaQuery.of(context).size.width / 30),
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           )).tr(),
                     ),

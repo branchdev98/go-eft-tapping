@@ -162,9 +162,9 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 children: [
                   Ink.image(
                     image: const AssetImage("assets/images/btnhome.png"),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                     width: MediaQuery.of(context).size.width / 8,
-                    height: MediaQuery.of(context).size.width / 8,
+                    height: MediaQuery.of(context).size.width / 8 + 40,
                   ),
                 ]),
             onTap: () async {
@@ -321,7 +321,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                       alignment: Alignment.topCenter,
                       child: Text(LocaleKeys.goeftbridgec,
                           style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 10),
+                            fontSize: (MediaQuery.of(context).size.width / 12),
                             color: Colors.black,
                           )).tr(),
                     ),
@@ -385,9 +385,6 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                 height: 100,
               ),
               getFooterSection(),
-              SizedBox(
-                height: 3,
-              )
             ]),
       )),
     );
