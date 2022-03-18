@@ -22,7 +22,6 @@ abstract class  LocaleKeys {
   static const recordingproblem = 'recordingproblem';
   static const recordingintensity = 'recordingintensity';
   static const chooselanguage = 'chooselanguage';
-  static const goeftbridgec = 'goeftbridgec';
   static const recordprefferedemotion = 'recordprefferedemotion';
   static const recording = 'recording';
   static const record = 'record';
@@ -32,8 +31,9 @@ abstract class  LocaleKeys {
   static const hellosara = 'hellosara';
   static const acupoints2 = 'acupoints2';
   static const acupoints = 'acupoints';
-  static const pagedtitle = 'pagedtitle';
+  static const pagebtitle = 'pagebtitle';
   static const pageetitle = 'pageetitle';
+  static const pageftitle = 'pageftitle';
   static const checkout = 'checkout';
   static const takealook = 'takealook';
 

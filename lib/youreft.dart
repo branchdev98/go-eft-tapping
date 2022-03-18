@@ -294,7 +294,7 @@ class _YourEFTState extends State<YourEFT> with WidgetsBindingObserver {
                               color: Colors.transparent,
                               child: Align(
                                 alignment: Alignment.topCenter,
-                                child: Text(LocaleKeys.pagedtitle,
+                                child: Text(LocaleKeys.pagebtitle,
                                     style: TextStyle(
                                       fontSize:
                                           (MediaQuery.of(context).size.width /

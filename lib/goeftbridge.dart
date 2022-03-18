@@ -319,7 +319,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                     color: Colors.transparent,
                     child: Align(
                       alignment: Alignment.topCenter,
-                      child: Text(LocaleKeys.goeftbridgec,
+                      child: Text(LocaleKeys.pageftitle,
                           style: TextStyle(
                             fontSize: (MediaQuery.of(context).size.width / 12),
                             color: Colors.black,

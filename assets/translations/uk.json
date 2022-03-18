@@ -18,7 +18,7 @@
     "recordproblem": "Inspelning \nav problemet",
     "recordintensity": "Inspelning \nav intensiteten",
     "chooselanguage": "виберіть мову нижче",
-    "goeftbridgec": "GO EFT Bridge",
+    
     "recordingproblem" : "Inspelning pågår...",
     "recordingintensity" : "Inspelning pågår...",
     "recordprefferedemotion" :"Inspelning av\nföredragen känsla",
@@ -30,8 +30,9 @@
     "hellosara" : "Hejsan Sara!",
     "acupoints2": "2. Huvudet\n3. Ögonbrynet\n4. Sidan av ögat\n5. Under ögat\n6. Under näsan\n7. Hakan, under läppen\n8. Nyckelbenspunkten,\n  eller handflatan \n  på nyckelbenen\n9. Under armen\n10. Handloven",
     "acupoints": "1. Sidan av handen\n(karatepunkten)",
-    "pagedtitle": "Spela in ditt problem",
+    "pagebtitle": "Spela in ditt problem",
     "pageetitle": "Vi knackar tillsammans",
+    "pageftitle": "GO EFT Bridge",
     "checkout": "Titta på denna GO EFT Tapping app!",
     "takealook": "Ta en titt på den här appen!"
   }

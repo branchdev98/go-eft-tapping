@@ -20,7 +20,7 @@
     "recordingproblem" : "تسجيل...",
     "recordingintensity" : "تسجيل...",
     "chooselanguage": "اختر اللغة",
-    "goeftbridgec" : "EFT انطلق عبر الجسر",
+    
     "recordprefferedemotion" :"قم بالتسجيل",
     "recording" :"تسجيل...",
     "record" : "قم بالتسجيل",
@@ -30,8 +30,9 @@
     "hellosara": "Hello",
     "acupoints2": "2. أعلى الرأس\n3. حاجب العين\n4. جانب العين\n5. تحت العين\n6. تحت الأنف\n7. الذقن\n8. الترقوة\n'عقدة ربطة العنق'\n9. تحت الإبط\n10.  داخل الكم\n(معصم اليد)",
     "acupoints": "1. منطقة ضربة \n الكاراتيه",
-    "pagedtitle": "سجل مشكلتك",
-    "pageetitle": "انطلق بالنقرEFT ",
+    "pagebtitle": "سجل مشكلتك",
+    "pageetitle": "نضغط معا",
+    "pageftitle" : "جسر للتحسين",
     "checkout": "check out GO EFT TAPPING app!",
     "takealook": "Take a look at this app!"
 }

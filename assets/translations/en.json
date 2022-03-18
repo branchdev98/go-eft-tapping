@@ -17,7 +17,7 @@
     "recordproblem": "Record problem",
     "recordintensity": "Record intensity",
     "chooselanguage": "Choose language below",
-    "goeftbridgec": "Bridge to Better!",
+    
     "recordingproblem" : "Recording problem...",
     "recordingintensity" : "Recording intensity...",
     "recordprefferedemotion" :"Record preferred \nemotion",
@@ -29,8 +29,9 @@
     "hellosara": "Hello Sara!",
     "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Inside Wrist",
     "acupoints": "1. Side of hand\n (Karate chop point)",
-    "pagedtitle": "Record your problem",
+    "pagebtitle": "Record your problem",
     "pageetitle": "We tap together",
+    "pageftitle": "Bridge to Better!",
     "checkout": "check out GO EFT TAPPING app!",
     "takealook": "Take a look at this app!"
 

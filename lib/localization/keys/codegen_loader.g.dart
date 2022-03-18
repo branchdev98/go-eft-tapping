@@ -36,7 +36,6 @@ class CodegenLoader extends AssetLoader{
   "recordingproblem": "تسجيل...",
   "recordingintensity": "تسجيل...",
   "chooselanguage": "اختر اللغة",
-  "goeftbridgec": "EFT انطلق عبر الجسر",
   "recordprefferedemotion": "قم بالتسجيل",
   "recording": "تسجيل...",
   "record": "قم بالتسجيل",
@@ -46,8 +45,9 @@ class CodegenLoader extends AssetLoader{
   "hellosara": "Hello",
   "acupoints2": "2. أعلى الرأس\n3. حاجب العين\n4. جانب العين\n5. تحت العين\n6. تحت الأنف\n7. الذقن\n8. الترقوة\n'عقدة ربطة العنق'\n9. تحت الإبط\n10.  داخل الكم\n(معصم اليد)",
   "acupoints": "1. منطقة ضربة \n الكاراتيه",
-  "pagedtitle": "سجل مشكلتك",
-  "pageetitle": "انطلق بالنقرEFT ",
+  "pagebtitle": "سجل مشكلتك",
+  "pageetitle": "نضغط معا",
+  "pageftitle": "جسر للتحسين",
   "checkout": "check out GO EFT TAPPING app!",
   "takealook": "Take a look at this app!"
 };
@@ -70,7 +70,6 @@ static const Map<String,dynamic> en = {
   "recordproblem": "Record problem",
   "recordintensity": "Record intensity",
   "chooselanguage": "Choose language below",
-  "goeftbridgec": "Bridge to Better!",
   "recordingproblem": "Recording problem...",
   "recordingintensity": "Recording intensity...",
   "recordprefferedemotion": "Record preferred \nemotion",
@@ -82,8 +81,9 @@ static const Map<String,dynamic> en = {
   "hellosara": "Hello Sara!",
   "acupoints2": "2. Top of head\n3. Eyebrow\n4. Side of eye\n5. Under eye\n6. Under nose\n7. Chin\n8. Collarbone\n9. Under arm\n10. Inside Wrist",
   "acupoints": "1. Side of hand\n (Karate chop point)",
-  "pagedtitle": "Record your problem",
+  "pagebtitle": "Record your problem",
   "pageetitle": "We tap together",
+  "pageftitle": "Bridge to Better!",
   "checkout": "check out GO EFT TAPPING app!",
   "takealook": "Take a look at this app!"
 };
@@ -106,7 +106,6 @@ static const Map<String,dynamic> sv = {
   "recordproblem": "Inspelning \nav problemet",
   "recordintensity": "Inspelning \nav intensiteten",
   "chooselanguage": "Välj språk nedan",
-  "goeftbridgec": "GO EFT Bridge",
   "recordingproblem": "Inspelning pågår...",
   "recordingintensity": "Inspelning pågår...",
   "recordprefferedemotion": "Inspelning av\nföredragen känsla",
@@ -118,8 +117,9 @@ static const Map<String,dynamic> sv = {
   "hellosara": "Hejsan Sara!",
   "acupoints2": "2. Huvudet\n3. Ögonbrynet\n4. Sidan av ögat\n5. Under ögat\n6. Under näsan\n7. Hakan, under läppen\n8. Nyckelbenspunkten,\n  eller handflatan \n  på nyckelbenen\n9. Under armen\n10. Handloven",
   "acupoints": "1. Sidan av handen\n(karatepunkten)",
-  "pagedtitle": "Spela in ditt problem",
+  "pagebtitle": "Spela in ditt problem",
   "pageetitle": "Vi knackar tillsammans",
+  "pageftitle": "Bro till Bättring",
   "checkout": "Titta på denna GO EFT Tapping app!",
   "takealook": "Ta en titt på den här appen!"
 };
@@ -143,7 +143,6 @@ static const Map<String,dynamic> uk = {
   "recordproblem": "Inspelning \nav problemet",
   "recordintensity": "Inspelning \nav intensiteten",
   "chooselanguage": "виберіть мову нижче",
-  "goeftbridgec": "GO EFT Bridge",
   "recordingproblem": "Inspelning pågår...",
   "recordingintensity": "Inspelning pågår...",
   "recordprefferedemotion": "Inspelning av\nföredragen känsla",
@@ -155,8 +154,9 @@ static const Map<String,dynamic> uk = {
   "hellosara": "Hejsan Sara!",
   "acupoints2": "2. Huvudet\n3. Ögonbrynet\n4. Sidan av ögat\n5. Under ögat\n6. Under näsan\n7. Hakan, under läppen\n8. Nyckelbenspunkten,\n  eller handflatan \n  på nyckelbenen\n9. Under armen\n10. Handloven",
   "acupoints": "1. Sidan av handen\n(karatepunkten)",
-  "pagedtitle": "Spela in ditt problem",
+  "pagebtitle": "Spela in ditt problem",
   "pageetitle": "Vi knackar tillsammans",
+  "pageftitle": "GO EFT Bridge",
   "checkout": "Titta på denna GO EFT Tapping app!",
   "takealook": "Ta en titt på den här appen!"
 };
