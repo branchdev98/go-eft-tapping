@@ -34,6 +34,24 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
         child: Scaffold(
           body: Column(
             children: [
+              SizedBox(
+                height: 30,
+              ),
+              Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(LocaleKeys.pagectitle,
+                      style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width / 12),
+                        color: Colors.black,
+                      )).tr(),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Container(
                 // padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
 
@@ -41,7 +59,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                 //alignment: Alignment.centerRight,
 
                 width: MediaQuery.of(context).size.width - 50,
-                height: MediaQuery.of(context).size.height - 80 - 49,
+                height: MediaQuery.of(context).size.height - 80 - 125,
                 child: WebView(
                   key: const Key("webview1"),
                   debuggingEnabled: true,

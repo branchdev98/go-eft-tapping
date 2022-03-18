@@ -32,6 +32,7 @@ abstract class  LocaleKeys {
   static const acupoints2 = 'acupoints2';
   static const acupoints = 'acupoints';
   static const pagebtitle = 'pagebtitle';
+  static const pagectitle = 'pagectitle';
   static const pageetitle = 'pageetitle';
   static const pageftitle = 'pageftitle';
   static const checkout = 'checkout';
