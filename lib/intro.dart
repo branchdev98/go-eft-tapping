@@ -41,7 +41,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                 //alignment: Alignment.centerRight,
 
                 width: MediaQuery.of(context).size.width - 50,
-                height: MediaQuery.of(context).size.height - 90,
+                height: MediaQuery.of(context).size.height - 80 - 49,
                 child: WebView(
                   key: const Key("webview1"),
                   debuggingEnabled: true,
@@ -54,31 +54,35 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                   },
                 ),
               ),
-              Row(
-                //left: 0,
-                //top: MediaQuery.of(context).size.height - 112,
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: Row(
+                  //left: 0,
+                  //top: MediaQuery.of(context).size.height - 112,
 
-                children: [
-                  SizedBox(width: 15),
-                  Material(
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Ink.image(
-                      image: const AssetImage("assets/images/btnhome.png"),
-                      fit: BoxFit.cover,
-                      //  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
-                      width: MediaQuery.of(context).size.width / 8,
-                      height: MediaQuery.of(context).size.width / 8,
-                      child: InkWell(onTap: () {
-                        //int result = await player.stop();
-                        //  if (result == 1) {
-                        Navigator.pop(context);
-                        // }
-                      }),
+                  children: [
+                    SizedBox(width: 15),
+                    Material(
+                      clipBehavior: Clip.hardEdge,
+                      color: Colors.transparent,
+                      child: Ink.image(
+                        image: const AssetImage("assets/images/btnhome.png"),
+                        fit: BoxFit.contain,
+                        //  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
+                        width: MediaQuery.of(context).size.width / 8,
+                        height: 80,
+                        child: InkWell(onTap: () {
+                          //int result = await player.stop();
+                          //  if (result == 1) {
+                          Navigator.pop(context);
+                          // }
+                        }),
+                      ),
                     ),
-                  ),
-                ],
-              ) /*,*/
+                  ],
+                ) /*,*/
+                ,
+              )
             ],
           ),
         ));

@@ -148,143 +148,146 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
   }
 
   Widget getFooterSection() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      SizedBox(
-        width: 1,
-      ),
-      Material(
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: InkWell(
-            child: Stack(
-                alignment: Alignment.bottomLeft,
-                fit: StackFit.passthrough,
-                children: [
-                  Ink.image(
-                    image: const AssetImage("assets/images/btnhome.png"),
-                    fit: BoxFit.contain,
-                    width: MediaQuery.of(context).size.width / 8,
-                    height: MediaQuery.of(context).size.width / 8 + 40,
-                  ),
-                ]),
-            onTap: () async {
-              int result = await player.stop();
-              if (result == 1) {
-                //pause success
-                Navigator.of(context).popUntil((route) => route.isFirst);
-                setState(() {
-                  // isplaying = false;
-                });
-              } else {
-                if (kDebugMode) {
-                  print("Error on pause audio.");
-                }
-              }
-            }),
-      ),
-      SizedBox(
-        width: 1,
-      ),
-      Material(
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: InkWell(
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          SizedBox(
+            width: 1,
+          ),
+          Material(
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: InkWell(
+                child: Stack(
+                    alignment: Alignment.bottomLeft,
+                    fit: StackFit.passthrough,
+                    children: [
+                      Ink.image(
+                        image: const AssetImage("assets/images/btnhome.png"),
+                        fit: BoxFit.contain,
+                        width: MediaQuery.of(context).size.width / 8,
+                        height: 80,
+                      ),
+                    ]),
+                onTap: () async {
+                  int result = await player.stop();
+                  if (result == 1) {
+                    //pause success
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    setState(() {
+                      // isplaying = false;
+                    });
+                  } else {
+                    if (kDebugMode) {
+                      print("Error on pause audio.");
+                    }
+                  }
+                }),
+          ),
+          SizedBox(
+            width: 1,
+          ),
+          Material(
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: InkWell(
+                child: Stack(
+                    alignment: Alignment.center,
+                    fit: StackFit.passthrough,
+                    children: [
+                      Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: (state == RecordState.before ||
+                            state == RecordState.recorded),
+                        child: Image.asset(
+                          "assets/images/btnred.png",
+                          fit: BoxFit.contain,
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: 80,
+                        ),
+                      ),
+                      Text(
+                        (state == RecordState.before ||
+                                state == RecordState.recorded)
+                            ? LocaleKeys.recordprefferedemotion
+                            : (state == RecordState.recording)
+                                ? LocaleKeys.recording
+                                : "",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width /
+                                ((LocaleKeys.lang.tr() == "ara") ? 15 : 30),
+                            color: (state == RecordState.recording)
+                                ? Colors.red
+                                : Colors.white),
+                      ).tr(),
+                    ]),
+                onTap: () async {
+                  if (state == RecordState.before ||
+                      state == RecordState.recorded) {
+                    startRecord("preferred");
+                    //   problemState = RecordState.recording;
+                  }
+
+                  disableBtn = true;
+                  setState(() {});
+                }),
+          ),
+          SizedBox(
+            width: 1,
+          ),
+          Material(
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
             child: Stack(
                 alignment: Alignment.center,
                 fit: StackFit.passthrough,
                 children: [
-                  Visibility(
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: (state == RecordState.before ||
-                        state == RecordState.recorded),
-                    child: Image.asset(
-                      "assets/images/btnred.png",
-                      fit: BoxFit.fitHeight,
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.width / 9,
-                    ),
+                  Ink.image(
+                    image: (state == RecordState.recording)
+                        ? const AssetImage("assets/images/btnstop.png")
+                        : !playPaused && !playCompleted
+                            ? const AssetImage("assets/images/btnpause.png")
+                            : const AssetImage("assets/images/btnplay.png"),
+                    fit: BoxFit.contain,
+                    width: MediaQuery.of(context).size.width / 8,
+                    height: 80,
+                    child: InkWell(onTap: () async {
+                      if (state == RecordState.recording) {
+                        stopRecord();
+                      } else if (state == RecordState.before) {
+                        if (!playPaused && !playCompleted) {
+                          player.pause();
+                          setState(() {
+                            playPaused = true;
+                          });
+                        } else if (playPaused) {
+                          player.resume();
+                          setState(() {
+                            playPaused = false;
+                            playCompleted = false;
+                          });
+                        } else {
+                          audiofilepos = 0;
+                          audioasset = await getAssetFile(audiofilepos);
+                          audioCache.play(audioasset);
+                          setState(() {
+                            playPaused = false;
+                            playCompleted = false;
+                          });
+                        }
+                      }
+                    }),
                   ),
-                  Text(
-                    (state == RecordState.before ||
-                            state == RecordState.recorded)
-                        ? LocaleKeys.recordprefferedemotion
-                        : (state == RecordState.recording)
-                            ? LocaleKeys.recording
-                            : "",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width /
-                            ((LocaleKeys.lang.tr() == "ara") ? 15 : 30),
-                        color: (state == RecordState.recording)
-                            ? Colors.red
-                            : Colors.white),
-                  ).tr(),
                 ]),
-            onTap: () async {
-              if (state == RecordState.before ||
-                  state == RecordState.recorded) {
-                startRecord("preferred");
-                //   problemState = RecordState.recording;
-              }
-
-              disableBtn = true;
-              setState(() {});
-            }),
-      ),
-      SizedBox(
-        width: 1,
-      ),
-      Material(
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: Stack(
-            alignment: Alignment.center,
-            fit: StackFit.passthrough,
-            children: [
-              Ink.image(
-                image: (state == RecordState.recording)
-                    ? const AssetImage("assets/images/btnstop.png")
-                    : !playPaused && !playCompleted
-                        ? const AssetImage("assets/images/btnpause.png")
-                        : const AssetImage("assets/images/btnplay.png"),
-                fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width / 8,
-                height: MediaQuery.of(context).size.width / 8,
-                child: InkWell(onTap: () async {
-                  if (state == RecordState.recording) {
-                    stopRecord();
-                  } else if (state == RecordState.before) {
-                    if (!playPaused && !playCompleted) {
-                      player.pause();
-                      setState(() {
-                        playPaused = true;
-                      });
-                    } else if (playPaused) {
-                      player.resume();
-                      setState(() {
-                        playPaused = false;
-                        playCompleted = false;
-                      });
-                    } else {
-                      audiofilepos = 0;
-                      audioasset = await getAssetFile(audiofilepos);
-                      audioCache.play(audioasset);
-                      setState(() {
-                        playPaused = false;
-                        playCompleted = false;
-                      });
-                    }
-                  }
-                }),
-              ),
-            ]),
-      ),
-      SizedBox(
-        width: 1,
-      ),
-    ]);
+          ),
+          SizedBox(
+            width: 1,
+          ),
+        ]));
   }
 
   @override

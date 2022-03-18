@@ -268,189 +268,196 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
   Widget getFooterSection() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 80,
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          Material(
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: InkWell(
-                child: Stack(
-                    alignment: Alignment.bottomLeft,
-                    fit: StackFit.passthrough,
-                    children: [
-                      Ink.image(
-                        image: const AssetImage("assets/images/btnhome.png"),
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width / 8,
-                        height: MediaQuery.of(context).size.width / 8,
-                      ),
-                    ]),
-                onTap: () async {
-                  if (kDebugMode) {
-                    print("tapped home");
-                  }
-                  int result = await player.stop();
+        height: 100,
+        child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Stack(
+                            alignment: Alignment.bottomLeft,
+                            fit: StackFit.passthrough,
+                            children: [
+                              Ink.image(
+                                image: const AssetImage(
+                                    "assets/images/btnhome.png"),
+                                fit: BoxFit.contain,
+                                width: MediaQuery.of(context).size.width / 8,
+                                height: 80,
+                              ),
+                            ]),
+                        onTap: () async {
+                          if (kDebugMode) {
+                            print("tapped home");
+                          }
+                          int result = await player.stop();
 
-                  if (result == 1) {
-                    //pause success
-                    //nextflow = false;
+                          if (result == 1) {
+                            //pause success
+                            //nextflow = false;
 
-                    setState(() {
-                      Navigator.pop(context);
+                            setState(() {
+                              Navigator.pop(context);
 
-                      audiofilepos = 0;
-                    });
-                  } else {
-                    if (kDebugMode) {
-                      print("Error on pause audio.");
-                    }
-                  }
-                }),
-          ),
-          const SizedBox(width: 1),
-          Material(
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: InkWell(
-                child: Image.asset(
-                  "assets/images/btnbridge.png",
-                  fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width / 8,
-                  height: MediaQuery.of(context).size.width / 8,
-                ),
-                onTap: () async {
-                  player.stop();
+                              audiofilepos = 0;
+                            });
+                          } else {
+                            if (kDebugMode) {
+                              print("Error on pause audio.");
+                            }
+                          }
+                        }),
+                  ),
+                  const SizedBox(width: 1),
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: Image.asset(
+                          "assets/images/btnbridge.png",
+                          fit: BoxFit.contain,
+                          width: MediaQuery.of(context).size.width / 8,
+                          height: 80,
+                        ),
+                        onTap: () async {
+                          player.stop();
 
-                  playCompleted = true;
-                  mode_result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GoEFTBridge()),
-                  );
+                          playCompleted = true;
+                          mode_result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const GoEFTBridge()),
+                          );
 
-                  whatismode(mode_result);
-                  setState(() {
-                    playCompleted = false;
-                    playPaused = false;
-                  });
-                  audiofilepos = 0;
-                  audioasset = await getAssetFile(mode, audiofilepos);
-                  audioCache.play(audioasset);
-                }),
-          ),
-          const SizedBox(width: 1),
-          Material(
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: InkWell(
-                child: (playPaused == true || playCompleted == true)
-                    ? Image.asset(
-                        "assets/images/btnplay.png",
-                        fit: BoxFit.fitHeight,
-                        width: MediaQuery.of(context).size.width / 8,
-                        height: MediaQuery.of(context).size.width / 8,
-                      )
-                    : Image.asset(
-                        "assets/images/btnpause.png",
-                        fit: BoxFit.fitHeight,
-                        width: MediaQuery.of(context).size.width / 8,
-                        height: MediaQuery.of(context).size.width / 8,
-                      ),
-                onTap: () async {
-                  //disableBtn = true;
+                          whatismode(mode_result);
+                          setState(() {
+                            playCompleted = false;
+                            playPaused = false;
+                          });
+                          audiofilepos = 0;
+                          audioasset = await getAssetFile(mode, audiofilepos);
+                          audioCache.play(audioasset);
+                        }),
+                  ),
+                  const SizedBox(width: 1),
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: InkWell(
+                        child: (playPaused == true || playCompleted == true)
+                            ? Image.asset(
+                                "assets/images/btnplay.png",
+                                fit: BoxFit.contain,
+                                width: MediaQuery.of(context).size.width / 8,
+                                height: 80,
+                              )
+                            : Image.asset(
+                                "assets/images/btnpause.png",
+                                fit: BoxFit.contain,
+                                width: MediaQuery.of(context).size.width / 8,
+                                height: 80,
+                              ),
+                        onTap: () async {
+                          //disableBtn = true;
 
-                  if (playCompleted) {
-                    audiofilepos = 0;
-                    setState(() {
-                      playPaused = false;
-                      playCompleted = false;
-                    });
-                    //  whatismode(mode_result);
-                    audioasset = await getAssetFile(mode, audiofilepos);
-                    audioCache.play(audioasset);
-                    //loadplayer();
-                  } else {
-                    if (playPaused == false) {
-                      player.pause();
-                      setState(() {
-                        playPaused = true;
-                      });
-                    } else if (playPaused == true) {
-                      player.resume();
-                      setState(() {
-                        playPaused = false;
-                      });
-                    }
-                  }
-                }),
-          ),
-          const SizedBox(width: 1),
-          Material(
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: Ink.image(
-              image: const AssetImage("assets/images/btnstop.png"),
-              fit: BoxFit.cover,
-              width: MediaQuery.of(context).size.width / 8,
-              height: MediaQuery.of(context).size.width / 8,
-              child: InkWell(onTap: () async {
-                disableBtn = false;
-                int result = 0;
-                while (result == 0) {
-                  result = await player.stop();
-                }
-                player.release();
-                setState(() {
-                  playCompleted = true;
-
-                  audiofilepos = 0;
-                });
-                //  stopRecord();
-              }),
-            ),
-          ),
-          const SizedBox(width: 1),
-          IgnorePointer(
-              ignoring: mode == track.F,
-              child: Container(
-                foregroundDecoration: mode == track.F
-                    ? const BoxDecoration(
-                        color: Colors.grey,
-                        backgroundBlendMode: BlendMode.lighten)
-                    : null,
-                child: Material(
-                  clipBehavior: Clip.hardEdge,
-                  color: Colors.transparent,
-                  child: Ink.image(
-                    image: mode == track.E1
-                        ? const AssetImage("assets/images/btnnext.png")
-                        : const AssetImage("assets/images/btnrepeat.png"),
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width / 8,
-                    height: MediaQuery.of(context).size.width / 8,
-                    child: InkWell(onTap: () async {
-                      int result = await player.stop();
-
-                      if (result == 1) {
+                          if (playCompleted) {
+                            audiofilepos = 0;
+                            setState(() {
+                              playPaused = false;
+                              playCompleted = false;
+                            });
+                            //  whatismode(mode_result);
+                            audioasset = await getAssetFile(mode, audiofilepos);
+                            audioCache.play(audioasset);
+                            //loadplayer();
+                          } else {
+                            if (playPaused == false) {
+                              player.pause();
+                              setState(() {
+                                playPaused = true;
+                              });
+                            } else if (playPaused == true) {
+                              player.resume();
+                              setState(() {
+                                playPaused = false;
+                              });
+                            }
+                          }
+                        }),
+                  ),
+                  const SizedBox(width: 1),
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: const AssetImage("assets/images/btnstop.png"),
+                      fit: BoxFit.contain,
+                      width: MediaQuery.of(context).size.width / 8,
+                      height: 80,
+                      child: InkWell(onTap: () async {
+                        disableBtn = false;
+                        int result = 0;
+                        while (result == 0) {
+                          result = await player.stop();
+                        }
+                        player.release();
                         setState(() {
-                          mode = track.E2;
+                          playCompleted = true;
 
                           audiofilepos = 0;
                         });
-
-                        playCompleted = false;
-                        audioasset = await getAssetFile(mode, audiofilepos);
-                        audioCache.play(audioasset);
-                        //  player
-                        //     .playBytes(audiobytes)
-                        //     .then((playCompleted) => false);
-                      }
-                      //  stopRecord();
-                    }),
+                        //  stopRecord();
+                      }),
+                    ),
                   ),
-                ),
-              )),
-        ]));
+                  const SizedBox(width: 1),
+                  IgnorePointer(
+                      ignoring: mode == track.F,
+                      child: Container(
+                        foregroundDecoration: mode == track.F
+                            ? const BoxDecoration(
+                                color: Colors.grey,
+                                backgroundBlendMode: BlendMode.lighten)
+                            : null,
+                        child: Material(
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: Ink.image(
+                            image: mode == track.E1
+                                ? const AssetImage("assets/images/btnnext.png")
+                                : const AssetImage(
+                                    "assets/images/btnrepeat.png"),
+                            fit: BoxFit.contain,
+                            width: MediaQuery.of(context).size.width / 8,
+                            height: 80,
+                            child: InkWell(onTap: () async {
+                              int result = await player.stop();
+
+                              if (result == 1) {
+                                setState(() {
+                                  mode = track.E2;
+
+                                  audiofilepos = 0;
+                                });
+
+                                playCompleted = false;
+                                audioasset =
+                                    await getAssetFile(mode, audiofilepos);
+                                audioCache.play(audioasset);
+                                //  player
+                                //     .playBytes(audiobytes)
+                                //     .then((playCompleted) => false);
+                              }
+                              //  stopRecord();
+                            }),
+                          ),
+                        ),
+                      )),
+                ])));
   }
 
   @override

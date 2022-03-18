@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'GO EFT Tapping',
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
@@ -227,7 +227,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           height: 10,
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                          padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.width / 8,
+                              0,
+                              MediaQuery.of(context).size.width / 8,
+                              0),
                           child: Material(
                             clipBehavior: Clip.hardEdge,
                             color: Colors.transparent,
@@ -245,18 +249,27 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             ),
                           ),
                         ),
-                        Material(
-                          clipBehavior: Clip.hardEdge,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(LocaleKeys.thesound,
-                                style: TextStyle(
-                                  fontSize:
-                                      (MediaQuery.of(context).size.width / 30),
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                )).tr(),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.width / 8,
+                              0,
+                              MediaQuery.of(context).size.width / 8,
+                              0),
+                          child: Material(
+                            clipBehavior: Clip.hardEdge,
+                            color: Colors.transparent,
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(LocaleKeys.thesound,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize:
+                                        (MediaQuery.of(context).size.width /
+                                            30),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  )).tr(),
+                            ),
                           ),
                         ),
                       ],
@@ -449,7 +462,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording1)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : MediaQuery.of(context).size.width / 2.7,
+                                      : MediaQuery.of(context).size.width / 2.5,
                                   height:
                                       MediaQuery.of(context).size.width / 9.5,
                                 ),
@@ -570,7 +583,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording2)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : MediaQuery.of(context).size.width / 2.7,
+                                      : MediaQuery.of(context).size.width / 2.5,
                                   height:
                                       MediaQuery.of(context).size.width / 9.5,
                                 ),
