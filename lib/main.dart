@@ -223,19 +223,26 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 )).tr(),
                           ),
                         ),
-                        Material(
-                          clipBehavior: Clip.hardEdge,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(LocaleKeys.disclaimer,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize:
-                                      (MediaQuery.of(context).size.width / 30),
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                )).tr(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                          child: Material(
+                            clipBehavior: Clip.hardEdge,
+                            color: Colors.transparent,
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(LocaleKeys.disclaimer,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize:
+                                        (MediaQuery.of(context).size.width /
+                                            30),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  )).tr(),
+                            ),
                           ),
                         ),
                         Material(
@@ -518,17 +525,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               if (result == true &&
                                   intensityrecorded &&
                                   feelingrecorded) {
-                                Navigator.push(
+                                await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => GoEFTTappingPage()),
-                                );
-                                setState(() {
-                                  state = record_state.none;
-                                  feelingrecorded = false;
-                                  intensityrecorded = false;
-                                  disableBtn = false;
-                                });
+                                ).then((value) => {
+                                      setState(() {
+                                        state = record_state.none;
+                                        feelingrecorded = false;
+                                        intensityrecorded = false;
+                                        disableBtn = false;
+                                      })
+                                    });
                               }
                             }),
                           ),
@@ -637,12 +645,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               var result = await stopRecord();
                               if (result == true) {
                                 if (feelingrecorded == true) {
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             GoEFTTappingPage()),
-                                  );
+                                  ).then((value) => {
+                                        setState(() {
+                                          state = record_state.none;
+                                          feelingrecorded = false;
+                                          intensityrecorded = false;
+                                          disableBtn = false;
+                                        })
+                                      });
                                 }
                               }
                             }),
@@ -826,9 +841,9 @@ Widget getFooterSection(context) {
             player.pause();
             final InAppReview inAppReview = InAppReview.instance;
 
-            if (await inAppReview.isAvailable()) {
-              inAppReview.requestReview();
-            }
+            //   if (await inAppReview.isAvailable()) {
+            inAppReview.requestReview();
+            //  }
           }),
         ),
       ),
