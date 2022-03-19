@@ -485,10 +485,11 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
+   // return SafeArea(
+     //   top: true,
+     //   bottom: true,
+     //   child: 
+      return Scaffold(
             body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -504,7 +505,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 30,
+                    height: 30+30.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -609,7 +610,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
               /* add child content here */
             ],
           ),
-        )));
+        ));
   }
 
   State<StatefulWidget> createState() => throw UnimplementedError();

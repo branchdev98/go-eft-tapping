@@ -292,11 +292,12 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
+  //  return SafeArea(
+      //top: true,
       // left: true,
-      bottom: true,
-      child: Scaffold(
+      //bottom: true,
+      //child:
+      return Scaffold(
           //key: YourEFT,
           body: Container(
         decoration: BoxDecoration(
@@ -389,7 +390,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
               ),
               getFooterSection(),
             ]),
-      )),
+      ),
     );
   }
 

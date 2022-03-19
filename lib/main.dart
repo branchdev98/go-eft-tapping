@@ -190,10 +190,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Scaffold(
+   // return SafeArea(
+   //   top: true,
+    //  bottom: true,
+    //  child:
+    return Scaffold(
           body: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -208,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
-                          height: 30,
+                          height: 30+30.0,
                         ),
                         Material(
                           clipBehavior: Clip.hardEdge,
@@ -428,7 +429,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     ),
                     getBottomSection(context),
                     getFooterSection(context),
-                  ]))),
+                  ])),
     );
   }
 

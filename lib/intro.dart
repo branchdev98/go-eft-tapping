@@ -28,15 +28,16 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        top: true,
-        bottom: true,
-        child: Scaffold(
+   // return SafeArea(
+     //   top: true,
+     //   bottom: true,
+     //   child:
+     return Scaffold(
           body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                height: 30,
+                height: 30+30,
               ),
               Material(
                 clipBehavior: Clip.hardEdge,
@@ -107,7 +108,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
               )
             ],
           ),
-        ));
+        );
   }
 
   @override
