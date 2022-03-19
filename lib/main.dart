@@ -22,6 +22,7 @@ import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:advanced_in_app_review/advanced_in_app_review.dart';
 
 enum record_state {
   none,
@@ -159,6 +160,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
 
     loadplayer();
+    // initPlatformState();
+    AdvancedInAppReview()
+        .setMinDaysBeforeRemind(7)
+        .setMinDaysAfterInstall(2)
+        .setMinLaunchTimes(2)
+        .monitor();
   }
 
   @override
@@ -190,95 +197,141 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-   // return SafeArea(
-   //   top: true,
+    // return SafeArea(
+    //   top: true,
     //  bottom: true,
     //  child:
     return Scaffold(
-          body: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage("assets/images/background.png"),
+      body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage("assets/images/background.png"),
+            ),
+          ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      height: 30 + 30.0,
+                    ),
+                    Material(
+                      clipBehavior: Clip.hardEdge,
+                      color: Colors.transparent,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(LocaleKeys.pagebtitle,
+                            style: TextStyle(
+                              fontSize:
+                                  (MediaQuery.of(context).size.width / 12),
+                              color: Colors.black,
+                            )).tr(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width / 8,
+                          0,
+                          MediaQuery.of(context).size.width / 8,
+                          0),
+                      child: Material(
+                        clipBehavior: Clip.hardEdge,
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(LocaleKeys.disclaimer,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize:
+                                    (MediaQuery.of(context).size.width / 30),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              )).tr(),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width / 8,
+                          0,
+                          MediaQuery.of(context).size.width / 8,
+                          0),
+                      child: Material(
+                        clipBehavior: Clip.hardEdge,
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(LocaleKeys.thesound,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize:
+                                    (MediaQuery.of(context).size.width / 30),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              )).tr(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              child: Column(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          height: 30+30.0,
-                        ),
-                        Material(
-                          clipBehavior: Clip.hardEdge,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(LocaleKeys.pagebtitle,
+                    Material(
+                      elevation: 4.0,
+                      clipBehavior: Clip.hardEdge,
+                      color: Colors.transparent,
+                      child: InkWell(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            fit: StackFit.passthrough,
+                            children: [
+                              Ink.image(
+                                image: const AssetImage(
+                                    "assets/images/btngreen.png"),
+                                fit: BoxFit.cover,
+                                width:
+                                    MediaQuery.of(context).size.width / 4 * 3,
+                                height: MediaQuery.of(context).size.width / 6,
+                              ),
+                              Text(
+                                LocaleKeys.eftintro,
                                 style: TextStyle(
-                                  fontSize:
-                                      (MediaQuery.of(context).size.width / 12),
-                                  color: Colors.black,
-                                )).tr(),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.width / 8,
-                              0,
-                              MediaQuery.of(context).size.width / 8,
-                              0),
-                          child: Material(
-                            clipBehavior: Clip.hardEdge,
-                            color: Colors.transparent,
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(LocaleKeys.disclaimer,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
                                     fontSize:
-                                        (MediaQuery.of(context).size.width /
-                                            30),
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  )).tr(),
-                            ),
+                                        MediaQuery.of(context).size.width / 16,
+                                    color: Colors.white),
+                              ).tr(),
+                            ],
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.width / 8,
-                              0,
-                              MediaQuery.of(context).size.width / 8,
-                              0),
-                          child: Material(
-                            clipBehavior: Clip.hardEdge,
-                            color: Colors.transparent,
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(LocaleKeys.thesound,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize:
-                                        (MediaQuery.of(context).size.width /
-                                            30),
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  )).tr(),
-                            ),
-                          ),
-                        ),
-                      ],
+                          onTap: () async {
+                            //  player.pause();
+                            //player.pause();
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EFTIntroPage()),
+                            );
+                          }),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Material(
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 20,
+                    ),
+                    IgnorePointer(
+                      ignoring: disableBtn,
+                      child: Container(
+                        foregroundDecoration: disableBtn
+                            ? const BoxDecoration(
+                                color: Colors.grey,
+                                backgroundBlendMode: BlendMode.lighten)
+                            : null,
+                        child: Material(
                           elevation: 4.0,
                           clipBehavior: Clip.hardEdge,
                           color: Colors.transparent,
@@ -289,7 +342,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 children: [
                                   Ink.image(
                                     image: const AssetImage(
-                                        "assets/images/btngreen.png"),
+                                        "assets/images/btnblue.png"),
                                     fit: BoxFit.cover,
                                     width: MediaQuery.of(context).size.width /
                                         4 *
@@ -298,138 +351,80 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         MediaQuery.of(context).size.width / 6,
                                   ),
                                   Text(
-                                    LocaleKeys.eftintro,
-                                    style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.width /
-                                                16,
-                                        color: Colors.white),
-                                  ).tr(),
+                                          (feelingrecorded == true)
+                                              ? LocaleKeys.myfeelingrecorded
+                                              : LocaleKeys.myfeeling,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  20,
+                                              color: Colors.white))
+                                      .tr(),
                                 ],
                               ),
-                              onTap: () async {
-                                //  player.pause();
-                                //player.pause();
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => EFTIntroPage()),
-                                );
+                              onTap: () {
+                                play("d2");
                               }),
                         ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 20,
-                        ),
-                        IgnorePointer(
-                          ignoring: disableBtn,
-                          child: Container(
-                            foregroundDecoration: disableBtn
-                                ? const BoxDecoration(
-                                    color: Colors.grey,
-                                    backgroundBlendMode: BlendMode.lighten)
-                                : null,
-                            child: Material(
-                              elevation: 4.0,
-                              clipBehavior: Clip.hardEdge,
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    fit: StackFit.passthrough,
-                                    children: [
-                                      Ink.image(
-                                        image: const AssetImage(
-                                            "assets/images/btnblue.png"),
-                                        fit: BoxFit.cover,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                4 *
-                                                3,
-                                        height:
-                                            MediaQuery.of(context).size.width /
-                                                6,
-                                      ),
-                                      Text(
-                                              (feelingrecorded == true)
-                                                  ? LocaleKeys.myfeelingrecorded
-                                                  : LocaleKeys.myfeeling,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          20,
-                                                  color: Colors.white))
-                                          .tr(),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    play("d2");
-                                  }),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 20,
-                        ),
-                        IgnorePointer(
-                          ignoring: disableBtn,
-                          child: Container(
-                            foregroundDecoration: disableBtn
-                                ? const BoxDecoration(
-                                    color: Colors.grey,
-                                    backgroundBlendMode: BlendMode.lighten)
-                                : null,
-                            child: Material(
-                              elevation: 4.0,
-                              clipBehavior: Clip.hardEdge,
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    fit: StackFit.passthrough,
-                                    children: [
-                                      Ink.image(
-                                        image: const AssetImage(
-                                            "assets/images/btnred.png"),
-                                        fit: BoxFit.cover,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                4 *
-                                                3,
-                                        height:
-                                            MediaQuery.of(context).size.width /
-                                                6,
-                                      ),
-                                      Text(
-                                              (intensityrecorded == true)
-                                                  ? LocaleKeys
-                                                      .theintensityrecorded
-                                                  : LocaleKeys.theintensity,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          20,
-                                                  color: Colors.white))
-                                          .tr(),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    play("d3");
-                                  }),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    getBottomSection(context),
-                    getFooterSection(context),
-                  ])),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 20,
+                    ),
+                    IgnorePointer(
+                      ignoring: disableBtn,
+                      child: Container(
+                        foregroundDecoration: disableBtn
+                            ? const BoxDecoration(
+                                color: Colors.grey,
+                                backgroundBlendMode: BlendMode.lighten)
+                            : null,
+                        child: Material(
+                          elevation: 4.0,
+                          clipBehavior: Clip.hardEdge,
+                          color: Colors.transparent,
+                          child: InkWell(
+                              child: Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.passthrough,
+                                children: [
+                                  Ink.image(
+                                    image: const AssetImage(
+                                        "assets/images/btnred.png"),
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width /
+                                        4 *
+                                        3,
+                                    height:
+                                        MediaQuery.of(context).size.width / 6,
+                                  ),
+                                  Text(
+                                          (intensityrecorded == true)
+                                              ? LocaleKeys.theintensityrecorded
+                                              : LocaleKeys.theintensity,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  20,
+                                              color: Colors.white))
+                                      .tr(),
+                                ],
+                              ),
+                              onTap: () {
+                                play("d3");
+                              }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                getBottomSection(context),
+                getFooterSection(context),
+              ])),
     );
   }
 
