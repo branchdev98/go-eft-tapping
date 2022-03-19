@@ -33,6 +33,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
         bottom: true,
         child: Scaffold(
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SizedBox(
                 height: 30,
@@ -59,7 +60,10 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                 //alignment: Alignment.centerRight,
 
                 width: MediaQuery.of(context).size.width - 50,
-                height: MediaQuery.of(context).size.height - 80 - 125,
+                height: MediaQuery.of(context).size.height -
+                    80 -
+                    94 -
+                    MediaQuery.of(context).size.width / 12,
                 child: WebView(
                   key: const Key("webview1"),
                   debuggingEnabled: true,
@@ -88,7 +92,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
                         fit: BoxFit.contain,
                         //  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
                         width: MediaQuery.of(context).size.width / 8,
-                        height: 80,
+                        height: 70,
                         child: InkWell(onTap: () {
                           //int result = await player.stop();
                           //  if (result == 1) {
