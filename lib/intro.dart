@@ -28,87 +28,87 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-   // return SafeArea(
-     //   top: true,
-     //   bottom: true,
-     //   child:
-     return Scaffold(
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 30+30,
-              ),
-              Material(
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(LocaleKeys.pagectitle,
-                      style: TextStyle(
-                        fontSize: (MediaQuery.of(context).size.width / 12),
-                        color: Colors.black,
-                      )).tr(),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                // padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-
-                //fit: StackFit.passthrough, // Just Changed this line
-                //alignment: Alignment.centerRight,
-
-                width: MediaQuery.of(context).size.width - 50,
-                height: MediaQuery.of(context).size.height -
-                    80 -
-                    94 -
-                    MediaQuery.of(context).size.width / 12,
-                child: WebView(
-                  key: const Key("webview1"),
-                  debuggingEnabled: true,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  initialUrl: "",
-                  onWebViewCreated:
-                      (WebViewController webViewController) async {
-                    _webViewController = webViewController;
-                    await loadAsset();
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                child: Row(
-                  //left: 0,
-                  //top: MediaQuery.of(context).size.height - 112,
-
-                  children: [
-                    SizedBox(width: 15),
-                    Material(
-                      clipBehavior: Clip.hardEdge,
-                      color: Colors.transparent,
-                      child: Ink.image(
-                        image: const AssetImage("assets/images/btnhome.png"),
-                        fit: BoxFit.contain,
-                        //  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
-                        width: MediaQuery.of(context).size.width / 8,
-                        height: 70,
-                        child: InkWell(onTap: () {
-                          //int result = await player.stop();
-                          //  if (result == 1) {
-                          Navigator.pop(context);
-                          // }
-                        }),
-                      ),
-                    ),
-                  ],
-                ) /*,*/
-                ,
-              )
-            ],
+    // return SafeArea(
+    //   top: true,
+    //   bottom: true,
+    //   child:
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            height: 30 + 30,
           ),
-        );
+          Material(
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Text(LocaleKeys.pagectitle,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: (MediaQuery.of(context).size.width / 12),
+                    color: Colors.black,
+                  )).tr(),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            // padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+
+            //fit: StackFit.passthrough, // Just Changed this line
+            //alignment: Alignment.centerRight,
+
+            width: MediaQuery.of(context).size.width - 50,
+            height: MediaQuery.of(context).size.height -
+                80 -
+                94 -
+                MediaQuery.of(context).size.width / 12,
+            child: WebView(
+              key: const Key("webview1"),
+              debuggingEnabled: true,
+              javascriptMode: JavascriptMode.unrestricted,
+              initialUrl: "",
+              onWebViewCreated: (WebViewController webViewController) async {
+                _webViewController = webViewController;
+                await loadAsset();
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Row(
+              //left: 0,
+              //top: MediaQuery.of(context).size.height - 112,
+
+              children: [
+                SizedBox(width: 15),
+                Material(
+                  clipBehavior: Clip.hardEdge,
+                  color: Colors.transparent,
+                  child: Ink.image(
+                    image: const AssetImage("assets/images/btnhome.png"),
+                    fit: BoxFit.contain,
+                    //  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
+                    width: MediaQuery.of(context).size.width / 8,
+                    height: 70,
+                    child: InkWell(onTap: () {
+                      //int result = await player.stop();
+                      //  if (result == 1) {
+                      Navigator.pop(context);
+                      // }
+                    }),
+                  ),
+                ),
+              ],
+            ) /*,*/
+            ,
+          )
+        ],
+      ),
+    );
   }
 
   @override

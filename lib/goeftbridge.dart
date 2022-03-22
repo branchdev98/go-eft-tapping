@@ -292,14 +292,14 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-  //  return SafeArea(
-      //top: true,
-      // left: true,
-      //bottom: true,
-      //child:
-      return Scaffold(
-          //key: YourEFT,
-          body: Container(
+    //  return SafeArea(
+    //top: true,
+    // left: true,
+    //bottom: true,
+    //child:
+    return Scaffold(
+      //key: YourEFT,
+      body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
@@ -313,7 +313,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
             //    mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                height: 1,
+                height: 1 + 30.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
