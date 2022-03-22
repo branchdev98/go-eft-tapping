@@ -309,32 +309,28 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
         child: Column(
             //alignment: Alignment.topCenter,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-            //    mainAxisSize: MainAxisSize.min,
+            // mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
-                height: 1 + 30.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Material(
-                    clipBehavior: Clip.hardEdge,
-                    color: Colors.transparent,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(LocaleKeys.pageftitle,
-                          style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 12),
-                            color: Colors.black,
-                          )).tr(),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      height: 30 + 30.0,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
+                    Material(
+                      clipBehavior: Clip.hardEdge,
+                      color: Colors.transparent,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(LocaleKeys.pageftitle,
+                            style: TextStyle(
+                              fontSize:
+                                  (MediaQuery.of(context).size.width / 12),
+                              color: Colors.black,
+                            )).tr(),
+                      ),
+                    ),
+                  ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -378,16 +374,10 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
                   // )
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
               Image.asset("assets/images/bridge.png",
                   fit: BoxFit.contain,
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width / 2),
-              SizedBox(
-                height: 100,
-              ),
               getFooterSection(),
             ]),
       ),

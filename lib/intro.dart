@@ -46,7 +46,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
               alignment: Alignment.topCenter,
               child: Text(LocaleKeys.pagectitle,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    //  fontWeight: FontWeight.bold,
                     fontSize: (MediaQuery.of(context).size.width / 12),
                     color: Colors.black,
                   )).tr(),

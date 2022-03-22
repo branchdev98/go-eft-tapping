@@ -531,6 +531,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               });
 
                               var result = await stopRecord();
+
                               if (result == true &&
                                   intensityrecorded &&
                                   feelingrecorded) {

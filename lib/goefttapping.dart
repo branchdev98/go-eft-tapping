@@ -485,132 +485,131 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
 
   @override
   Widget build(BuildContext context) {
-   // return SafeArea(
-     //   top: true,
-     //   bottom: true,
-     //   child: 
-      return Scaffold(
-            body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.png"),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    // return SafeArea(
+    //   top: true,
+    //   bottom: true,
+    //   child:
+    return Scaffold(
+        body: Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/background.png"),
+          fit: BoxFit.fill,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              SizedBox(
+                height: 30 + 30.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 30+30.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Material(
-                        clipBehavior: Clip.hardEdge,
-                        color: Colors.transparent,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(LocaleKeys.pageetitle,
-                              style: TextStyle(
-                                fontSize:
-                                    (MediaQuery.of(context).size.width / 12),
-                                color: Colors.black,
-                              )).tr(),
-                        ),
-                      ),
-                    ],
-                  ),
                   Material(
                     clipBehavior: Clip.hardEdge,
                     color: Colors.transparent,
                     child: Align(
                       alignment: Alignment.topCenter,
-                      child: Text(LocaleKeys.thesound,
+                      child: Text(LocaleKeys.pageetitle,
                           style: TextStyle(
-                            fontSize: (MediaQuery.of(context).size.width / 30),
-                            fontWeight: FontWeight.bold,
+                            fontSize: (MediaQuery.of(context).size.width / 12),
                             color: Colors.black,
                           )).tr(),
                     ),
                   ),
                 ],
-                /* add child content here */
               ),
-              Stack(
-                alignment: (LocaleKeys.lang.tr() == "ara")
-                    ? Alignment.bottomLeft
-                    : Alignment.bottomRight,
+              Material(
+                clipBehavior: Clip.hardEdge,
+                color: Colors.transparent,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(LocaleKeys.thesound,
+                      style: TextStyle(
+                        fontSize: (MediaQuery.of(context).size.width / 30),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      )).tr(),
+                ),
+              ),
+            ],
+            /* add child content here */
+          ),
+          Stack(
+            alignment: (LocaleKeys.lang.tr() == "ara")
+                ? Alignment.bottomLeft
+                : Alignment.bottomRight,
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 40,
-                      ),
-
-                      //   alignment: Alignment.bottomRight,
-
-                      Image.asset("assets/images/girl.png",
-                          fit: BoxFit.fill,
-                          width: MediaQuery.of(context).size.width / 1.6,
-                          height: MediaQuery.of(context).size.width / 1.3),
-                      SizedBox(
-                        height: 60,
-                      ),
-                    ],
+                  SizedBox(
+                    height: 40,
                   ),
-                  Positioned(
-                    top: 30,
-                    left: (LocaleKeys.lang.tr() == "ara")
-                        ? MediaQuery.of(context).size.width -
-                            (MediaQuery.of(context).size.width +
-                                    MediaQuery.of(context).size.height) /
-                                8 -
-                            20
-                        : 20,
-                    child: Text(
-                      LocaleKeys.acupoints2,
-                      style: TextStyle(
-                          height: (LocaleKeys.lang.tr() == "ara") ? 1.1 : 1.5,
-                          fontSize: (MediaQuery.of(context).size.height +
-                                  MediaQuery.of(context).size.width) /
-                              (LocaleKeys.lang.tr() == "ara" ? 60 : 80),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ).tr(),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).size.width / 1.3 + 40,
-                    left: (LocaleKeys.lang.tr() == "ara")
-                        ? MediaQuery.of(context).size.width -
-                            math.min(MediaQuery.of(context).size.height,
-                                    MediaQuery.of(context).size.width) /
-                                1.5 -
-                            10
-                        : MediaQuery.of(context).size.width / 3 * 1.9 - 20,
-                    child: Text(
-                      LocaleKeys.acupoints,
-                      style: TextStyle(
-                          height: 1.0,
-                          fontSize: (MediaQuery.of(context).size.height +
-                                  MediaQuery.of(context).size.width) /
-                              (LocaleKeys.lang.tr() == "ara" ? 60 : 80),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ).tr(),
+
+                  //   alignment: Alignment.bottomRight,
+
+                  Image.asset("assets/images/girl.png",
+                      fit: BoxFit.fill,
+                      width: MediaQuery.of(context).size.width / 1.6,
+                      height: MediaQuery.of(context).size.width / 1.3),
+                  SizedBox(
+                    height: 60,
                   ),
                 ],
               ),
-              getFooterSection(),
-
-              /* add child content here */
+              Positioned(
+                top: 30,
+                left: (LocaleKeys.lang.tr() == "ara")
+                    ? MediaQuery.of(context).size.width -
+                        (MediaQuery.of(context).size.width +
+                                MediaQuery.of(context).size.height) /
+                            8 -
+                        20
+                    : 20,
+                child: Text(
+                  LocaleKeys.acupoints2,
+                  style: TextStyle(
+                      height: (LocaleKeys.lang.tr() == "ara") ? 1.1 : 1.5,
+                      fontSize: (MediaQuery.of(context).size.height +
+                              MediaQuery.of(context).size.width) /
+                          (LocaleKeys.lang.tr() == "ara" ? 60 : 80),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ).tr(),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.width / 1.3 + 40,
+                left: (LocaleKeys.lang.tr() == "ara")
+                    ? MediaQuery.of(context).size.width -
+                        math.min(MediaQuery.of(context).size.height,
+                                MediaQuery.of(context).size.width) /
+                            1.5 -
+                        10
+                    : MediaQuery.of(context).size.width / 3 * 1.9 - 20,
+                child: Text(
+                  LocaleKeys.acupoints,
+                  style: TextStyle(
+                      height: 1.0,
+                      fontSize: (MediaQuery.of(context).size.height +
+                              MediaQuery.of(context).size.width) /
+                          (LocaleKeys.lang.tr() == "ara" ? 60 : 80),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ).tr(),
+              ),
             ],
           ),
-        ));
+          getFooterSection(),
+
+          /* add child content here */
+        ],
+      ),
+    ));
   }
 
   State<StatefulWidget> createState() => throw UnimplementedError();
