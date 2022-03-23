@@ -11,8 +11,6 @@ import 'package:go_eft_tapping/goefttapping.dart';
 
 import 'package:go_eft_tapping/intro.dart';
 import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
-//import 'package:go_eft_tapping/manager/localization_manager.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:record_mp3/record_mp3.dart';
 import 'package:share_plus/share_plus.dart';
@@ -22,7 +20,7 @@ import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:advanced_in_app_review/advanced_in_app_review.dart';
+//import 'package:advanced_in_app_review/advanced_in_app_review.dart';
 
 enum record_state {
   none,
@@ -150,9 +148,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
     if (Platform.isIOS) {
       player.notificationService?.startHeadlessService();
-    }
-
-    if (Platform.isIOS) {
       appUrl = 'https://apps.apple.com/us/app/go-eft-tapping/id582597439';
     } else {
       appUrl =
@@ -161,11 +156,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
     loadplayer();
     // initPlatformState();
-    AdvancedInAppReview()
+    /*AdvancedInAppReview()
         .setMinDaysBeforeRemind(7)
         .setMinDaysAfterInstall(2)
         .setMinLaunchTimes(2)
-        .monitor();
+        .monitor();*/
   }
 
   @override
@@ -284,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Material(
-                      elevation: 4.0,
+                      elevation: 0.0,
                       clipBehavior: Clip.hardEdge,
                       color: Colors.transparent,
                       child: InkWell(
@@ -295,22 +290,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               Ink.image(
                                 image: const AssetImage(
                                     "assets/images/btngreen.png"),
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                                 width:
                                     MediaQuery.of(context).size.width / 4 * 3,
-                                height: MediaQuery.of(context).size.width / 6,
+                                height: MediaQuery.of(context).size.height / 12,
                               ),
                               Text(
                                 LocaleKeys.eftintro,
                                 style: TextStyle(
                                     fontSize:
-                                        MediaQuery.of(context).size.width / 16,
+                                        MediaQuery.of(context).size.height / 40,
                                     color: Colors.white),
                               ).tr(),
                             ],
                           ),
                           onTap: () async {
-                            //  player.pause();
+                            player.stop();
                             //player.pause();
 
                             Navigator.push(
@@ -321,7 +316,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           }),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height / 20,
+                      height: MediaQuery.of(context).size.height / 30,
                     ),
                     IgnorePointer(
                       ignoring: disableBtn,
@@ -332,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 backgroundBlendMode: BlendMode.lighten)
                             : null,
                         child: Material(
-                          elevation: 4.0,
+                          elevation: 0.0,
                           clipBehavior: Clip.hardEdge,
                           color: Colors.transparent,
                           child: InkWell(
@@ -343,12 +338,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   Ink.image(
                                     image: const AssetImage(
                                         "assets/images/btnblue.png"),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                     width: MediaQuery.of(context).size.width /
                                         4 *
                                         3,
                                     height:
-                                        MediaQuery.of(context).size.width / 6,
+                                        MediaQuery.of(context).size.height / 12,
                                   ),
                                   Text(
                                           (feelingrecorded == true)
@@ -358,8 +353,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                           style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
-                                                      .width /
-                                                  20,
+                                                      .height /
+                                                  40,
                                               color: Colors.white))
                                       .tr(),
                                 ],
@@ -371,7 +366,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height / 20,
+                      height: MediaQuery.of(context).size.height / 30,
                     ),
                     IgnorePointer(
                       ignoring: disableBtn,
@@ -382,7 +377,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 backgroundBlendMode: BlendMode.lighten)
                             : null,
                         child: Material(
-                          elevation: 4.0,
+                          elevation: 0.0,
                           clipBehavior: Clip.hardEdge,
                           color: Colors.transparent,
                           child: InkWell(
@@ -393,12 +388,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   Ink.image(
                                     image: const AssetImage(
                                         "assets/images/btnred.png"),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                     width: MediaQuery.of(context).size.width /
                                         4 *
                                         3,
                                     height:
-                                        MediaQuery.of(context).size.width / 6,
+                                        MediaQuery.of(context).size.height / 12,
                                   ),
                                   Text(
                                           (intensityrecorded == true)
@@ -408,8 +403,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                           style: TextStyle(
                                               fontSize: MediaQuery.of(context)
                                                       .size
-                                                      .width /
-                                                  20,
+                                                      .height /
+                                                  40,
                                               color: Colors.white))
                                       .tr(),
                                 ],
@@ -458,9 +453,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording1)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : MediaQuery.of(context).size.width / 2.5,
-                                  height:
-                                      MediaQuery.of(context).size.width / 9.5,
+                                      : 130,
+                                  height: 34,
                                 ),
                               ),
                               Container(
@@ -476,10 +470,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: (LocaleKeys.lang.tr() == "ara")
-                                          ? MediaQuery.of(context).size.width /
-                                              20
-                                          : MediaQuery.of(context).size.width /
-                                              30,
+                                          ? MediaQuery.of(context).size.height /
+                                              50
+                                          : MediaQuery.of(context).size.height /
+                                              60,
                                       fontWeight:
                                           (LocaleKeys.lang.tr() == "ara")
                                               ? FontWeight.bold
@@ -580,9 +574,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording2)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : MediaQuery.of(context).size.width / 2.5,
-                                  height:
-                                      MediaQuery.of(context).size.width / 9.5,
+                                      : 130,
+                                  height: 34,
                                 ),
                               ),
                               Container(
@@ -599,10 +592,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   style: TextStyle(
                                       height: 1,
                                       fontSize: (LocaleKeys.lang.tr() == "ara")
-                                          ? MediaQuery.of(context).size.width /
-                                              25
-                                          : MediaQuery.of(context).size.width /
-                                              30,
+                                          ? MediaQuery.of(context).size.height /
+                                              50
+                                          : MediaQuery.of(context).size.height /
+                                              60,
                                       fontWeight:
                                           (LocaleKeys.lang.tr() == "ara")
                                               ? FontWeight.bold
