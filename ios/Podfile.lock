@@ -1,4 +1,6 @@
 PODS:
+  - advanced_in_app_review (0.0.1):
+    - Flutter
   - audioplayers (0.0.1):
     - Flutter
   - FBAEMKit (12.0.2):
@@ -34,6 +36,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - advanced_in_app_review (from `.symlinks/plugins/advanced_in_app_review/ios`)
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - Flutter (from `Flutter`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
@@ -55,6 +58,8 @@ SPEC REPOS:
     - FBSDKShareKit
 
 EXTERNAL SOURCES:
+  advanced_in_app_review:
+    :path: ".symlinks/plugins/advanced_in_app_review/ios"
   audioplayers:
     :path: ".symlinks/plugins/audioplayers/ios"
   Flutter:
@@ -81,6 +86,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  advanced_in_app_review: fe8fd50b8670cb3dbe67e4c26ca643f7aea8dbb8
   audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
   FBAEMKit: c6b8ddf8371640fcd1a3b844d0f8884c8f334cea
   FBSDKCoreKit: 506c0fd1c09a3075f62be8fa36bdd921c563daa9
