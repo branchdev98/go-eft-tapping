@@ -65,6 +65,7 @@ class _EFTIntroState extends State<EFTIntroPage> with WidgetsBindingObserver {
             height: MediaQuery.of(context).size.height -
                 80 -
                 94 -
+                7 -
                 MediaQuery.of(context).size.width / 12,
             child: WebView(
               key: const Key("webview1"),

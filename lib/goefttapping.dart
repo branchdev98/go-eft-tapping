@@ -270,7 +270,7 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
         width: MediaQuery.of(context).size.width,
         height: 100,
         child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 13),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

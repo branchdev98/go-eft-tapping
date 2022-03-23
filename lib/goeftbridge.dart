@@ -149,7 +149,7 @@ class _GoEFTBridgeState extends State<GoEFTBridge> with WidgetsBindingObserver {
 
   Widget getFooterSection() {
     return Padding(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 13),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           SizedBox(
