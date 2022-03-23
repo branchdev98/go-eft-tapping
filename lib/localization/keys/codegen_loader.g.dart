@@ -22,7 +22,7 @@ class CodegenLoader extends AssetLoader{
   "thesound": "يمكنك مقاطعة الصوت بأي زر.",
   "yourrecording": "",
   "copyright": "",
-  "eftintro": "مقدمة",
+  "eftintro": "مقدمة...",
   "youreft": "الحرية الانفعالية الخاصة بك",
   "contactme": "اكتب لي",
   "sharingiscaring": "المشاركة تعنى الاهتمام!",

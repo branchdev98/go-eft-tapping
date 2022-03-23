@@ -778,10 +778,9 @@ final List locale = [
 
 Widget getFooterSection(context) {
   return Container(
-    padding: const EdgeInsets.all(10),
+    padding: const EdgeInsets.fromLTRB(10, 15, 10, 20),
     color: const Color(0xFF2C5D98),
-    //margin: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-
+    // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       Material(
         elevation: 0.0,
