@@ -19,8 +19,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:in_app_review/in_app_review.dart';
-//import 'package:advanced_in_app_review/advanced_in_app_review.dart';
+//import 'package:in_app_review/in_app_review.dart';
+import 'package:advanced_in_app_review/advanced_in_app_review.dart';
 
 enum record_state {
   none,
@@ -155,12 +155,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
 
     loadplayer();
-    // initPlatformState();
-    /*AdvancedInAppReview()
+    //  initPlatformState();
+    AdvancedInAppReview()
         .setMinDaysBeforeRemind(7)
         .setMinDaysAfterInstall(2)
         .setMinLaunchTimes(2)
-        .monitor();*/
+        .monitor();
   }
 
   @override
@@ -305,14 +305,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             ],
                           ),
                           onTap: () async {
-                            player.stop();
-                            //player.pause();
+                            int result = await player.stop();
+                            await audioCache.fixedPlayer.stop();
+                            await player.release();
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EFTIntroPage()),
-                            );
+                            //player.pause();
+                            if (result == 1) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EFTIntroPage()),
+                              );
+                            }
                           }),
                     ),
                     SizedBox(
@@ -453,8 +457,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording1)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : 130,
-                                  height: 34,
+                                      : 150,
+                                  height: 40,
                                 ),
                               ),
                               Container(
@@ -574,8 +578,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording2)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : 130,
-                                  height: 34,
+                                      : 150,
+                                  height: 40,
                                 ),
                               ),
                               Container(
@@ -830,7 +834,7 @@ Widget getFooterSection(context) {
         ),
       ),
       const SizedBox(width: 10),
-      Material(
+      /*  Material(
         elevation: 0.0,
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
@@ -843,13 +847,13 @@ Widget getFooterSection(context) {
             player.pause();
             final InAppReview inAppReview = InAppReview.instance;
 
-            //   if (await inAppReview.isAvailable()) {
-            inAppReview.requestReview();
-            //  }
+            if (await inAppReview.isAvailable()) {
+              inAppReview.requestReview();
+            }
           }),
         ),
       ),
-      const SizedBox(width: 10),
+      const SizedBox(width: 10),*/
       Material(
         elevation: 0.0,
         clipBehavior: Clip.hardEdge,
