@@ -524,17 +524,25 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
                   ),
                 ],
               ),
-              Material(
-                clipBehavior: Clip.hardEdge,
-                color: Colors.transparent,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(LocaleKeys.thesound,
-                      style: TextStyle(
-                        fontSize: (MediaQuery.of(context).size.width / 30),
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      )).tr(),
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width / 8,
+                    0,
+                    MediaQuery.of(context).size.width / 8,
+                    0),
+                child: Material(
+                  clipBehavior: Clip.hardEdge,
+                  color: Colors.transparent,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(LocaleKeys.thesound,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: (MediaQuery.of(context).size.width / 30),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        )).tr(),
+                  ),
                 ),
               ),
             ],
