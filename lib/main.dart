@@ -16,11 +16,12 @@ import 'package:record_mp3/record_mp3.dart';
 import 'package:share_plus/share_plus.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:social_share_plugin/social_share_plugin.dart';
+//import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:permission_handler/permission_handler.dart';
 //import 'package:in_app_review/in_app_review.dart';
 import 'package:advanced_in_app_review/advanced_in_app_review.dart';
+import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 
 enum record_state {
   none,
@@ -865,6 +866,12 @@ Widget getFooterSection(context) {
           height: MediaQuery.of(context).size.width / 15,
           child: InkWell(onTap: () async {
             //    url: "https://sarabern.com", msg: "share");
+            String result = await FlutterSocialContentShare.share(
+                type: ShareType.facebookWithoutImage,
+                url: appUrl,
+                quote: LocaleKeys.checkout.tr());
+            print(result);
+            /*
             await SocialSharePlugin.shareToFeedFacebookLink(
                     quote: LocaleKeys.checkout.tr(), url: appUrl)
                 .catchError(
@@ -874,7 +881,7 @@ Widget getFooterSection(context) {
                         ))));
             //   } else {
             //     Fluttertoast.showToast(msg: "permission is denied");
-            //   }
+            //   }*/
           }),
         ),
       ),
