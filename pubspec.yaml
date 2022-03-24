@@ -50,13 +50,11 @@ dependencies:
   permission_handler: ^8.3.0
   record_mp3: ^3.0.0
   path_provider: ^2.0.8
-  social_share_plugin: 0.3.1+1
+  #social_share_plugin: 0.3.1+1
   wakelock: ^0.6.1+1
-  in_app_review: ^2.0.4
+ # in_app_review: ^2.0.4
   advanced_in_app_review: ^1.0.5
-  social_share: ^2.2.1
-  http: ^0.13.4
-  screenshot: ^1.2.3
+  
   flutter_social_content_share: ^1.0.2
   
 dev_dependencies:
