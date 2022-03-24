@@ -867,7 +867,11 @@ Widget getFooterSection(context) {
             //    url: "https://sarabern.com", msg: "share");
             await SocialSharePlugin.shareToFeedFacebookLink(
                     quote: LocaleKeys.checkout.tr(), url: appUrl)
-                .catchError((e) => print("[facebook error]: " + e.toString()));
+                .catchError(
+                    (e) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                          e.toString(),
+                        ))));
             //   } else {
             //     Fluttertoast.showToast(msg: "permission is denied");
             //   }
