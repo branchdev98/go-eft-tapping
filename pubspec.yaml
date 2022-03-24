@@ -99,7 +99,7 @@ flutter:
     - assets/html/engintro.html
     - assets/html/sweintro.html
     - assets/html/araintro.html
-    
+    - assets/html/ukrintro.html
     - assets/images/infobutton.png
     - assets/images/btnpause.png
     - assets/images/btnnext.png

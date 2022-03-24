@@ -127,7 +127,7 @@ static const Map<String,dynamic> sv = {
   "takealook": "Ta en titt på den här appen!"
 };
 static const Map<String,dynamic> uk = {
-  "lang": "swe",
+  "lang": "ukr",
   "title": "Hello Sw!",
   "Message": "This is Ukraine",
   "goefttapping": "GO EFT Tapping",
@@ -155,8 +155,8 @@ static const Map<String,dynamic> uk = {
   "ichoosetofeel": "Я вирішую відчувати \n(Бажана емоція)",
   "ihaveaquestion": "[Від Додатку Go EFT Простукування] У мене є питання",
   "hellosara": "Привіт, Саро!",
-  "acupoints2": "2. Верхня частина \nголови (маківка)\n3. Внутрішня \nчастина брови\n4. Зовнішній \nкутик ока\n5. Під оком\n6. Під носом\n7. Підборіддя \n(Під губами)\n8. Ключиця\n9. Під пахвою\n10. Внутрішня \nчастина зап’ястя",
-  "acupoints": "1. зовнішнє \nребро долоні\n(точка Карате)",
+  "acupoints2": "2. Верхня частина \nголови (Маківка)\n3. Внутрішня \nчастина брови\n4. Зовнішній \nкутик ока\n5. Під оком\n6. Під носом\n7. Підборіддя \n(Під губами)\n8. Ключиця\n9. Під пахвою\n10. Внутрішня \nчастина зап’ястя",
+  "acupoints": "1. Зовнішнє \nребро долоні\n(точка Карате)",
   "pagebtitle": "Озвучте вашу проблему",
   "pagectitle": "Знайомство з EFT",
   "pageetitle": "Ми простукуємо разом",

@@ -776,20 +776,16 @@ final List locale = [
 
 Widget getFooterSection(context) {
   return Container(
-    padding: const EdgeInsets.fromLTRB(10, 15, 10, 20),
+    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
     color: const Color(0xFF2C5D98),
     // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+    child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       Material(
         elevation: 0.0,
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Ink.image(
-          image: const AssetImage("assets/images/btnlanguage.png"),
-          fit: BoxFit.cover,
-          width: MediaQuery.of(context).size.width / 15,
-          height: MediaQuery.of(context).size.width / 15,
-          child: InkWell(onTap: () async {
+        child: InkWell(
+          onTap: () async {
             showDialog(
                 context: context,
                 builder: (builder) {
@@ -831,7 +827,16 @@ Widget getFooterSection(context) {
                     ),
                   );
                 });
-          }),
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Image(
+              image: AssetImage("assets/images/btnlanguage.png"),
+              fit: BoxFit.cover,
+              width: 25,
+              height: 25,
+            ),
+          ),
         ),
       ),
       const SizedBox(width: 10),
@@ -859,12 +864,8 @@ Widget getFooterSection(context) {
         elevation: 0.0,
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Ink.image(
-          image: const AssetImage("assets/images/fbshare.png"),
-          fit: BoxFit.cover,
-          width: MediaQuery.of(context).size.width / 15,
-          height: MediaQuery.of(context).size.width / 15,
-          child: InkWell(onTap: () async {
+        child: InkWell(
+          onTap: () async {
             //    url: "https://sarabern.com", msg: "share");
             String result = await FlutterSocialContentShare.share(
                 type: ShareType.facebookWithoutImage,
@@ -882,7 +883,16 @@ Widget getFooterSection(context) {
             //   } else {
             //     Fluttertoast.showToast(msg: "permission is denied");
             //   }*/
-          }),
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Image(
+              image: AssetImage("assets/images/fbshare.png"),
+              fit: BoxFit.cover,
+              width: 25,
+              height: 25,
+            ),
+          ),
         ),
       ),
       const SizedBox(width: 10),
@@ -890,16 +900,31 @@ Widget getFooterSection(context) {
         elevation: 0.0,
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Ink.image(
-          image: const AssetImage("assets/images/shareall.png"),
-          fit: BoxFit.cover,
-          width: MediaQuery.of(context).size.width / 15,
-          height: MediaQuery.of(context).size.width / 15,
-          child: InkWell(onTap: () {
-            //  shareFile();
+        child: InkWell(
+          onTap: () async {
             Share.share(LocaleKeys.checkout.tr() + "\n" + appUrl,
                 subject: LocaleKeys.takealook.tr());
-          }),
+            /*
+            await SocialSharePlugin.shareToFeedFacebookLink(
+                    quote: LocaleKeys.checkout.tr(), url: appUrl)
+                .catchError(
+                    (e) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                          e.toString(),
+                        ))));
+            //   } else {
+            //     Fluttertoast.showToast(msg: "permission is denied");
+            //   }*/
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Image(
+              image: AssetImage("assets/images/shareall.png"),
+              fit: BoxFit.cover,
+              width: 25,
+              height: 25,
+            ),
+          ),
         ),
       ),
       const SizedBox(width: 10),
@@ -907,17 +932,23 @@ Widget getFooterSection(context) {
         elevation: 0.0,
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Ink.image(
-          image: const AssetImage("assets/images/btncontactus.png"),
-          fit: BoxFit.cover,
-          width: MediaQuery.of(context).size.width / 15,
-          height: MediaQuery.of(context).size.width / 15,
-          child: InkWell(onTap: () async {
+        child: InkWell(
+          onTap: () async {
+            //    url: "https://sarabern.com", msg: "share");
             player.pause();
 
             _launchURL('sara@goldenopportunity.se',
                 LocaleKeys.ihaveaquestion.tr(), LocaleKeys.hellosara.tr());
-          }),
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Image(
+              image: AssetImage("assets/images/btncontactus.png"),
+              fit: BoxFit.cover,
+              width: 25,
+              height: 25,
+            ),
+          ),
         ),
       ),
     ]),
