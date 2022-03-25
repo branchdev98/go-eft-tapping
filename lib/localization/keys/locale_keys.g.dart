@@ -19,7 +19,6 @@ abstract class  LocaleKeys {
   static const theintensityrecorded = 'theintensityrecorded';
   static const recordproblem = 'recordproblem';
   static const recordintensity = 'recordintensity';
-  static const recordingproblem = 'recordingproblem';
   static const recordingintensity = 'recordingintensity';
   static const chooselanguage = 'chooselanguage';
   static const recordprefferedemotion = 'recordprefferedemotion';
