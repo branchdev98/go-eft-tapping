@@ -356,6 +356,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                               : LocaleKeys.myfeeling,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              height: 1,
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .height /
@@ -406,6 +407,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                               : LocaleKeys.theintensity,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              height: 1,
                                               fontSize: MediaQuery.of(context)
                                                       .size
                                                       .height /
