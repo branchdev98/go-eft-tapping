@@ -773,7 +773,7 @@ final List locale = [
   {'name': 'English ', 'locale': Locale('en')},
   {'name': 'Swedish (Svenska)', 'locale': Locale('sv')},
   {'name': 'Arabic (اَلْعَرَبِيَّةُ)', 'locale': Locale('ar')},
-  {'name': 'Ukrainian (украї́нська мо́ва)', 'locale': Locale('uk')},
+  {'name': 'Ukrainian (Українська мова)', 'locale': Locale('uk')},
 ];
 
 Widget getFooterSection(context) {
