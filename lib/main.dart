@@ -307,17 +307,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           ),
                           onTap: () async {
                             int result = await player.stop();
-                            await audioCache.fixedPlayer.stop();
-                            await player.release();
+                            // await audioCache.fixedPlayer.stop();
+                            //  await player.release();
 
                             //player.pause();
-                            if (result == 1) {
-                              Navigator.push(
+                            //      if (result == 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GoEFTTappingPage()),
+
+                              /* Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EFTIntroPage()),
-                              );
-                            }
+                                    builder: (context) => EFTIntroPage()),*/
+                            );
+                            //  }
                           }),
                     ),
                     SizedBox(
@@ -460,8 +465,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording1)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : 150,
-                                  height: 40,
+                                      : MediaQuery.of(context).size.width / 2.5,
+                                  height: MediaQuery.of(context).size.width /
+                                      2.5 /
+                                      3.85,
                                 ),
                               ),
                               Container(
@@ -476,11 +483,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                       : LocaleKeys.recordproblem,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
+                                      height: 1,
                                       fontSize: (LocaleKeys.lang.tr() == "ara")
-                                          ? MediaQuery.of(context).size.height /
-                                              50
-                                          : MediaQuery.of(context).size.height /
-                                              60,
+                                          ? (MediaQuery.of(context)
+                                                      .size
+                                                      .height +
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                              70
+                                          : (MediaQuery.of(context)
+                                                      .size
+                                                      .height +
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                              80,
                                       fontWeight:
                                           (LocaleKeys.lang.tr() == "ara")
                                               ? FontWeight.bold
@@ -581,8 +599,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   fit: BoxFit.fill,
                                   width: (state == record_state.recording2)
                                       ? MediaQuery.of(context).size.width / 3.5
-                                      : 150,
-                                  height: 40,
+                                      : MediaQuery.of(context).size.width / 2.5,
+                                  height: MediaQuery.of(context).size.width /
+                                      2.5 /
+                                      3.85,
                                 ),
                               ),
                               Container(
@@ -599,10 +619,20 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   style: TextStyle(
                                       height: 1,
                                       fontSize: (LocaleKeys.lang.tr() == "ara")
-                                          ? MediaQuery.of(context).size.height /
-                                              50
-                                          : MediaQuery.of(context).size.height /
-                                              60,
+                                          ? (MediaQuery.of(context)
+                                                      .size
+                                                      .height +
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                              70
+                                          : (MediaQuery.of(context)
+                                                      .size
+                                                      .height +
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width) /
+                                              80,
                                       fontWeight:
                                           (LocaleKeys.lang.tr() == "ara")
                                               ? FontWeight.bold

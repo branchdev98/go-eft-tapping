@@ -114,7 +114,7 @@ static const Map<String,dynamic> sv = {
   "ichoosetofeel": "så väljer jag \n(bättre känsla)",
   "ihaveaquestion": "[Från GO EFT Tapping appen] Jag har en fråga/fundering",
   "hellosara": "Hejsan Sara!",
-  "acupoints2": "2. Huvudet\n3. Ögonbrynet\n4. Sidan av ögat\n5. Under ögat\n6. Under näsan\n7. Hakan, under läppen\n8. Nyckelbenspunkten,\n    eller handflatan \n    på nyckelbenen\n9. Under armen\n10. Handloven",
+  "acupoints2": "2. Huvudet\n3. Ögonbrynet\n4. Sidan av ögat\n5. Under ögat\n6. Under näsan\n7. Hakan, under läppen\n8. Nyckelbenspunkten,\n     eller handflatan \n     på nyckelbenen\n9. Under armen\n10. Handloven",
   "acupoints": "1. Sidan av handen\n    (karatepunkten)",
   "pagebtitle": "Spela in ditt problem",
   "pagectitle": "EFT Introduktion",
