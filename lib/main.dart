@@ -307,22 +307,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           ),
                           onTap: () async {
                             int result = await player.stop();
-                            // await audioCache.fixedPlayer.stop();
-                            //  await player.release();
+                            await audioCache.fixedPlayer.stop();
+                            await player.release();
 
                             //player.pause();
-                            //      if (result == 1) {
-                            Navigator.push(
+                            if (result == 1) {
+                              /*  Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => GoEFTTappingPage()),
-
-                              /* Navigator.push(
+*/
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EFTIntroPage()),*/
-                            );
-                            //  }
+                                    builder: (context) => EFTIntroPage()),
+                              );
+                            }
                           }),
                     ),
                     SizedBox(
