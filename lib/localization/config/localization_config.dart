@@ -19,7 +19,7 @@ class LocalizationConfig extends StatelessWidget {
       //  startLocale: LocalizationEnum.english.translate!,
       fallbackLocale: LocalizationEnum.english.translate!,
       assetLoader: const CodegenLoader(),
-      child: const MyApp(),
+      child: MyApp(),
     );
   }
 }

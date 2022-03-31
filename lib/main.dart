@@ -1,7 +1,5 @@
-// @dart=2.9
-
 import 'dart:io';
-import 'dart:typed_data';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +29,7 @@ enum record_state {
   recorded2,
   recorded
 }
-String recordFilePath;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -51,7 +49,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  //const MyApp({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -82,7 +80,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 
@@ -93,10 +91,10 @@ class MyApp extends StatelessWidget {
 //AudioCache player = AudioCache();
 AudioCache audioCache = AudioCache();
 AudioPlayer player = AudioPlayer();
-Uint8List audiobytes;
+//Uint8List audiobytes;
 
 var playerState;
-String audioasset;
+//String audioasset;
 var disableBtn = false;
 var appUrl = "";
 var feelingrecorded = false;
@@ -104,7 +102,7 @@ var intensityrecorded = false;
 var state = record_state.none;
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key, this.title}) : super(key: key);
+  //const MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -115,7 +113,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  //final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -141,14 +139,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
 
     if (kIsWeb) {
       //Calls to Platform.isIOS fails on web
       return;
     }
     if (Platform.isIOS) {
-      player.notificationService?.startHeadlessService();
+      player.notificationService.startHeadlessService();
       appUrl = 'https://apps.apple.com/us/app/go-eft-tapping/id582597439';
     } else {
       appUrl =
@@ -307,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           ),
                           onTap: () async {
                             int result = await player.stop();
-                            await audioCache.fixedPlayer.stop();
+                            await audioCache.fixedPlayer?.stop();
                             await player.release();
 
                             //player.pause();
@@ -720,6 +718,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void startRecord(String what) async {
+    String recordFilePath;
     int result = 0;
     while (result == 0) {
       result = await player.stop();
@@ -899,7 +898,7 @@ Widget getFooterSection(context) {
         child: InkWell(
           onTap: () async {
             //    url: "https://sarabern.com", msg: "share");
-            String result = await FlutterSocialContentShare.share(
+            String? result = await FlutterSocialContentShare.share(
                 type: ShareType.facebookWithoutImage,
                 url: appUrl,
                 quote: LocaleKeys.checkout.tr());
