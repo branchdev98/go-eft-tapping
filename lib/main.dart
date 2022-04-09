@@ -9,16 +9,18 @@ import 'package:go_eft_tapping/goefttapping.dart';
 
 import 'package:go_eft_tapping/intro.dart';
 import 'package:go_eft_tapping/localization/keys/locale_keys.g.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record_mp3/record_mp3.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'provider/multi_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 //import 'package:social_share_plugin/social_share_plugin.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:permission_handler/permission_handler.dart';
 //import 'package:in_app_review/in_app_review.dart';
-import 'package:advanced_in_app_review/advanced_in_app_review.dart';
+
 import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 
 enum record_state {
@@ -154,12 +156,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
 
     loadplayer();
-    //  initPlatformState();
-    AdvancedInAppReview()
-        .setMinDaysBeforeRemind(7)
-        .setMinDaysAfterInstall(2)
-        .setMinLaunchTimes(2)
-        .monitor();
   }
 
   @override
@@ -564,6 +560,20 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                         disableBtn = false;
                                       })
                                     });
+                                var value;
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                value = prefs.getInt("success_times");
+                                if (value >= 2) {
+                                  final InAppReview inAppReview =
+                                      InAppReview.instance;
+                                  if (await inAppReview.isAvailable()) {
+                                    Future.delayed(const Duration(seconds: 1),
+                                        () {
+                                      inAppReview.requestReview();
+                                    });
+                                  }
+                                }
                               }
                             }),
                           ),

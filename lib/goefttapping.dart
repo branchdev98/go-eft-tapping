@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_eft_tapping/goeftbridge.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -222,9 +223,15 @@ class _GoEFTTappingState extends State<GoEFTTappingPage>
     return audioasset;
   }
 
-  whatismode(frombridge) {
+  whatismode(frombridge) async {
     if (frombridge == true) {
       mode = track.F;
+      int? value = 0;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      value = prefs.getInt("success_times");
+      if (value == null) value = 0;
+      if (value >= 2) return;
+      prefs.setInt("success_times", value + 1);
     } else {
       if (nextflow == false) {
         print("track e1:");
