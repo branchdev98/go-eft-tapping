@@ -125,7 +125,7 @@ static const Map<String,dynamic> sv = {
 };
 static const Map<String,dynamic> uk = {
   "lang": "ukr",
-  "title": "Hello Sw!",
+  "title": "Hello Uk!",
   "Message": "This is Ukraine",
   "goefttapping": "GO EFT Tapping",
   "thesound": "Аудіо може бути зупинене натисканням будь-якої кнопки.",
@@ -154,8 +154,8 @@ static const Map<String,dynamic> uk = {
   "pagectitle": "Знайомство з EFT",
   "pageetitle": "Ми простукуємо разом",
   "pageftitle": "Міст до кращого",
-  "checkout": "check out GO EFT TAPPING app!",
-  "takealook": "Take a look at this app!"
+  "checkout": "Спробуйте цей GO EFT Tapping додаток!",
+  "takealook": "Спробуйте цей додаток!"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": ar, "en": en, "sv": sv, "uk": uk};
 }

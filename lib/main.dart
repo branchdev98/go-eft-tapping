@@ -40,13 +40,13 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(
-    EasyLocalization(
+    /* EasyLocalization(
           useOnlyLangCode: true,
           supportedLocales: [Locale('en'), Locale('sv'), Locale('ar'),Locale('uk')],
           path: 'assets/translations',
           fallbackLocale: Locale('en'),
-          child: MyApp())
-    //const ProviderList(),
+          child: MyApp())*/
+    const ProviderList(),
   );
 }
 
@@ -64,6 +64,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //context.resetLocale();
+    context.setLocale(context.locale);
     return MaterialApp(
       title: 'GO EFT Tapping',
       localizationsDelegates: context.localizationDelegates,
@@ -142,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-
+    // context.resetLocale();
+    //context.setLocale(context.deviceLocale);
     if (kIsWeb) {
       //Calls to Platform.isIOS fails on web
       return;

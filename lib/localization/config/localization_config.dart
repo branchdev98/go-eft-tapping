@@ -16,7 +16,7 @@ class LocalizationConfig extends StatelessWidget {
       useOnlyLangCode: true,
       path: LocalizationManager.instance.localePath!,
       supportedLocales: LocalizationManager.instance.supportedLocales,
-      //  startLocale: LocalizationEnum.english.translate!,
+      //  startLocale: context.locale,
       fallbackLocale: LocalizationEnum.english.translate!,
       assetLoader: const CodegenLoader(),
       child: MyApp(),
